@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roast #2 · April 2, 2026 · Singapore | RoastMyTechStack</title>
-  <meta name="description" content="Recap of Roast #2: Kantaro, the app that teaches Spanish through music, from the Techies APAC community.">
+  <title>Roast #2 · April 6, 2026 · Singapore | RoastMyTechStack</title>
+  <meta name="description" content="Recap of Roast #2: the Harwav Order Hub, Kantaro, and Drag Flow from the Techies APAC community.">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,37 +16,94 @@
   <main class="page-main roast-page">
     <section class="roast-page-hero">
       <img src="roast-logo.png" alt="RoastMyTechStack" class="roast-page-logo">
-      <h1>Roast #2 · April 2, 2026 · Singapore</h1>
-      <p>Ee One brought Kantaro — an app that teaches Spanish through music — and asked the room to pick apart its vibe-coded AI stack. 49 of us packed SGInnovate, and the fixes poured in.</p>
+      <h1>Roast #2 · April 6, 2026 · Singapore</h1>
+      <p>Three builders brought three very different stacks: a self-improving order-hub workflow, a Spanish-through-music app, and a drag-node automation tool. This recap preserves the practical decisions, trade-offs, and questions raised in the room.</p>
     </section>
 
-    <!-- ============ SPEAKER: EE ONE LIM + CO-PRESENTERS ============ -->
+    <!-- ============ SPEAKER 1: MARCUS LIANG ============ -->
     <section class="speaker-section">
-      <p class="speaker-section-label">Speakers</p>
+      <p class="speaker-section-label">Speaker 01</p>
       <article class="speaker-card">
         <div class="speaker-info">
-          <p class="speaker-project">Kantaro · kantaro.live</p>
-          <h2>Ee One Lim</h2>
-          <p class="speaker-summary">Presented Kantaro, an app that turns music into a Spanish-learning companion — lyrics, translations, and soundtracks pulled together by an AI stack she assembled fast. Joining her on stage: co-presenters Marcus Liang Zhu and Jesse Sng.</p>
-          <div class="speaker-tags"><span>Claude</span><span>Google Stitch (MCP)</span><span>YouTube</span><span>LRCLib</span><span>Gemini</span></div>
+          <p class="speaker-project">Harwav Order Hub</p>
+          <h2>Marcus Liang</h2>
+          <p class="speaker-summary">A self-improving software workflow: users report issues through a chatbot, complaints become GitHub issues, and an automation loop routes them into Claude Code to generate, apply, and ship fixes — with a human validating before redeploy.</p>
+          <div class="speaker-tags"><span>Chatbot intake</span><span>GitHub issues</span><span>OpenClaw</span><span>Claude Code</span><span>Human validation</span></div>
           <div class="speaker-links">
-            <a href="https://kantaro.live" target="_blank" rel="noopener" class="icon-link" title="Kantaro"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></a>
-            <a href="https://www.linkedin.com/in/eeonelim/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://www.linkedin.com/in/marcus-liang-zhu-041a0ab0/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
           </div>
         </div>
       </article>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">01</span><h3 class="topic-title">The Stack</h3></div>
+        <div class="topic-header"><span class="topic-number">01</span><h3>The Self-Healing Loop</h3></div>
         <div class="topic-body">
-          <p>Kantaro leans on a stack assembled mostly from AI building blocks: <code>Claude</code> for planning and coding, <code>Google Stitch</code> (via MCP) for design, <code>YouTube</code> as the music source, <code>LRCLib</code> for lyrics, and <code>Gemini</code> for translations — all wrapped into an experience built as a weekend project.</p>
+          <p>A user complains via the chatbot → the complaint becomes a GitHub issue → an OpenClaw cron pulls the issues → the issue goes into Claude Code → a Claude skill generates and applies a fix → changes push to GitHub → a human tests the software → if solved it redeploys, if not it returns for further fixes.</p>
         </div>
       </div>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">02</span><h3 class="topic-title">Fixes From The Room</h3></div>
+        <div class="topic-header"><span class="topic-number">02</span><h3>Improving AI Output Around It</h3></div>
         <div class="topic-body">
-          <p>The community left her with concrete next moves: fixes for a lyrics-syncing bug, workarounds for model-specific issues, and a set of security and scalability architecture changes before the app grows its user base.</p>
+          <p>To improve AI output quality, check out <a href="https://hamel.dev" target="_blank" rel="noopener">Hamel's eval blog</a>. And for the UI, <a href="https://ui.shadcn.com" target="_blank" rel="noopener">shadcn</a> for better-looking components with less effort.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SPEAKER 2: EE ONE ============ -->
+    <section class="speaker-section">
+      <p class="speaker-section-label">Speaker 02</p>
+      <article class="speaker-card">
+        <div class="speaker-info">
+          <p class="speaker-project">Kantaro · kantaro.live</p>
+          <h2>Ee One Lim</h2>
+          <p class="speaker-summary">An app that teaches Spanish through music — pulling real lyrics, front-end design via Stitch, and open-source components to keep the stack light. The roast pushed on where the API calls live and how to keep UI changes verifiable.</p>
+          <div class="speaker-tags"><span>LRCLib</span><span>Stitch + Google MCP</span><span>Heartmula</span><span>Open-source streaming</span><span>Frontend API calls</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/eeonelim/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://kantaro.live" target="_blank" rel="noopener" class="icon-link" title="Website"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></a>
+          </div>
+        </div>
+      </article>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">01</span><h3>LYRICS &amp; DESIGN</h3></div>
+        <div class="topic-body">
+          <p><a href="https://lrclib.net" target="_blank" rel="noopener">LRCLib</a> is the open-source package to pull lyrics from music. Use <strong>Stitch with Google MCP</strong> for frontend design, and <a href="https://heartmula.com" target="_blank" rel="noopener">Heartmula</a> — an open-source music LLM — as an open-source music streaming / YouTube API alternative.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>Where The API Calls Live</h3></div>
+        <div class="topic-body">
+          <p><strong>Push the API call to the frontend</strong> to avoid being API-blocked by Google. And add <strong>acceptance criteria with screenshots</strong> to check for better UI control — the AI should show its work before you approve it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SPEAKER 3: JESSE LIM ============ -->
+    <section class="speaker-section">
+      <p class="speaker-section-label">Speaker 03</p>
+      <article class="speaker-card">
+        <div class="speaker-info">
+          <p class="speaker-project">Drag Flow</p>
+          <h2>Jesse Lim</h2>
+          <p class="speaker-summary">An automation tool where you connect workflows by dragging nodes. The roast gave three sharp habits: escalate models deliberately, let AI write your documentation, and make the AI wait for you instead of the other way round.</p>
+          <div class="speaker-tags"><span>Drag-and-drop flow</span><span>Model escalation</span><span>AI documentation</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/jesse-sng-05ab7944/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+          </div>
+        </div>
+      </article>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">01</span><h3>Three Habits</h3></div>
+        <div class="topic-body">
+          <ul class="topic-list">
+            <li><strong>Don't reach for the biggest model for everything</strong> — escalate the model accordingly as the task demands it.</li>
+            <li><strong>Documentation is your best friend</strong> — get the AI to write it for you.</li>
+            <li><strong>Let the AI wait for you, instead of waiting for the AI.</strong></li>
+          </ul>
         </div>
       </div>
     </section>
@@ -58,8 +115,18 @@
         <img src="assets/roast-7/sginnovate.png" alt="SGInnovate" class="venue-logo">
         <div class="venue-info">
           <h3>SGInnovate</h3>
-          <p>32 Carpenter Street · Hosting the Roast My TechStack series since the community's earliest days.</p>
+          <p>PIC: <a href="https://www.linkedin.com/in/antinglim/" target="_blank" rel="noopener">An Ting</a></p>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ SHOUTOUTS ============ -->
+    <section class="ops-section">
+      <p class="speaker-section-label">Special shoutouts</p>
+      <div class="ops-grid">
+        <div class="ops-card"><span class="ops-emoji">🎚</span><h3>Recording Gears</h3><p>Jesse Sng</p></div>
+        <div class="ops-card"><span class="ops-emoji">🎙</span><h3>Mic Runner</h3><p>Arul</p></div>
+        <div class="ops-card"><span class="ops-emoji">🏠</span><h3>Venue Sponsors</h3><p>An Ting, Raj &amp; SGInnovate</p></div>
       </div>
     </section>
   </main>

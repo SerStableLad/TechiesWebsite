@@ -8,24 +8,37 @@
       "hosts": [],
       "speakers": [
         {
+          "name": "Jesse Sng",
+          "linkedin": "https://www.linkedin.com/in/jesse-sng-05ab7944/",
+          "project": "AI Content Pipeline",
+          "stack": ["Imagen", "GPT Image", "ComfyUI", "Remotion"],
+          "summary": "Parallel content pipeline (one input to podcast, blog, images, audio). Plan orchestration up front, fail-continue then retry, Imagen cheaper but no text-in-image, GPT Image for text."
+        },
+        {
           "name": "Gaurav Kumar Manek",
           "linkedin": "https://www.linkedin.com/in/gauravmanek/",
-          "project": "LLM Evals",
+          "project": "Evals for AI Agents",
           "stack": [],
-          "summary": "Five grader types for LLM output — exact match, code execution, trajectory checks, LLM judge, human review — with a rule to prefer the cheapest grader that catches the failure mode. Warned against ungrounded, agent-authored output ('shipping fiction')."
+          "summary": "Evals overlap with guardrails; guardrails can be deterministic code. Limit blast radius by infrastructure (separate machine) or by action (draft not send, mark not delete). Slides: evals-for-ai-agents-slides.pdf."
         }
       ],
       "keyTakeaways": [
-        "Grade at the top of the ladder first: each rung down costs more and catches less.",
-        "Fail-continue rather than fail-fast in parallel content pipelines — keep partial success, retry only what broke.",
-        "Workflows are deterministic; agents figure out the path — keep paths fixed where possible.",
-        "Imagen is cheaper but can't render text in images; GPT Image can."
+        "Fail-continue beats fail-fast in parallel workflows — keep partial success, retry later.",
+        "Imagen is cheaper but can't render text in images; GPT Image can.",
+        "Guardrails can be deterministic code, and blast radius can be capped by infrastructure or progressive actions."
       ],
       "architectureDecisions": [],
       "discussionPoints": [
-        "Parallel content generation: one input to podcast, blog, images, audio in parallel",
-        "Imagen vs. GPT Image for text-in-image generation",
-        "Deterministic n8n workflows vs. goal-driven agents"
+        "Parallel generation: orchestration and piecing things together",
+        "Error management: continue first, then retry",
+        "Image cursive improvement with ComfyUI, video with Remotion",
+        "Observability: Grafana for light work, Prometheus for heavier"
+      ],
+      "ops": [
+        { "role": "Time & Mic Keeper", "name": "Jasmine" },
+        { "role": "Memories Keeper", "name": "Esther" },
+        { "role": "Host", "name": "Han" },
+        { "role": "Knowledge Keeper", "name": "Han" }
       ],
       "links": {
         "luma": "https://lu.ma/ta5lewdh",
@@ -36,37 +49,49 @@
       "number": 5,
       "date": "2026-05-21",
       "title": "Roast My TechStack #5",
-      "location": "GrowthLab Singapore",
+      "location": "SGInnovate · GrowthLab",
       "hosts": [],
       "speakers": [
         {
           "name": "Richard Lee",
-          "linkedin": "",
-          "project": "Agentic Loop",
-          "stack": [],
-          "summary": "Presenter on an agentic loop — continuous perceive/decide/act/observe iteration until a goal completes."
+          "linkedin": "https://www.linkedin.com/in/yaksheng/",
+          "project": "Agents to find business opportunities",
+          "stack": ["Multi-agent", "Grafana"],
+          "summary": "Executive agent controlling siloed, purpose-built child agents. Hallucination countered with multi-layer grounding. Don't over-engineer: monolith first, transition to scale later. Deck: github.com/yaksheng/techies-scape-260521."
         },
         {
-          "name": "Alex Teo",
-          "linkedin": "",
-          "project": "Agentic Features on an App",
-          "stack": [],
-          "summary": "Presenter on layering agentic features onto an existing app rather than building agent-first."
+          "name": "Alec Teo",
+          "linkedin": "https://www.linkedin.com/in/alexgteo/",
+          "project": "PixelPuggles",
+          "stack": ["Supabase auth", "Imagen 4", "n8n"],
+          "summary": "Auth after 3 plays for lower friction; Supabase native but messaging weaker, Clerk uptime worse. Review schema yourself. Agent-ready via isitagentready.com. Offload pixelation to user device. Imagen 4 ~6x cheaper."
         },
         {
           "name": "Dalton Prescott Ng",
-          "linkedin": "",
-          "project": "Evokoa",
-          "stack": [],
-          "summary": "Presenter on Evokoa, a virtual graph layer that gives AI agents business context."
+          "linkedin": "https://www.linkedin.com/in/dalton-prescott-ng/",
+          "project": "Evokoa · pgGraph",
+          "stack": ["PostgreSQL", "Graph"],
+          "summary": "Virtual graph layer for AI agents on Postgres. Graph DB ~34x cheaper than Neo4j. Hydration enables fraud detection. RAG for search, Graph for entity relations."
         }
       ],
-      "keyTakeaways": [],
+      "keyTakeaways": [
+        "Hallucination in multi-agent systems needs multiple layers of grounding.",
+        "Start with a monolith, not micro-services.",
+        "Destructive ops: deterministic code; auth never rolled by hand — containerise it.",
+        "RAG is for search; graphs are for entity relations."
+      ],
       "architectureDecisions": [],
       "discussionPoints": [
-        "When to stop an agentic loop and how to bound runaway iteration",
-        "Retrofitting agentic behaviour onto a shipping app",
-        "Using a virtual graph layer to give agents business context"
+        "Supabase auth vs Clerk trade-offs",
+        "Database hydration and fraud detection",
+        "LLM-as-judge for image eval: different model + scientific database",
+        "isitagentready.com for agent-friendly apps"
+      ],
+      "ops": [
+        { "role": "Time & Mic Keeper", "name": "Ying Zhao" },
+        { "role": "Memories Keeper", "name": "Esther" },
+        { "role": "Host", "name": "Jesse" },
+        { "role": "Knowledge Keeper", "name": "Han" }
       ],
       "links": {
         "luma": "https://lu.ma/uha4dnyd",
@@ -77,42 +102,47 @@
       "number": 4,
       "date": "2026-05-07",
       "title": "Roast My TechStack #4",
-      "location": "SGInnovate, 32 Carpenter St",
+      "location": "SGInnovate · GrowthLab",
       "hosts": [],
       "speakers": [
         {
-          "name": "Yingzhao Ouyang",
-          "linkedin": "https://sg.linkedin.com/in/yzouyang",
-          "project": "LinkedIn Analytics",
-          "stack": [],
-          "summary": "Shared his LinkedIn analytics stack, instrumented to optimize for maximum reach."
+          "name": "Ying Zhao",
+          "linkedin": "https://www.linkedin.com/in/yzouyang/",
+          "project": "Personal LinkedIn Analytics Pipeline",
+          "stack": ["Databricks", "Medallion ETL", "One Big Table"],
+          "summary": "Production-style LinkedIn analytics. Get data via API / scraping / 3rd party. Bronze→silver→gold medallion. Retries + backoff to avoid bill shock. One Big Table over relational for query speed."
         },
         {
           "name": "Ee One Lim",
-          "linkedin": "",
+          "linkedin": "https://www.linkedin.com/in/eeonelim/",
           "project": "Care Compass",
-          "stack": [],
-          "summary": "App that directs caregivers to the right support resources."
+          "stack": ["RAG", "n8n", "Postgres", "GPT-5.4 mini"],
+          "summary": "Caregiver support navigation. RAG > raw LLM when you have a single source of truth. n8n dynamic model selector, uses LLM websearch vs RAG. Postgres for RAG store. Eval tool in Claude, Kapso for WhatsApp business."
         },
         {
           "name": "Kaleb Nim",
-          "linkedin": "",
+          "linkedin": "https://www.linkedin.com/in/kaleb-nim/",
           "project": "Voice Resume",
-          "stack": [],
-          "summary": "AI-voice interview app that lets employers ask anything and receive real-time answers."
+          "stack": ["ASR", "Whisper", "Oracle Cloud free tier"],
+          "summary": "AI-voice interview app that answers real-time. Oracle free tier forever: 24GB RAM 4cpu 10TB egress. Whisper TTS for speech. Guardrails via persona.md."
         }
       ],
-      "keyTakeaways": [],
+      "keyTakeaways": [
+        "RAG beats a raw LLM when you have a single source of truth.",
+        "Oracle Cloud's forever-free tier is enough for side projects.",
+        "Simplest AI guardrails start with a persona.md."
+      ],
       "architectureDecisions": [],
       "discussionPoints": [
-        "What to instrument when optimizing for reach on LinkedIn",
-        "Keeping caregiver-support recommendations grounded and current",
-        "Reliability of real-time AI-voice interview answers"
+        "How to get LinkedIn data: API, scraping, 3rd party analytics",
+        "Medallion ETL: bronze / silver / gold",
+        "Retries and backoff for LLM calls and APIs",
+        "One Big Table vs relationship database"
       ],
       "ops": [
         { "role": "Time & Mic Keeper", "name": "Esther" },
-        { "role": "Memories Keeper", "name": "Arul Kumaran" },
-        { "role": "Host", "name": "Jesse Sng" },
+        { "role": "Memories Keeper", "name": "Arul" },
+        { "role": "Host", "name": "Jesse" },
         { "role": "Knowledge Keeper", "name": "Han" }
       ],
       "links": {
@@ -122,27 +152,50 @@
     },
     {
       "number": 3,
-      "date": "2026-04-16",
+      "date": "2026-04-17",
       "title": "Roast My TechStack #3",
       "location": "SGInnovate, 32 Carpenter St",
       "hosts": [],
       "speakers": [
         {
-          "name": "Gaurav Murarka",
+          "name": "Abdelrahman Fliou",
+          "linkedin": "https://www.linkedin.com/in/abdelrahman-fliou/",
+          "project": "TransPrice",
+          "stack": ["Docling", "MarkItDown", "pdfplumber", "shadcn"],
+          "summary": "Pricing copilot. Parse PDFs to Markdown: Docling for images, MarkItDown for text, pdfplumber for Python. Deterministic code for numeric analysis and audit trail. No real-time API calls. Model-specific choice: gpt-4o mini for categorization, conversational model for negotiation."
+        },
+        {
+          "name": "Gaurav Kumar Manek",
           "linkedin": "https://www.linkedin.com/in/gauravmanek/",
-          "project": "Visigoth.ai",
-          "stack": [],
-          "summary": "Walked through the counter-intuitive storage mechanism of his previous startup Visigoth.ai and the structure that worked best. Slides public at github.com/gauravmm/2026-04-Roast-My-Tech-Stack."
+          "project": "Visigoth.ai · Data Storage",
+          "stack": ["Immutable storage", "FastAPI", "DuckDB"],
+          "summary": "Counter-intuitive storage that worked best at Visigoth.ai. Mimics functional programming. Disk write off the critical path = no user-visible latency, only possible because immutable. FastAPI over Flask."
+        },
+        {
+          "name": "Arul Kumaran",
+          "linkedin": "https://www.linkedin.com/in/arulkumaran/",
+          "project": "Programmatic Video Toolchain",
+          "stack": ["Remotion", "Voicebox", "FFmpeg", "Gemma"],
+          "summary": "Build & render programmatic video with React (Remotion). Voicebox clones your voice locally. FFmpeg for decode/encode. Google Gemma for lightweight video summarization."
         }
       ],
       "keyTakeaways": [
-        "Counter-intuitive storage structures can beat 'textbook' designs in practice depending on scale.",
-        "Trade-offs that make a wrong-looking design the right one don't always generalise."
+        "Deterministic code for numeric analysis keeps an audit trail.",
+        "Push disk writes off the critical path — possible because data is immutable.",
+        "Bookend media workloads with Remotion, Voicebox, FFmpeg, and light Gemma models."
       ],
       "architectureDecisions": [],
       "discussionPoints": [
-        "Underlying storage mechanism of Visigoth.ai",
-        "What generalises beyond the product's specific shape"
+        "PDF → Markdown parsing options",
+        "Relational DB path: DuckDB or Postgres upsert",
+        "Functional-programming-shaped immutable storage",
+        "Open-weights video summarization"
+      ],
+      "ops": [
+        { "role": "Time & Mic Keeper", "name": "Freddy Lim" },
+        { "role": "Memories Keeper", "name": "Yong En" },
+        { "role": "Host", "name": "Han" },
+        { "role": "Knowledge Keeper", "name": "Han" }
       ],
       "links": {
         "luma": "https://lu.ma/9odgn5me",
@@ -152,42 +205,43 @@
     },
     {
       "number": 2,
-      "date": "2026-04-02",
+      "date": "2026-04-06",
       "title": "Roast My TechStack #2",
       "location": "SGInnovate, 32 Carpenter St",
       "hosts": [],
       "speakers": [
         {
+          "name": "Marcus Liang",
+          "linkedin": "https://www.linkedin.com/in/marcus-liang-zhu-041a0ab0/",
+          "project": "Harwav Order Hub",
+          "stack": ["Chatbot", "GitHub issues", "OpenClaw", "Claude Code"],
+          "summary": "Self-improving software workflow: user complaint via chatbot → GitHub issue → OpenClaw cron → Claude Code skill generates & applies fix → human tests → resolve/redeploy. Eval blog by Hamel, shadcn for UI."
+        },
+        {
           "name": "Ee One Lim",
           "linkedin": "https://www.linkedin.com/in/eeonelim/",
           "project": "Kantaro",
-          "stack": ["Claude", "Google Stitch (MCP)", "YouTube", "LRCLib", "Gemini"],
-          "summary": "App that teaches Spanish through music. Stack: Claude for planning/coding, Google Stitch via MCP for design, YouTube for music, LRCLib for lyrics, Gemini for translations."
+          "stack": ["LRCLib", "Stitch + Google MCP", "Heartmula"],
+          "summary": "Teach Spanish through music. LRCLib for lyrics, Stitch + Google MCP for frontend design, Heartmula as open-source music LLM / YouTube API alternative. Push API calls to frontend to avoid Google API blocks."
         },
         {
-          "name": "Marcus Liang Zhu",
-          "linkedin": "",
-          "project": "",
+          "name": "Jesse Lim",
+          "linkedin": "https://www.linkedin.com/in/jesse-sng-05ab7944/",
+          "project": "Drag Flow",
           "stack": [],
-          "summary": "Co-presenter alongside Ee One Lim."
-        },
-        {
-          "name": "Jesse Sng",
-          "linkedin": "https://sg.linkedin.com/in/jesse-sng-05ab7944",
-          "project": "",
-          "stack": [],
-          "summary": "Co-presenter alongside Ee One Lim."
+          "summary": "Drag-and-drop flow automation. Don't reach for the biggest model for everything — escalate per task. Get AI to write documentation. Let the AI wait for you."
         }
       ],
       "keyTakeaways": [
-        "Fixes from the room: lyrics-syncing bug, model-specific issues, security and scalability architecture changes.",
-        "Vibe-coded AI stacks can ship fast but accumulate architecture debt."
+        "Self-healing loops: route complaints into GitHub issues and let agents ship fixes with human validation.",
+        "Escalate models deliberately, don't use one model for everything.",
+        "Push API calls to the frontend to dodge provider blocks."
       ],
       "architectureDecisions": [],
       "discussionPoints": [
-        "Lyrics-syncing bug fixes",
-        "Model-specific issues and workarounds",
-        "Security and scalability before growing user base"
+        "Self-improvement software workflow via Claude Code",
+        "Lyrics, design & streaming stack for music language apps",
+        "Acceptance criteria with screenshots for UI control"
       ],
       "links": {
         "luma": "https://lu.ma/5lo93sf2",

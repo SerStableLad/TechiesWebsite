@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Roast #5 · May 21, 2026 · Singapore | RoastMyTechStack</title>
-  <meta name="description" content="Recap of Roast #5: agentic loops, agentic app features, and the Evokoa virtual graph layer — co-hosted with GrowthLab at Singapore.">
+  <meta name="description" content="Recap of Roast #5: agents, PixelPuggles, and pgGraph from the Techies APAC community, co-hosted with GrowthLab.">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,65 +17,143 @@
     <section class="roast-page-hero">
       <img src="roast-logo.png" alt="RoastMyTechStack" class="roast-page-logo">
       <h1>Roast #5 · May 21, 2026 · Singapore</h1>
-      <p>Three builds went under the knife at GrowthLab Singapore — an agentic loop, agentic features bolted onto an app, and a virtual graph layer for AI agents. 37 of us showed up for it.</p>
+      <p>Three builds went under the knife: an agent system that hunts business opportunities, a pixel art app with an agentic future, and a Postgres-based graph layer for AI agents. This recap preserves the practical decisions, trade-offs, and questions raised in the room.</p>
     </section>
 
     <!-- ============ SPEAKER 1: RICHARD LEE ============ -->
     <section class="speaker-section">
       <p class="speaker-section-label">Speaker 01</p>
-      <article class="speaker-card">
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast5/richard-lee.png" alt="Richard Lee presenting on agents at Roast #5" class="speaker-photo">
         <div class="speaker-info">
-          <p class="speaker-project">Agentic Loop</p>
+          <p class="speaker-project">Agents To Find Business Opportunities</p>
           <h2>Richard Lee</h2>
-          <p class="speaker-summary">Walked the room through an agentic loop he's built — where the agent continuously loops through perceive, decide, act, and observe until the goal completes, rather than running a single scripted pass.</p>
-          <div class="speaker-tags"><span>Agentic loop</span><span>Autonomous agents</span></div>
+          <p class="speaker-summary">How he built a multiple-agent system to hunt for business opportunities — an executive agent controlling many siloed, purpose-built child agents. The deck is available on GitHub along with the painful lessons about grounding and over-engineering.</p>
+          <div class="speaker-tags"><span>Multi-agent</span><span>Orchestration</span><span>Grounding</span><span>Containerised auth</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/yaksheng/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="http://github.com/yaksheng/techies-scape-260521" target="_blank" rel="noopener" class="icon-link" title="GitHub"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0012 2z"/></svg></a>
+          </div>
         </div>
       </article>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">01</span><h3 class="topic-title">The Loop</h3></div>
+        <div class="topic-header"><span class="topic-number">01</span><h3>One Executive, Many Child Agents</h3></div>
         <div class="topic-body">
-          <p>Rather than a one-shot prompt, the agent runs an iteration cycle — taking in context, deciding a next action, acting on it, and folding the result back into the next step. The roast centred on when looping stops, how to bound runaway iteration, and how to tell the loop is converging.</p>
+          <p>Multiple agents work together: an executive agent controls many child agents. The critical design rule — a child agent must be <strong>very siloed and purpose-built</strong>. Each one does one job well and stays out of the others' business.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>Hallucination Requires Layered Grounding</h3></div>
+        <div class="topic-body">
+          <p>The key challenge was hallucination, and the answer was <strong>multiple layers of grounding</strong> — no single grounding source is enough when agents are compounding their own context.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">03</span><h3>Don't Over-Engineer</h3></div>
+        <div class="topic-body">
+          <p>Don't jump straight into micro-services — a <strong>monolith might be better</strong> to start. You can always transition to scale later, and speed is still important in the early days of an agent system.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">04</span><h3>Deterministic Where It's Destructive</h3></div>
+        <div class="topic-body">
+          <p>If an operation is high-risk or destructive, always go for the <strong>deterministic approach (code)</strong> rather than an agent. Never roll your own auth — <strong>airlock your auth by containerising it</strong>.</p>
+          <p>For observability, consider <a href="https://grafana.com/" target="_blank" rel="noopener">Grafana</a>.</p>
         </div>
       </div>
     </section>
 
-    <!-- ============ SPEAKER 2: ALEX TEO ============ -->
+    <!-- ============ SPEAKER 2: ALEC TEO ============ -->
     <section class="speaker-section">
       <p class="speaker-section-label">Speaker 02</p>
-      <article class="speaker-card">
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast5/alec-teo.png" alt="Alec Teo presenting PixelPuggles at Roast #5" class="speaker-photo">
         <div class="speaker-info">
-          <p class="speaker-project">Agentic Features On An App</p>
-          <h2>Alex Teo</h2>
-          <p class="speaker-summary">Brought agentic features built on top of an existing application — layering autonomous behaviour onto a product rather than building it agent-first from scratch.</p>
-          <div class="speaker-tags"><span>Agentic features</span><span>Product integration</span></div>
+          <p class="speaker-project">PixelPuggles</p>
+          <h2>Alec Teo</h2>
+          <p class="speaker-summary">An image app that pixelates and animates photos — roasted on its auth choice, its data schema, and how it can be made agent-friendly. The room also weighed image-generation cost and automating image evaluation.</p>
+          <div class="speaker-tags"><span>Supabase auth</span><span>Clerk</span><span>Data schema</span><span>Agents-ready</span><span>Imagen</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/alexgteo/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+          </div>
         </div>
       </article>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">01</span><h3 class="topic-title">Agents Bolted Onto Reality</h3></div>
+        <div class="topic-header"><span class="topic-number">01</span><h3>Supabase Auth vs. Clerk</h3></div>
         <div class="topic-body">
-          <p>The session grappled with retrofitting agentic capability onto an app that already ships — handling existing auth, data models, and user expectations without rebuilding the product around the agent.</p>
+          <p>The choice: create an auth after 3 plays for lower barrier of entry, natively integrated with supabase. The trade-off — <strong>Supabase auth's messaging isn't as great</strong>, but <strong>Clerk's uptime isn't as good as Supabase</strong>.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>Review The Schema Yourself</h3></div>
+        <div class="topic-body">
+          <p>Data schema is still very important in system design, and you need to <strong>review it yourself</strong> — don't let the framework decide it for you.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">03</span><h3>Get Agent-Ready</h3></div>
+        <div class="topic-body">
+          <p>Allow agent interaction with your app to prep for an agentic future. Check your surfaces against <a href="https://isitagentready.com" target="_blank" rel="noopener">isitagentready.com</a> to make your app more agent friendly.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">04</span><h3>Image Processing &amp; Cost</h3></div>
+        <div class="topic-body">
+          <p>Alec manually pixelated the photos and batch-uploaded them. Consider <strong>offloading pixelation to the user's device</strong> to better optimise. For image generation costing, consider <code>Imagen 4</code> (6× cheaper) over competing generation models.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">05</span><h3>Automate Image Eval</h3></div>
+        <div class="topic-body">
+          <p>Consider automating part of the image generation evaluation: use an <strong>LLM as a judge</strong> to check output. Two rules from the room: it must be a <strong>different model from the image gen model</strong>, and it should have access to a <strong>scientific database for best accuracy</strong>.</p>
         </div>
       </div>
     </section>
 
-    <!-- ============ SPEAKER 3: DALTON PRESCOTT NG ============ -->
+    <!-- ============ SPEAKER 3: DALTON ============ -->
     <section class="speaker-section">
       <p class="speaker-section-label">Speaker 03</p>
-      <article class="speaker-card">
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast5/dalton-ng.png" alt="Dalton Prescott Ng presenting pgGraph at Roast #5" class="speaker-photo">
         <div class="speaker-info">
-          <p class="speaker-project">Evokoa</p>
+          <p class="speaker-project">Evokoa · pgGraph</p>
           <h2>Dalton Prescott Ng</h2>
-          <p class="speaker-summary">Presented Evokoa — a virtual graph layer that gives AI agents business context, letting them reason over the relationships in a company's knowledge rather than a flat pile of documents.</p>
-          <div class="speaker-tags"><span>Virtual graph layer</span><span>AI agents</span><span>Business context</span></div>
+          <p class="speaker-summary">A virtual graph layer for AI agents built on Postgres — pgGraph. The session covered why graph databases are expensive, when graph beats RAG, and how database hydration unlocks use cases like fraud detection.</p>
+          <div class="speaker-tags"><span>Graph DB</span><span>PostgreSQL</span><span>RAG vs Graph</span><span>Hydration</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/dalton-prescott-ng/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://github.com/evokoa/pggraph" target="_blank" rel="noopener" class="icon-link" title="GitHub"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0012 2z"/></svg></a>
+          </div>
         </div>
       </article>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">01</span><h3 class="topic-title">A Graph Layer For Agent Business Context</h3></div>
+        <div class="topic-header"><span class="topic-number">01</span><h3>Graph Databases Are Expensive</h3></div>
         <div class="topic-body">
-          <p>Evokoa's pitch: stand up a virtual graph over existing data so agents can navigate relationships — who is responsible for what, what depends on what — the way a human at the company would, instead of dumping context into the prompt window.</p>
+          <p>Graph databases carry a real cost. pgGraph's approach on Postgres is roughly <strong>34× cheaper than Neo4j</strong>, bringing graph capabilities into a database teams already run.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>Database Hydration</h3></div>
+        <div class="topic-body">
+          <p>Database hydration (also known as object hydration) converts raw database query results — a row or an array — into fully functioning, in-memory programming objects. A big use case is <strong>fraud detection</strong>.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">03</span><h3>RAG vs. Graph</h3></div>
+        <div class="topic-body">
+          <p>The room's clean takeaway: <strong>RAG is good for search</strong>; <strong>Graph finds the relations between entities</strong>. Use the right question per tool instead of forcing one to do both.</p>
         </div>
       </div>
     </section>
@@ -84,10 +162,22 @@
     <section class="venue-section">
       <h2>Venue sponsor</h2>
       <div class="venue-grid">
+        <img src="assets/roast5/venue-sginnovate.png" alt="SGInnovate" class="venue-logo">
         <div class="venue-info">
-          <h3>GrowthLab Singapore</h3>
-          <p>Co-hosted Roast #5 — GrowthLab's home turf for this session.</p>
+          <h3>SGInnovate</h3>
+          <p>PIC: <a href="https://www.linkedin.com/in/arul-murugan-525b321a7/" target="_blank" rel="noopener">Arul</a> · Co-hosted with <strong>GrowthLab</strong> <img src="assets/roast5/cohost-growthlabs.png" alt="GrowthLab" style="height:24px;vertical-align:middle;"></p>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ EVENT OPS ============ -->
+    <section class="ops-section">
+      <p class="speaker-section-label">Event ops volunteers</p>
+      <div class="ops-grid">
+        <div class="ops-card"><span class="ops-emoji">⏳</span><h3>Time &amp; Mic Keeper</h3><p>Ying Zhao</p><a href="https://www.linkedin.com/in/yzouyang/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">📸</span><h3>Memories Keeper</h3><p>Esther</p><a href="https://www.linkedin.com/in/esthertanshuzhen/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">🎙</span><h3>Host</h3><p>Jesse</p><a href="https://www.linkedin.com/in/jesse-sng-05ab7944/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">🧠</span><h3>Knowledge Keeper</h3><p>Han</p><a href="https://sg.linkedin.com/in/hanwai" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
       </div>
     </section>
   </main>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Roast #4 · May 7, 2026 · Singapore | RoastMyTechStack</title>
-  <meta name="description" content="Recap of Roast #4: LinkedIn analytics, Care Compass for caregivers, and the Voice Resume — from the Techies APAC community.">
+  <meta name="description" content="Recap of Roast #4: a personal LinkedIn analytics pipeline, Care Compass, and a Voice Resume from the Techies APAC community.">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,80 +17,138 @@
     <section class="roast-page-hero">
       <img src="roast-logo.png" alt="RoastMyTechStack" class="roast-page-logo">
       <h1>Roast #4 · May 7, 2026 · Singapore</h1>
-      <p>Three stacks on the chopping block at SGInnovate: a LinkedIn analytics rig, a caregiver support app, and an AI-voice interview app for job seekers — with a full ops crew helping the roast run smooth.</p>
+      <p>Three stacks on the table: a production-style personal LinkedIn analytics pipeline, a caregiver navigation app, and a voice-driven resume. This recap preserves the practical decisions, trade-offs, and questions raised in the room.</p>
     </section>
 
-    <!-- ============ SPEAKER 1: YINGZHAO OUYANG ============ -->
+    <!-- ============ SPEAKER 1: YING ZHAO ============ -->
     <section class="speaker-section">
       <p class="speaker-section-label">Speaker 01</p>
-      <article class="speaker-card">
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast4/yingzhao.jpg" alt="Ying Zhao presenting his LinkedIn analytics pipeline at Roast #4" class="speaker-photo">
         <div class="speaker-info">
-          <p class="speaker-project">LinkedIn Analytics</p>
-          <h2>Yingzhao Ouyang</h2>
-          <p class="speaker-summary">Shared how he set up his own LinkedIn analytics stack, instrumented to optimize for maximum reach — then invited the room to pick apart what the numbers were actually telling him.</p>
-          <div class="speaker-tags"><span>Analytics</span><span>LinkedIn</span><span>Growth</span></div>
+          <p class="speaker-project">Personal LinkedIn Analytics Pipeline</p>
+          <h2>Ying Zhao</h2>
+          <p class="speaker-summary">A production-style personal analytics pipeline for LinkedIn, built with Databricks in a medallion architecture — and optimized for maximum reach. The roast covered getting the data, ETL done right, retries, and the One Big Table trade-off.</p>
+          <div class="speaker-tags"><span>Databricks</span><span>Medallion ETL</span><span>One Big Table</span><span>API</span><span>Retries &amp; backoff</span></div>
           <div class="speaker-links">
-            <a href="https://sg.linkedin.com/in/yzouyang" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://www.linkedin.com/in/yzouyang/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://github.com/KunojiLym/databricks-linkedin-analytics" target="_blank" rel="noopener" class="icon-link" title="GitHub"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0012 2z"/></svg></a>
+            <a href="https://www.yzouyang.com/category/blog-series/build-your-own-linkedin-analytics/" target="_blank" rel="noopener" class="icon-link" title="Blog series"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></a>
           </div>
         </div>
       </article>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">01</span><h3 class="topic-title">Analytics To Chase Reach</h3></div>
+        <div class="topic-header"><span class="topic-number">01</span><h3>How To Get The Data</h3></div>
         <div class="topic-body">
-          <p>The discussion centred on what to instrument when the goal is maximum reach — which metrics matter, how to attribute them, and when vanity metrics hide the actual driver of growth.</p>
+          <ul class="topic-list">
+            <li><strong>API</strong> — the first-class route.</li>
+            <li><strong>Scraping</strong> — when the API doesn't give you what you need.</li>
+            <li><strong>3rd party analytics</strong> — as a complement or fallback.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>ETL In Medallion Terms</h3></div>
+        <div class="topic-body">
+          <p><strong>E</strong> → <strong>Extract</strong> (bronze) · <strong>T</strong> → <strong>Transformation</strong> (silver) · <strong>L</strong> → <strong>Load</strong> (gold). Databricks is the cloud-based platform that runs the data analytics and AI workloads.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">03</span><h3>Retries And Backoff</h3></div>
+        <div class="topic-body">
+          <p>To overcome time-out issues, consider <strong>retries with backoff</strong> — especially for LLM calls and APIs. This prevents a huge bill shock when a provider starts failing in burst.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">04</span><h3>One Big Table Over A Relationship DB</h3></div>
+        <div class="topic-body">
+          <p>The <strong>One Big Table</strong> approach beats a relationship database (e.g. Neo4j) for query speed and simplifies data consumption — fewer joins, one place to ask questions of.</p>
         </div>
       </div>
     </section>
 
-    <!-- ============ SPEAKER 2: EE ONE LIM ============ -->
+    <!-- ============ SPEAKER 2: EE ONE ============ -->
     <section class="speaker-section">
       <p class="speaker-section-label">Speaker 02</p>
-      <article class="speaker-card">
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast4/eeone.jpg" alt="Ee One Lim presenting Care Compass at Roast #4" class="speaker-photo">
         <div class="speaker-info">
           <p class="speaker-project">Care Compass</p>
           <h2>Ee One Lim</h2>
-          <p class="speaker-summary">Presented an app that directs caregivers to the right support resources, so families spend less time hunting and more time caregiving.</p>
-          <div class="speaker-tags"><span>Caregiver support</span><span>Health Tech</span></div>
+          <p class="speaker-summary">An app that navigates caregivers to the right support resources — a RAG-over-LLM build that raises reliability over raw generation. The roast dug into RAG vs. web search, dynamic model selection, and where to store the knowledge base.</p>
+          <div class="speaker-tags"><span>RAG</span><span>n8n</span><span>Postgres</span><span>Dynamic model selector</span><span>Web search</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/eeonelim/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://github.com/EeOneLim/care-compass" target="_blank" rel="noopener" class="icon-link" title="GitHub"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0012 2z"/></svg></a>
+            <a href="https://care-compass-iota.vercel.app/" target="_blank" rel="noopener" class="icon-link" title="Website"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></a>
+          </div>
         </div>
       </article>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">01</span><h3 class="topic-title">Directing Caregivers To Support</h3></div>
+        <div class="topic-header"><span class="topic-number">01</span><h3>RAG Over Plain LLM</h3></div>
         <div class="topic-body">
-          <p>Caregivers often don't know what help exists or where to find it. The app maps the landscape of support resources and routes each caregiver to what fits their situation, with the roast focused on keeping those recommendations grounded and current.</p>
+          <p>If you have a single source of truth, <strong>RAG is preferred over a raw LLM</strong> — it increases reliability. And if you need the LLM to do a web search, <strong>use a dedicated web search tool</strong> rather than letting the model guess.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>Dynamic Model Selection With n8n</h3></div>
+        <div class="topic-body">
+          <p>Consider an <code>n8n</code> <strong>dynamic model selector</strong> to choose the best model per use case. n8n reduces LLM usage overall and can switch between using an LLM web search and RAG depending on the query.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">03</span><h3>Store The Knowledge Base In Postgres</h3></div>
+        <div class="topic-body">
+          <p>Consider <a href="https://www.postgresql.org/" target="_blank" rel="noopener">Postgres</a> for the RAG store. For cost efficiency, consider other LLMs for this use case — like GPT-5.4 mini or other open-weight models.</p>
+          <p>Other tools raised: the eval tool in the Claude platform, and <a href="https://kapso.ai/" target="_blank" rel="noopener">Kapso</a> for WhatsApp business workflows.</p>
         </div>
       </div>
     </section>
 
-    <!-- ============ SPEAKER 3: KALEB NIM ============ -->
+    <!-- ============ SPEAKER 3: KALEB ============ -->
     <section class="speaker-section">
       <p class="speaker-section-label">Speaker 03</p>
-      <article class="speaker-card">
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast4/kaleb.jpg" alt="Kaleb presenting the Voice Resume at Roast #4" class="speaker-photo">
         <div class="speaker-info">
           <p class="speaker-project">Voice Resume</p>
           <h2>Kaleb Nim</h2>
-          <p class="speaker-summary">Demoed a voice resume — an AI-voice interview app that lets potential employers ask anything and receive real-time answers, turning a résumé into a living conversation.</p>
-          <div class="speaker-tags"><span>AI voice</span><span>Job seeking</span><span>Real-time answers</span></div>
+          <p class="speaker-summary">A voice-driven resume — an AI-voice interview app that lets employers ask anything and get real-time answers. The roast covered voice recognition, budget compute, text-to-speech, and guardrailing AI applications.</p>
+          <div class="speaker-tags"><span>ASR</span><span>Whisper TTS</span><span>Oracle Cloud free tier</span><span>Guardrails</span><span>persona.md</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/kaleb-nim/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://github.com/Kaleb-Nim/nim-kaleb" target="_blank" rel="noopener" class="icon-link" title="GitHub"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0012 2z"/></svg></a>
+            <a href="https://kalebnim.dev/" target="_blank" rel="noopener" class="icon-link" title="Website"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></a>
+          </div>
         </div>
       </article>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">01</span><h3 class="topic-title">A Résumé That Answers Back</h3></div>
+        <div class="topic-header"><span class="topic-number">01</span><h3>Speech In, Speech Out</h3></div>
         <div class="topic-body">
-          <p>The pitch: instead of a static document, employers get to grill an AI voice representing the candidate, answering questions about their experience in real time. The room probed the reliability of those answers and what happens when the voice drifts from the truth.</p>
+          <p><strong>ASR</strong> (automatic speech recognition) turns the interview questions into text, and <code>Whisper</code> does the text-to-speech for the answers. The result: employers talk to a resume like it's a candidate.</p>
         </div>
       </div>
-    </section>
 
-    <!-- ============ OPS CREW ============ -->
-    <section class="ops-section">
-      <h2>Ops crew</h2>
-      <div class="ops-grid">
-        <div class="ops-card"><span class="ops-emoji">⏳</span><h3>Time &amp; Mic Keeper</h3><p>Esther</p></div>
-        <div class="ops-card"><span class="ops-emoji">📸</span><h3>Memories Keeper</h3><p>Arul Kumaran</p></div>
-        <div class="ops-card"><span class="ops-emoji">🎙</span><h3>Host</h3><p>Jesse Sng</p><a href="https://sg.linkedin.com/in/jesse-sng-05ab7944" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
-        <div class="ops-card"><span class="ops-emoji">🧠</span><h3>Knowledge Keeper</h3><p>Han</p><a href="https://sg.linkedin.com/in/hanwai" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>Budget Compute That Lasts</h3></div>
+        <div class="topic-body">
+          <p>For a budget option, <strong>Oracle Cloud's free tier lasts forever</strong>: 24GB RAM, 4 CPU, and 10TB egress — plenty for a side project with a video-heavy workload.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">03</span><h3>Guardrails For AI Applications</h3></div>
+        <div class="topic-body">
+          <p>Always consider guardrails for AI applications, and the simplest way to build them is via a <code>persona.md</code> — encode who the AI is and what it will not do right in the prompt, checked before any answer ships.</p>
+        </div>
       </div>
     </section>
 
@@ -98,11 +156,22 @@
     <section class="venue-section">
       <h2>Venue sponsor</h2>
       <div class="venue-grid">
-        <img src="assets/roast-7/sginnovate.png" alt="SGInnovate" class="venue-logo">
+        <img src="assets/roast4/venue-sginnovate.png" alt="SGInnovate" class="venue-logo">
         <div class="venue-info">
           <h3>SGInnovate</h3>
-          <p>32 Carpenter Street · Hosting the Roast My TechStack series since the community's earliest days.</p>
+          <p>PIC: <a href="https://www.linkedin.com/in/arul-murugan-525b321a7/" target="_blank" rel="noopener">Arul</a> · Co-hosted with <strong>GrowthLab</strong> <img src="assets/roast4/cohost-growthlabs.png" alt="GrowthLab" style="height:24px;vertical-align:middle;"></p>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ EVENT OPS ============ -->
+    <section class="ops-section">
+      <p class="speaker-section-label">Event ops volunteers</p>
+      <div class="ops-grid">
+        <div class="ops-card"><span class="ops-emoji">⏳</span><h3>Time &amp; Mic Keeper</h3><p>Esther</p><a href="https://www.linkedin.com/in/esthertanshuzhen/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">📸</span><h3>Memories Keeper</h3><p>Arul</p><a href="https://www.linkedin.com/in/arulkumaran/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">🎙</span><h3>Host</h3><p>Jesse</p><a href="https://www.linkedin.com/in/jesse-sng-05ab7944/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">🧠</span><h3>Knowledge Keeper</h3><p>Han</p><a href="https://sg.linkedin.com/in/hanwai" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
       </div>
     </section>
   </main>

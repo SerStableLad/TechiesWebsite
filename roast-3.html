@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roast #3 · April 16, 2026 · Singapore | RoastMyTechStack</title>
-  <meta name="description" content="Recap of Roast #3: the counter-intuitive storage structure behind Visigoth.ai, from the Techies APAC community.">
+  <title>Roast #3 · April 17, 2026 · Singapore | RoastMyTechStack</title>
+  <meta name="description" content="Recap of Roast #3: TransPrice, Visigoth.ai's data storage, and programmatic video tooling from the Techies APAC community.">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,44 +16,147 @@
   <main class="page-main roast-page">
     <section class="roast-page-hero">
       <img src="roast-logo.png" alt="RoastMyTechStack" class="roast-page-logo">
-      <h1>Roast #3 · April 16, 2026 · Singapore</h1>
-      <p>Gaurav Manek put the underlying storage mechanism of his previous startup, Visigoth.ai, on the firing line — and the counter-intuitive structure that ended up working best. 48 of us gathered at SGInnovate for the heat.</p>
+      <h1>Roast #3 · April 17, 2026 · Singapore</h1>
+      <p>Three builders brought three very different stacks: a pricing copilot that parses PDFs, the counter-intuitive storage structure behind Visigoth.ai, and a programmatic video toolchain. This recap preserves the practical decisions, trade-offs, and questions raised in the room.</p>
     </section>
 
-    <!-- ============ SPEAKER 1: GAURAV MANEK ============ -->
+    <!-- ============ SPEAKER 1: FLIOU ============ -->
     <section class="speaker-section">
       <p class="speaker-section-label">Speaker 01</p>
-      <article class="speaker-card">
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast3/fliou.jpg" alt="Fliou presenting TransPrice at Roast #3" class="speaker-photo">
         <div class="speaker-info">
-          <p class="speaker-project">Visigoth.ai</p>
-          <h2>Gaurav Murarka</h2>
-          <p class="speaker-summary">Brought the storage layer of his previous startup Visigoth.ai to the roast — live from the internals, with the room challenging where the architecture felt right and where it only worked because of its scale.</p>
-          <div class="speaker-tags"><span>Storage</span><span>Architecture</span><span>Scale</span></div>
+          <p class="speaker-project">TransPrice</p>
+          <h2>Abdelrahman Fliou</h2>
+          <p class="speaker-summary">TransPrice, a pricing copilot that turns documents like PDFs into a usable Markdown pipeline before model work. The roast concentrated on deterministic parsing, avoiding real-time API calls, and choosing the right model per task.</p>
+          <div class="speaker-tags"><span>PDF parsing</span><span>Docling</span><span>MarkItDown</span><span>deterministic code</span><span>shadcn</span></div>
           <div class="speaker-links">
-            <a href="https://github.com/gauravmm/2026-04-Roast-My-Tech-Stack" target="_blank" rel="noopener" class="icon-link" title="Slides on GitHub"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0012 2z"/></svg></a>
-            <a href="https://www.linkedin.com/in/gauravmanek/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://www.linkedin.com/in/abdelrahman-fliou/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
           </div>
         </div>
       </article>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">01</span><h3 class="topic-title">The Counter-Intuitive Storage Structure</h3></div>
+        <div class="topic-header"><span class="topic-number">01</span><h3>Ways To Parse PDFs To Markdown</h3></div>
         <div class="topic-body">
-          <p>Gaurav walked through the storage mechanism that ultimately worked best for Visigoth.ai — a structure that reads as strange on paper but paid off in practice. The roast dug into the trade-offs that made the "wrong-looking" design the right one, and how much of it generalises beyond the product's specific shape.</p>
-          <p>Slides are public on GitHub, licensed for reuse: <a href="https://github.com/gauravmm/2026-04-Roast-My-Tech-Stack" target="_blank" rel="noopener">gauravmm/2026-04-Roast-My-Tech-Stack</a>.</p>
+          <ul class="topic-list">
+            <li><strong>Image-heavy PDFs:</strong> extract into <code>a.md</code> format with <a href="https://www.docling.ai/" target="_blank" rel="noopener">Docling</a>.</li>
+            <li><strong>Text-based PDFs:</strong> extract into <code>a.md</code> with <a href="https://github.com/microsoft/markitdown" target="_blank" rel="noopener">MarkItDown</a> (Microsoft).</li>
+            <li><strong>Python alternative:</strong> <a href="https://github.com/jsvine/pdfplumber" target="_blank" rel="noopener">pdfplumber</a>.</li>
+          </ul>
         </div>
       </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>Deterministic Over Dynamic For Numbers</h3></div>
+        <div class="topic-body">
+          <p>Use <strong>deterministic code</strong> for numeric analysis — less flexibility, but you keep a clean audit trail. And <strong>don't do a real-time API call if you can help it</strong>: pre-compute and cache instead.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">03</span><h3>Be Selective With Models</h3></div>
+        <div class="topic-body">
+          <p>Pick a <strong>different model per task</strong>: use <code>gpt-4o mini</code> for categorization and simpler work, and a more conversational model to handle negotiation and distill negotiation style. Consider <a href="https://github.com/shadcn-ui/ui" target="_blank" rel="noopener">shadcn</a> for ease of UI design.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SPEAKER 2: GAURAV ============ -->
+    <section class="speaker-section">
+      <p class="speaker-section-label">Speaker 02</p>
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast3/gaurav-manek.jpg" alt="Gaurav presenting Visigoth.ai data storage at Roast #3" class="speaker-photo">
+        <div class="speaker-info">
+          <p class="speaker-project">Visigoth.ai · Data Storage</p>
+          <h2>Gaurav Kumar Manek</h2>
+          <p class="speaker-summary">The underlying storage mechanism of his previous startup Visigoth.ai, and the counter-intuitive structure that ended up working best. The roast dug into immutability, the functional-programming feel, and staying off the critical path.</p>
+          <div class="speaker-tags"><span>Immutable storage</span><span>Functional programming</span><span>FastAPI</span><span>DuckDB</span><span>Postgres upsert</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/gauravmanek/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://github.com/gauravmm/2026-04-Roast-My-Tech-Stack" target="_blank" rel="noopener" class="icon-link" title="Slides on GitHub"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0012 2z"/></svg></a>
+          </div>
+        </div>
+      </article>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">01</span><h3>If You Should Switch To A Relational DB</h3></div>
+        <div class="topic-body">
+          <p>The audience showed two paths: adopt <a href="https://github.com/duckdb/duckdb" target="_blank" rel="noopener">DuckDB</a> for analytical workloads, or handle idempotent writes in Postgres with <a href="https://stackoverflow.com/questions/17267417/how-to-upsert-merge-insert-on-duplicate-update-in-postgresql" target="_blank" rel="noopener">upsert / on conflict</a> patterns.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>Mimics Functional Programming</h3></div>
+        <div class="topic-body">
+          <p>The strength of this approach is that it <strong>mimics functional programming</strong> — data flows through pure steps instead of mutating in place. Which raises the natural question: why not use a functional language for the whole stack?</p>
+          <p>For the API layer, build with <a href="https://github.com/fastapi/fastapi" target="_blank" rel="noopener">FastAPI</a> instead of rolling your own with Flask — notably more maintainable.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">03</span><h3>Off The Critical Path</h3></div>
+        <div class="topic-body">
+          <p>A key speedup: the disk write happens <strong>off the critical path</strong>, so there's no user-visible latency. This only works because everything is <strong>immutable</strong> — once written, nothing needs to overwrite or coordinate on the same bytes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SPEAKER 3: ARUL ============ -->
+    <section class="speaker-section">
+      <p class="speaker-section-label">Speaker 03</p>
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast3/arul.jpg" alt="Arul presenting programmatic video tooling at Roast #3" class="speaker-photo">
+        <div class="speaker-info">
+          <p class="speaker-project">Programmatic Video Toolchain</p>
+          <h2>Arul Kumaran</h2>
+          <p class="speaker-summary">A stack for building and rendering programmatic video: React-based rendering, local voice cloning, a general-purpose media workhorse, and open-weights models for video summarization.</p>
+          <div class="speaker-tags"><span>Remotion</span><span>Voicebox</span><span>FFmpeg</span><span>Gemma</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/arulkumaran/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://arul.sg/" target="_blank" rel="noopener" class="icon-link" title="Website"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></a>
+          </div>
+        </div>
+      </article>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">01</span><h3>The Toolchain</h3></div>
+        <div class="topic-body">
+          <ul class="topic-list">
+            <li><strong><a href="https://github.com/remotion-dev/remotion" target="_blank" rel="noopener">Remotion</a></strong> — build and render programmatic videos using React code.</li>
+            <li><strong><a href="https://github.com/jamiepine/voicebox" target="_blank" rel="noopener">Voicebox</a></strong> — a local tool that clones your own voice for personalized audio.</li>
+            <li><strong><a href="https://ffmpeg.org/" target="_blank" rel="noopener">FFmpeg</a></strong> — the versatile framework to decode, encode, and process video and audio files.</li>
+            <li><strong><a href="https://deepmind.google/models/gemma/" target="_blank" rel="noopener">Google Gemma</a></strong> — lightweight, open models capable of video summarization tasks.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ROOM PHOTO ============ -->
+    <section class="venue-section">
+      <img src="assets/roast3/room.jpg" alt="The room at Roast #3" style="width:100%;height:auto;border-radius:var(--radius);">
     </section>
 
     <!-- ============ VENUE SPONSOR ============ -->
     <section class="venue-section">
       <h2>Venue sponsor</h2>
       <div class="venue-grid">
-        <img src="assets/roast-7/sginnovate.png" alt="SGInnovate" class="venue-logo">
+        <img src="assets/roast3/venue-sginnovate.png" alt="SGInnovate" class="venue-logo">
         <div class="venue-info">
           <h3>SGInnovate</h3>
-          <p>32 Carpenter Street · Hosting the Roast My TechStack series since the community's earliest days.</p>
+          <p>PIC: <a href="https://www.linkedin.com/in/antinglim/" target="_blank" rel="noopener">An Ting</a></p>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ EVENT OPS ============ -->
+    <section class="ops-section">
+      <p class="speaker-section-label">Event ops volunteers</p>
+      <div class="ops-grid">
+        <div class="ops-card"><span class="ops-emoji">⏳</span><h3>Time &amp; Mic Keeper</h3><p>Freddy Lim</p><a href="https://www.linkedin.com/in/bboxfred/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">📸</span><h3>Memories Keeper</h3><p>Yong En</p><a href="https://www.linkedin.com/in/loongye/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">🎙</span><h3>Host</h3><p>Han</p><a href="https://sg.linkedin.com/in/hanwai" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">🧠</span><h3>Knowledge Keeper</h3><p>Han</p><a href="https://sg.linkedin.com/in/hanwai" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
       </div>
     </section>
   </main>

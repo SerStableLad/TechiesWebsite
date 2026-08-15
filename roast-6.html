@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Roast #6 · June 4, 2026 · Singapore | RoastMyTechStack</title>
-  <meta name="description" content="Recap of Roast #6: AI content pipelines, LLM evals, and agent-vs-workflow design debates from the Techies APAC community.">
+  <meta name="description" content="Recap of Roast #6: Jesse Sng on AI content pipelines and Gaurav Kumar Manek on LLM evals, from the Techies APAC community.">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,39 +17,51 @@
     <section class="roast-page-hero">
       <img src="roast-logo.png" alt="RoastMyTechStack" class="roast-page-logo">
       <h1>Roast #6 · June 4, 2026 · Singapore</h1>
-      <p>Three builders put AI-generated content production, LLM evals, and the agent-versus-workflow decision under the spotlight at SGInnovate. This recap preserves the practical decisions and questions raised in the room.</p>
+      <p>Two builds took the heat at SGInnovate: a parallel AI content pipeline and an evaluation harness for AI agents. This recap preserves the practical decisions, trade-offs, and questions raised in the room.</p>
     </section>
 
-    <!-- ============ SPEAKER 1: CONTENT PIPELINE ============ -->
+    <!-- ============ SPEAKER 1: JESSE SNG ============ -->
     <section class="speaker-section">
       <p class="speaker-section-label">Speaker 01</p>
-      <article class="speaker-card">
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast6/jesse-sng.jpg" alt="Jesse Sng presenting at Roast #6" class="speaker-photo">
         <div class="speaker-info">
           <p class="speaker-project">AI Content Pipeline</p>
-          <h2>AI Content Pipeline</h2>
-          <p class="speaker-summary">One input. Out comes a podcast, a blog post, images, and audio — produced in parallel. The conversation focused on how to keep partial progress when a generation step fails, and how to pick image models when cost and text-rendering both matter.</p>
-          <div class="speaker-tags"><span>Parallel generation</span><span>Fail-continue</span><span>Imagen</span><span>GPT Image</span><span>Retry logic</span></div>
+          <h2>Jesse Sng</h2>
+          <p class="speaker-summary">Brought a content pipeline that fans one piece of source material out into a podcast, blog, images, and audio in parallel. The conversation concentrated on orchestrating parallel generation, engineering error handling so effort is never discarded, and choosing image models when text-in-image matters.</p>
+          <div class="speaker-tags"><span>Parallel generation</span><span>Fail-continue</span><span>Imagen</span><span>GPT Image</span><span>Remotion</span><span>ComfyUI</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/jesse-sng-05ab7944/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+          </div>
         </div>
       </article>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">01</span><h3 class="topic-title">One Input, Everything in Parallel</h3></div>
+        <div class="topic-header"><span class="topic-number">01</span><h3>Parallel Generation</h3></div>
         <div class="topic-body">
-          <p>The pipeline takes a single piece of content and fans out into a podcast, blog, images, and audio. The generation steps run in parallel rather than sequentially, collapsing overall latency down to the slowest branch.</p>
+          <p>When you run a parallel workflow — one source, multiple outputs at once — always plan for <strong>orchestration and piecing things together</strong> up front. The fan-out is the easy part; reassembling coherent pieces from independent branches is where the complexity lives.</p>
         </div>
       </div>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">02</span><h3 class="topic-title">Fail-Continuing, Not Fail-Fast</h3></div>
+        <div class="topic-header"><span class="topic-number">02</span><h3>Error Management: Continue First, Retry Later</h3></div>
         <div class="topic-body">
-          <p>The room's key takeaway: never discard previous effort on failure. Continue with the partial results that already succeeded, then retry only what failed. Separating "continue what worked" from "retry what broke" keeps the pipeline resilient and cheap instead of restarting from zero.</p>
+          <p>If a branch fails, plan the workflow to <strong>continue first and go back to retry afterwards</strong>. Do not discard the previous effort — partial success is still worth keeping. Fail-continue beats fail-fast when each branch is expensive to produce.</p>
         </div>
       </div>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">03</span><h3 class="topic-title">Imagen vs. GPT Image</h3></div>
+        <div class="topic-header"><span class="topic-number">03</span><h3>Image Generation</h3></div>
         <div class="topic-body">
-          <p>A concrete trade-off surfaced on image generation: <code>Imagen</code> is cheaper but does not support rendering text inside the image, while <code>GPT Image</code> does — or you superimpose text on top afterwards. The choice comes down to whether baked-in text is worth the extra cost per asset.</p>
+          <p><code>Imagen</code> is cheaper for image generation than GPT Image, but it does not support rendering text inside the image. If you need legible text baked into the asset, <code>GPT Image</code> remains affordable — or render and superimpose text over the image afterwards to save cost.</p>
+          <p>For finer control over image aesthetics, explore <a href="https://comfy.org/" target="_blank" rel="noopener">ComfyUI</a> for image improvement pipelines. For programmatic video, consider <a href="https://www.remotion.dev/" target="_blank" rel="noopener">Remotion</a>.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">04</span><h3>Observability</h3></div>
+        <div class="topic-body">
+          <p>Start light with <a href="https://grafana.com/" target="_blank" rel="noopener">Grafana</a> for monitoring; move to <a href="https://prometheus.io/" target="_blank" rel="noopener">Prometheus</a> when the load warrants the heavier machinery.</p>
         </div>
       </div>
     </section>
@@ -57,71 +69,34 @@
     <!-- ============ SPEAKER 2: GAURAV MANEK ============ -->
     <section class="speaker-section">
       <p class="speaker-section-label">Speaker 02</p>
-      <article class="speaker-card">
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast6/gaurav-manek.png" alt="Gaurav Kumar Manek presenting on evals at Roast #6" class="speaker-photo">
         <div class="speaker-info">
-          <p class="speaker-project">LLM Evals — clear gradings</p>
+          <p class="speaker-project">Evals for AI Agents</p>
           <h2>Gaurav Kumar Manek</h2>
-          <p class="speaker-summary">A talk on LLM evaluation that gave the room the clearest framework of the night: a ladder of five grader types, each costing more and catching less. The rule of thumb: prefer the cheapest grader at the top of the table that reliably catches the failure mode you care about.</p>
-          <div class="speaker-tags"><span>LLM evals</span><span>Grading</span><span>Trajectory checks</span><span>LLM judge</span><span>Human review</span></div>
+          <p class="speaker-summary">A talk on evaluation for AI agents — where evals overlap with guardrails, how to bound an agent's blast radius, and when a deterministic check beats a model call. The clearest framework of the night for grading agent output.</p>
+          <div class="speaker-tags"><span>LLM evals</span><span>Guardrails</span><span>Deterministic checks</span><span>Blast radius</span></div>
           <div class="speaker-links">
             <a href="https://www.linkedin.com/in/gauravmanek/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
-            <a href="https://github.com/gauravmm" target="_blank" rel="noopener" class="icon-link" title="GitHub"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0012 2z"/></svg></a>
           </div>
         </div>
       </article>
 
       <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">01</span><h3 class="topic-title">The Five Grader Ladder</h3></div>
+        <div class="topic-header"><span class="topic-number">01</span><h3>Evals vs. Guardrails</h3></div>
         <div class="topic-body">
-          <p>Five ways to grade model output, in increasing cost and decreasing coverage:</p>
+          <p>Evals and guardrails can overlap, but they are not the same job. A guardrail can be implemented as deterministic code — it doesn't need to be another model.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>Limit The Blast Radius</h3></div>
+        <div class="topic-body">
+          <p>Two ways to keep a misbehaving agent from doing damage:</p>
           <ul class="topic-list">
-            <li><strong>Exact match</strong> — compare against a canonical answer. Cheapest, but only catches deterministic failures.</li>
-            <li><strong>Code execution</strong> — run the output and check the result against an assertion.</li>
-            <li><strong>Trajectory checks</strong> — verify the intermediate steps and tool calls, not just the final answer.</li>
-            <li><strong>LLM judge</strong> — use another model to evaluate. More flexible, harder to make reliable.</li>
-            <li><strong>Human review</strong> — the most expensive and the final safety net.</li>
+            <li><strong>By infrastructure</strong> — run agents on isolated resources (a separate Mac mini, a separate cloud account) so a failure can't reach production systems.</li>
+            <li><strong>By action</strong> — make destructive actions progressive and reversible: draft an email instead of sending it, mark an email instead of deleting it.</li>
           </ul>
-        </div>
-      </div>
-
-      <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">02</span><h3 class="topic-title">Grade At The Top Of The Table First</h3></div>
-        <div class="topic-body">
-          <p>Each rung down the ladder costs more and catches less. The practical takeaway: pick the cheapest grader that reliably catches the failure mode you care about, and only escalate when it doesn't. Bloating every eval to an LLM judge (or human review) burns budget without improving signal.</p>
-        </div>
-      </div>
-
-      <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">03</span><h3 class="topic-title">"Shipping Fiction"</h3></div>
-        <div class="topic-body">
-          <p>Ungrounded, agent-generated content — an AI-written blog post with no evidence behind its claims — is effectively shipping fiction. The room tied this back to evaluation: without a grounding step and a grader that checks it, agents confidently publish output nobody can vouch for.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ SPEAKER 3: AGENTS VS WORKFLOWS ============ -->
-    <section class="speaker-section">
-      <p class="speaker-section-label">Speaker 03</p>
-      <article class="speaker-card">
-        <div class="speaker-info">
-          <p class="speaker-project">Agents vs. Workflows</p>
-          <h2>Agents vs. Workflows</h2>
-          <p class="speaker-summary">A discussion that veered off the slides into one of the sharpest exchanges of the night: the difference between deterministic workflows and autonomous agents, and where each belongs in a production system.</p>
-          <div class="speaker-tags"><span>n8n</span><span>Deterministic workflows</span><span>Agents</span><span>Tools</span></div>
-        </div>
-      </article>
-
-      <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">01</span><h3 class="topic-title">Workflows Are Deterministic</h3></div>
-        <div class="topic-body">
-          <p>A workflow (e.g. built in <code>n8n</code>) takes a defined path: fixed steps, predictable order, easy to test and retry. If you know the path ahead of time, a workflow is the right tool — determinism is a feature, not a limitation.</p>
-        </div>
-      </div>
-
-      <div class="topic-block">
-        <div class="topic-header"><span class="topic-number">02</span><h3 class="topic-title">Agents Figure Out The Path</h3></div>
-        <div class="topic-body">
-          <p>An agent takes a goal plus a set of tools and works out the path at runtime. That flexibility is a cost too: unpredictable behaviour, harder eval, harder debugging. The room's consensus — keep the path deterministic where it can be, and let agents loose only where replanning earns its keep.</p>
         </div>
       </div>
     </section>
@@ -130,11 +105,22 @@
     <section class="venue-section">
       <h2>Venue sponsor</h2>
       <div class="venue-grid">
-        <img src="assets/roast-7/sginnovate.png" alt="SGInnovate" class="venue-logo">
+        <img src="assets/roast6/venue-sginnovate.png" alt="SGInnovate" class="venue-logo">
         <div class="venue-info">
           <h3>SGInnovate</h3>
-          <p>32 Carpenter Street · Hosting the Roast My TechStack series since the community's earliest days.</p>
+          <p>PIC: <a href="https://www.linkedin.com/in/antinglim/" target="_blank" rel="noopener">An Ting</a></p>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ EVENT OPS ============ -->
+    <section class="ops-section">
+      <p class="speaker-section-label">Event ops volunteers</p>
+      <div class="ops-grid">
+        <div class="ops-card"><span class="ops-emoji">⏳</span><h3>Time &amp; Mic Keeper</h3><p>Jasmine</p><a href="https://www.linkedin.com/in/kaimingng/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">📸</span><h3>Memories Keeper</h3><p>Esther</p><a href="https://www.linkedin.com/in/esthertanshuzhen/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">🎙</span><h3>Host</h3><p>Han</p><a href="https://sg.linkedin.com/in/hanwai" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">🧠</span><h3>Knowledge Keeper</h3><p>Han</p><a href="https://sg.linkedin.com/in/hanwai" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
       </div>
     </section>
   </main>
