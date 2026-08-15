@@ -368,12 +368,20 @@ body {
   border-radius: var(--radius-lg);
 }
 
-.event-card-large-header {
+.event-card-overview {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 24px;
   margin: 20px 0 16px;
+}
+
+.event-card-overview-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-card-overview-body .event-card-desc {
+  margin-bottom: 0;
 }
 
 .event-poster {
@@ -395,10 +403,11 @@ body {
 
 .event-card-logo {
   display: block;
-  width: min(255px, 64%);
+  width: min(150px, 45%);
   height: auto;
   object-fit: contain;
   object-position: left center;
+  flex-shrink: 0;
 }
 
 .event-card-large .event-card-badge {
@@ -413,7 +422,51 @@ body {
 
 .event-card-large .btn {
   align-self: flex-start;
-  margin-top: auto;
+  margin-top: 4px;
+}
+
+.past-recaps-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 28px 0 8px;
+}
+
+.event-card--roast .past-list {
+  max-width: none;
+  margin: 0;
+  padding-top: 4px;
+}
+
+.event-card--roast .past-item {
+  padding: 12px 0;
+}
+
+.event-card--roast .past-list .past-item:nth-child(n+4) {
+  display: none;
+}
+
+.event-card--roast .past-list.is-expanded .past-item:nth-child(n+4) {
+  display: flex;
+}
+
+.recaps-toggle {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--accent-roast);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.event-card--roast .past-title {
+  font-size: 0.95rem;
 }
 
 .event-cards {
@@ -660,7 +713,8 @@ body {
 
 /* Upcoming */
 .luma-embed {
-  max-width: 900px;
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
   overflow: hidden;
   border: 1px solid var(--border);
@@ -1497,7 +1551,7 @@ body {
     height: 150px;
   }
 
-  .event-card-large-header {
+  .event-card-overview {
     align-items: flex-start;
     flex-direction: column;
     margin-bottom: 20px;

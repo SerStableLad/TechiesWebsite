@@ -13,13 +13,10 @@
 <body>
   <nav class="nav">
     <div class="nav-container">
-      <a href="#" class="nav-logo">
-        <span>&gt;Techies_</span>
-      </a>
+      <a href="index.html" class="nav-logo">&gt;Techies_</a>
       <div class="nav-links">
         <a href="#about">About</a>
         <a href="#events">Events</a>
-        <a href="#events">Calendar</a>
         <a href="#podcast">Podcast</a>
         <a href="exco.html">Exco</a>
         <a href="https://luma.com/APACtechies" target="_blank" rel="noopener" class="nav-cta">Join Us</a>
@@ -33,11 +30,9 @@
       <h1 class="hero-title">A 3rd space for devs
         <span class="hero-highlight">to geek out.</span>
       </h1>
-      <p class="hero-subtitle">No thought leadership. No marketing shills. No sales pitch.</p>
       <p class="hero-description">We skip the fluff to focus on high-stakes architectural decisions and 401-level production complexities. We run high-intensity sessions like <strong>RoastMyTechStack</strong> and <strong>Prod is DOWN</strong> to uncover raw, unfiltered engineering insights.</p>
       <div class="hero-actions">
         <a href="https://luma.com/APACtechies" target="_blank" rel="noopener" class="btn btn-primary">See Upcoming Events</a>
-        <a href="https://linktr.ee/techiesapac" target="_blank" rel="noopener" class="btn btn-secondary">All Links</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -81,18 +76,59 @@
   <section id="events" class="section events">
     <div class="container">
       <h2 class="section-title">Our Events</h2>
-      <p class="section-subtitle">Three formats. One mission. Zero fluff.</p>
+      
 
       <div class="events-two-col">
         <div class="events-col events-col--main">
           <article class="event-card-large event-card--roast">
             <img src="https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,anim=false,background=white,quality=85,width=800,height=800/uploads/f7/78c06a84-2e0a-4a15-8b77-7787a5f15314.png" alt="Roast My TechStack event poster" class="event-poster" loading="lazy">
-            <div class="event-card-large-header">
+            <div class="event-card-overview">
               <img src="roast-logo.png" alt="RoastMyTechStack" class="event-card-logo">
-              <span class="event-card-badge">Flagship Event</span>
+              <div class="event-card-overview-body">
+                <span class="event-card-badge">Flagship Event</span>
+                <p class="event-card-desc">Builders present a real stack, its constraints, and the decision they are stuck on. The room does the rest.</p>
+              </div>
             </div>
-            <p class="event-card-desc">Builders present a real stack, its constraints, and the decision they are stuck on. The room does the rest.</p>
-            <a href="https://luma.com/1ia9kj18" target="_blank" rel="noopener" class="btn btn-outline btn-roast">Next Roast →</a>
+            <p class="past-recaps-label">Past recaps</p>
+            <div class="past-list">
+              <a href="roast-7.html" class="past-item">
+                <span class="past-number">#7</span>
+                <span class="past-title">Kong (Zhiji), Fernandi (Canary Lab), Krishna (Unfinal)</span>
+                <span class="past-date">July 2</span>
+                <span class="past-arrow">→</span>
+              </a>
+              <a href="roast-6.html" class="past-item">
+                <span class="past-number">#6</span>
+                <span class="past-title">Jesse Sng, Gaurav (Evals)</span>
+                <span class="past-date">June 4</span>
+                <span class="past-arrow">→</span>
+              </a>
+              <a href="roast-5.html" class="past-item">
+                <span class="past-number">#5</span>
+                <span class="past-title">Richard Lee, Alec Teo, Dalton (pgGraph)</span>
+                <span class="past-date">May 21</span>
+                <span class="past-arrow">→</span>
+              </a>
+              <a href="roast-4.html" class="past-item">
+                <span class="past-number">#4</span>
+                <span class="past-title">Ying Zhao, Ee One (Care Compass), Kaleb (Voice Resume)</span>
+                <span class="past-date">May 7</span>
+                <span class="past-arrow">→</span>
+              </a>
+              <a href="roast-3.html" class="past-item">
+                <span class="past-number">#3</span>
+                <span class="past-title">Fliou, Gaurav (Visigoth.ai), Arul</span>
+                <span class="past-date">Apr 17</span>
+                <span class="past-arrow">→</span>
+              </a>
+              <a href="roast-2.html" class="past-item">
+                <span class="past-number">#2</span>
+                <span class="past-title">Marcus Liang, Ee One (Kantaro), Jesse (Drag Flow)</span>
+                <span class="past-date">Apr 6</span>
+                <span class="past-arrow">→</span>
+              </a>
+            </div>
+            <button type="button" class="recaps-toggle" aria-expanded="false">Show more</button>
           </article>
         </div>
 
@@ -101,14 +137,12 @@
             <img src="https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,anim=false,background=white,quality=85,width=800,height=800/uploads/mc/b5dd3dc0-ea86-40cd-aba5-771b96859ce5.png" alt="Prod is DOWN event poster" class="event-poster" loading="lazy">
             <h3>Prod is DOWN!!!</h3>
             <p class="event-card-desc">Production failures, what broke, and the guardrails that would have stopped them.</p>
-            <a href="https://luma.com/f5azjksz" target="_blank" rel="noopener" class="btn btn-outline btn-prod">Next Prod is DOWN →</a>
           </article>
 
           <article class="event-card event-card--brewing">
             <img src="https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,anim=false,background=white,quality=85,width=800,height=800/gallery-images/8y/d9f86a31-556f-454f-923f-16fecc8e742b" alt="Prod is Brewing event poster" class="event-poster" loading="lazy">
             <h3>Prod is Brewing</h3>
             <p class="event-card-desc">A hands-on workshop for deciding what is actually worth shipping, before writing code.</p>
-            <a href="https://luma.com/rddsuaa6" target="_blank" rel="noopener" class="btn btn-outline btn-brewing">Next Prod is Brewing →</a>
           </article>
         </div>
       </div>
@@ -132,51 +166,6 @@
         <div class="luma-embed">
           <iframe src="https://luma.com/embed/calendar/cal-i9QxU3ZODPclPpp/events" width="100%" height="500" frameborder="0" allowfullscreen title="Techies Events Calendar" loading="lazy"></iframe>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="past" class="section past">
-    <div class="container">
-      <h2 class="section-title">Previous Roasts</h2>
-      <p class="section-subtitle">We do a summary at the end of every session. Catch up on what you missed.</p>
-      <div class="past-list">
-        <a href="roast-7.html" class="past-item">
-          <span class="past-number">#7</span>
-          <span class="past-title">Roast #7 — Kong (Zhiji), Fernandi (Canary Lab), Krishna (Unfinal)</span>
-          <span class="past-date">July 2, 2026</span>
-          <span class="past-arrow">→</span>
-        </a>
-        <a href="roast-6.html" class="past-item">
-          <span class="past-number">#6</span>
-          <span class="past-title">Roast #6 — Jesse Sng, Gaurav (Evals)</span>
-          <span class="past-date">June 4, 2026</span>
-          <span class="past-arrow">→</span>
-        </a>
-        <a href="roast-5.html" class="past-item">
-          <span class="past-number">#5</span>
-          <span class="past-title">Roast #5 — Richard Lee, Alec Teo, Dalton (pgGraph)</span>
-          <span class="past-date">May 21, 2026</span>
-          <span class="past-arrow">→</span>
-        </a>
-        <a href="roast-4.html" class="past-item">
-          <span class="past-number">#4</span>
-          <span class="past-title">Roast #4 — Ying Zhao, Ee One (Care Compass), Kaleb (Voice Resume)</span>
-          <span class="past-date">May 7, 2026</span>
-          <span class="past-arrow">→</span>
-        </a>
-        <a href="roast-3.html" class="past-item">
-          <span class="past-number">#3</span>
-          <span class="past-title">Roast #3 — Fliou, Gaurav (Visigoth.ai), Arul</span>
-          <span class="past-date">Apr 17, 2026</span>
-          <span class="past-arrow">→</span>
-        </a>
-        <a href="roast-2.html" class="past-item">
-          <span class="past-number">#2</span>
-          <span class="past-title">Roast #2 — Marcus Liang, Ee One (Kantaro), Jesse (Drag Flow)</span>
-          <span class="past-date">Apr 6, 2026</span>
-          <span class="past-arrow">→</span>
-        </a>
       </div>
     </div>
   </section>
@@ -211,7 +200,7 @@
         <div class="footer-links">
           <h4>Content</h4>
           <a href="https://open.spotify.com/show/3JhNpERWFXWIjGcmXDvu3f" target="_blank" rel="noopener">Podcast</a>
-          <a href="#past">Past Roast Summaries</a>
+          <a href="#events">Past Roast Summaries</a>
           <a href="exco.html">Meet the Exco</a>
         </div>
         <div class="footer-links">

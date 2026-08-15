@@ -34,4 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     lastScroll = currentScroll;
   });
+
+  const toggle = document.querySelector('.recaps-toggle');
+  const list = document.querySelector('.event-card--roast .past-list');
+  if (toggle && list) {
+    toggle.addEventListener('click', () => {
+      const isExpanded = list.classList.toggle('is-expanded');
+      toggle.textContent = isExpanded ? 'Show less' : 'Show more';
+      toggle.setAttribute('aria-expanded', String(isExpanded));
+    });
+  }
 });
