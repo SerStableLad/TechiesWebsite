@@ -1,0 +1,199 @@
+{
+  "roasts": [
+    {
+      "number": 6,
+      "date": "2026-06-04",
+      "title": "Roast My TechStack #6",
+      "location": "SGInnovate, 32 Carpenter St",
+      "hosts": [],
+      "speakers": [
+        {
+          "name": "Gaurav Kumar Manek",
+          "linkedin": "https://www.linkedin.com/in/gauravmanek/",
+          "project": "LLM Evals",
+          "stack": [],
+          "summary": "Five grader types for LLM output — exact match, code execution, trajectory checks, LLM judge, human review — with a rule to prefer the cheapest grader that catches the failure mode. Warned against ungrounded, agent-authored output ('shipping fiction')."
+        }
+      ],
+      "keyTakeaways": [
+        "Grade at the top of the ladder first: each rung down costs more and catches less.",
+        "Fail-continue rather than fail-fast in parallel content pipelines — keep partial success, retry only what broke.",
+        "Workflows are deterministic; agents figure out the path — keep paths fixed where possible.",
+        "Imagen is cheaper but can't render text in images; GPT Image can."
+      ],
+      "architectureDecisions": [],
+      "discussionPoints": [
+        "Parallel content generation: one input to podcast, blog, images, audio in parallel",
+        "Imagen vs. GPT Image for text-in-image generation",
+        "Deterministic n8n workflows vs. goal-driven agents"
+      ],
+      "links": {
+        "luma": "https://lu.ma/ta5lewdh",
+        "summary": ""
+      }
+    },
+    {
+      "number": 5,
+      "date": "2026-05-21",
+      "title": "Roast My TechStack #5",
+      "location": "GrowthLab Singapore",
+      "hosts": [],
+      "speakers": [
+        {
+          "name": "Richard Lee",
+          "linkedin": "",
+          "project": "Agentic Loop",
+          "stack": [],
+          "summary": "Presenter on an agentic loop — continuous perceive/decide/act/observe iteration until a goal completes."
+        },
+        {
+          "name": "Alex Teo",
+          "linkedin": "",
+          "project": "Agentic Features on an App",
+          "stack": [],
+          "summary": "Presenter on layering agentic features onto an existing app rather than building agent-first."
+        },
+        {
+          "name": "Dalton Prescott Ng",
+          "linkedin": "",
+          "project": "Evokoa",
+          "stack": [],
+          "summary": "Presenter on Evokoa, a virtual graph layer that gives AI agents business context."
+        }
+      ],
+      "keyTakeaways": [],
+      "architectureDecisions": [],
+      "discussionPoints": [
+        "When to stop an agentic loop and how to bound runaway iteration",
+        "Retrofitting agentic behaviour onto a shipping app",
+        "Using a virtual graph layer to give agents business context"
+      ],
+      "links": {
+        "luma": "https://lu.ma/uha4dnyd",
+        "summary": ""
+      }
+    },
+    {
+      "number": 4,
+      "date": "2026-05-07",
+      "title": "Roast My TechStack #4",
+      "location": "SGInnovate, 32 Carpenter St",
+      "hosts": [],
+      "speakers": [
+        {
+          "name": "Yingzhao Ouyang",
+          "linkedin": "https://sg.linkedin.com/in/yzouyang",
+          "project": "LinkedIn Analytics",
+          "stack": [],
+          "summary": "Shared his LinkedIn analytics stack, instrumented to optimize for maximum reach."
+        },
+        {
+          "name": "Ee One Lim",
+          "linkedin": "",
+          "project": "Care Compass",
+          "stack": [],
+          "summary": "App that directs caregivers to the right support resources."
+        },
+        {
+          "name": "Kaleb Nim",
+          "linkedin": "",
+          "project": "Voice Resume",
+          "stack": [],
+          "summary": "AI-voice interview app that lets employers ask anything and receive real-time answers."
+        }
+      ],
+      "keyTakeaways": [],
+      "architectureDecisions": [],
+      "discussionPoints": [
+        "What to instrument when optimizing for reach on LinkedIn",
+        "Keeping caregiver-support recommendations grounded and current",
+        "Reliability of real-time AI-voice interview answers"
+      ],
+      "ops": [
+        { "role": "Time & Mic Keeper", "name": "Esther" },
+        { "role": "Memories Keeper", "name": "Arul Kumaran" },
+        { "role": "Host", "name": "Jesse Sng" },
+        { "role": "Knowledge Keeper", "name": "Han" }
+      ],
+      "links": {
+        "luma": "",
+        "summary": ""
+      }
+    },
+    {
+      "number": 3,
+      "date": "2026-04-16",
+      "title": "Roast My TechStack #3",
+      "location": "SGInnovate, 32 Carpenter St",
+      "hosts": [],
+      "speakers": [
+        {
+          "name": "Gaurav Murarka",
+          "linkedin": "https://www.linkedin.com/in/gauravmanek/",
+          "project": "Visigoth.ai",
+          "stack": [],
+          "summary": "Walked through the counter-intuitive storage mechanism of his previous startup Visigoth.ai and the structure that worked best. Slides public at github.com/gauravmm/2026-04-Roast-My-Tech-Stack."
+        }
+      ],
+      "keyTakeaways": [
+        "Counter-intuitive storage structures can beat 'textbook' designs in practice depending on scale.",
+        "Trade-offs that make a wrong-looking design the right one don't always generalise."
+      ],
+      "architectureDecisions": [],
+      "discussionPoints": [
+        "Underlying storage mechanism of Visigoth.ai",
+        "What generalises beyond the product's specific shape"
+      ],
+      "links": {
+        "luma": "https://lu.ma/9odgn5me",
+        "summary": "",
+        "slides": "https://github.com/gauravmm/2026-04-Roast-My-Tech-Stack"
+      }
+    },
+    {
+      "number": 2,
+      "date": "2026-04-02",
+      "title": "Roast My TechStack #2",
+      "location": "SGInnovate, 32 Carpenter St",
+      "hosts": [],
+      "speakers": [
+        {
+          "name": "Ee One Lim",
+          "linkedin": "https://www.linkedin.com/in/eeonelim/",
+          "project": "Kantaro",
+          "stack": ["Claude", "Google Stitch (MCP)", "YouTube", "LRCLib", "Gemini"],
+          "summary": "App that teaches Spanish through music. Stack: Claude for planning/coding, Google Stitch via MCP for design, YouTube for music, LRCLib for lyrics, Gemini for translations."
+        },
+        {
+          "name": "Marcus Liang Zhu",
+          "linkedin": "",
+          "project": "",
+          "stack": [],
+          "summary": "Co-presenter alongside Ee One Lim."
+        },
+        {
+          "name": "Jesse Sng",
+          "linkedin": "https://sg.linkedin.com/in/jesse-sng-05ab7944",
+          "project": "",
+          "stack": [],
+          "summary": "Co-presenter alongside Ee One Lim."
+        }
+      ],
+      "keyTakeaways": [
+        "Fixes from the room: lyrics-syncing bug, model-specific issues, security and scalability architecture changes.",
+        "Vibe-coded AI stacks can ship fast but accumulate architecture debt."
+      ],
+      "architectureDecisions": [],
+      "discussionPoints": [
+        "Lyrics-syncing bug fixes",
+        "Model-specific issues and workarounds",
+        "Security and scalability before growing user base"
+      ],
+      "links": {
+        "luma": "https://lu.ma/5lo93sf2",
+        "summary": "",
+        "website": "https://kantaro.live"
+      }
+    }
+  ]
+}

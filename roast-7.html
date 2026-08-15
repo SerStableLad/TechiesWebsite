@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roast #7 · July 2, 2026 · Singapore | RoastMyTechStack</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="nav"><div class="nav-container"><a href="index.html" class="nav-logo">&gt;Techies_</a><div class="nav-links"><a href="index.html#events">Events</a><a href="index.html#past">All Roasts</a><a href="https://luma.com/APACtechies" target="_blank" rel="noopener" class="nav-cta">Join Us</a></div></div></nav>
+
+  <main class="page-main roast-page">
+    <section class="roast-page-hero">
+      <img src="roast-logo.png" alt="RoastMyTechStack" class="roast-page-logo">
+      <h1>Roast #7 · July 2, 2026 · Singapore</h1>
+      <p>Three builders unpacked an AI-native astrology product, an AI repair loop for Playwright, and a server-first real-time application. This recap preserves the practical decisions, trade-offs, and questions raised in the room.</p>
+    </section>
+
+    <!-- ============ SPEAKER 1: KONG ============ -->
+    <section class="speaker-section">
+      <p class="speaker-section-label">Speaker 01</p>
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast-7/kong.jpg" alt="Kong presenting Zhiji at Roast #7" class="speaker-photo">
+        <div class="speaker-info">
+          <p class="speaker-project">Zhiji / 知己</p>
+          <h2>Kong</h2>
+          <p class="speaker-summary">A solo, non-technical founder building a live, paid AI astrology companion with no human engineer in the loop. Zhiji means "the one who knows you": it calculates a Chinese astrology chart from a birthday, then becomes a companion that knows that chart and the people around it.</p>
+          <div class="speaker-tags"><span>Vercel</span><span>Vanilla JS</span><span>Supabase / Postgres</span><span>Stripe</span><span>Claude / GPT / DeepSeek</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/kongleesg/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://www.zhiji.io" target="_blank" rel="noopener" class="icon-link" title="Website"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></a>
+          </div>
+        </div>
+      </article>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">01</span><h3>Product &amp; Constraints</h3></div>
+        <div class="topic-body">
+          <p>Two constraints shaped everything: Kong is a solo, non-technical founder who has written zero lines of code, and if it breaks, he fixes it with AI. The stack is optimised for exactly one question: can an AI understand, change, and fix it with no human engineer in the loop?</p>
+          <p>Zhiji evolved through three versions. v0 was screenshots pasted into Claude. v1 added a database for memory. v2 removed the astrology maths from the model, split a fragile single page into separate rooms, and added live streaming. Each version was a wall hit and rebuilt around.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>Six Building Blocks</h3></div>
+        <div class="topic-body">
+          <div class="architecture-grid">
+            <div><strong>Browser</strong><span>Plain ES-module JS. One <code>app.html</code> shell mounts a <code>surfaces/*.js</code> module per room. No React, Vue, bundler, or build step.</span></div>
+            <div><strong>One Door</strong><span><code>api/generate.js</code> routes every reading and chat request, streams over SSE, stamps <code>pending → completed / failed</code>, and re-drives failures via recovery sweeps.</span></div>
+            <div><strong>Calculator</strong><span>~89 deterministic modules do the astrology maths. The model never performs chart calculations. Same input always yields the same chart.</span></div>
+            <div><strong>Voices</strong><span><code>lib/providers.js</code> abstracts the model: Sonnet 4.6 default, Opus on chat turns, DeepSeek + GPT in the roster. Auto-fallback on provider outage.</span></div>
+            <div><strong>Memory</strong><span>One Supabase / Postgres DB: profiles, frozen readings, idempotent credit ledger, editable doctrine, runtime config, and subscriptions. Row-level security enabled.</span></div>
+            <div><strong>Till</strong><span>Stripe checkout, webhook, and portal. The coin ledger is idempotent per key — a retried webhook cannot double-grant. Paid readings are frozen and cache-keyed, never regenerated.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">03</span><h3>Engine &amp; Dependencies</h3></div>
+        <div class="topic-body">
+          <p>The astrology engine is homegrown (~89 modules): four pillars, ten gods, hidden stems, 納音, five-element weighting, luck cycles, full 紫微斗數 chart, 神煞, 用神, the 盲派 layer, and 易經 casting. Validated against an external golden reference (bazi.today) and the doctrine master's calibrated set.</p>
+          <p>Three boundary bugs were found and fixed: the 子時 midnight day-roll, the month solar-term boundary, and 立春-day hour precision.</p>
+          <p>The one external dependency is <code>lunar-javascript@1.7.4</code>, used only for raw calendar astronomy (Gregorian ↔ lunar conversion and solar-term instants). If its maths were ever off at a boundary, it would silently tilt every chart. De-risking today: exact-version pin, everything on top is homegrown, and golden-reference validation. Next step: an automated golden-chart regression suite.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">04</span><h3>Agent Workflow</h3></div>
+        <div class="topic-body">
+          <p>Kong coordinates seven specialist AI agents: CPO (product plan), CFO (money), CMO (marketing), UX (user behaviour), CD (design), TM (writes &amp; ships code), and BM (astrology master). They never talk to each other directly. Kong routes work between them using an agent orchestrator and a custom <code>/handover</code> command.</p>
+          <p>The principle: explicitly decide when to continue an existing thread, when to clear context, and when to start a new thread. Validate AI-generated architecture by having multiple LLMs critique each other's decisions rather than relying on a single model.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">05</span><h3>Latency, Memory &amp; Cost</h3></div>
+        <div class="topic-body">
+          <ul class="topic-list">
+            <li><strong>Latency:</strong> Pre-compute predictable results instead of generating on demand. Use token streaming so users see the response immediately. Evaluate Iris.io as a potential solution.</li>
+            <li><strong>Memory:</strong> Use Haiku to periodically compress or summarise conversation memory. Compact before adding back to the context window. Prune unnecessary context to prevent degradation.</li>
+            <li><strong>Cost:</strong> Pre-compute frequently requested outputs. Benchmark cheaper models for comparable quality. Per-generation USD is captured in <code>generations.total_cost_usd</code>. Moving astrology off the model made it both cheaper and exact.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">06</span><h3>UI/UX &amp; Prompt Engineering</h3></div>
+        <div class="topic-body">
+          <p>Rather than prompting from scratch every time, provide the AI with a mood board, a brand guide, and a design system as persistent references to enforce consistent UI and UX decisions.</p>
+          <p>Prompt practice: at the end of each week, ask the LLM to review the week's interactions, identify better prompting strategies, and refine techniques based on actual usage rather than theoretical best practices.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">07</span><h3>Known Weak Points</h3></div>
+        <div class="topic-body">
+          <ul class="topic-list">
+            <li><strong>One switch, no undo.</strong> <code>admin_settings</code> is read live, so a flip takes effect instantly. No staged rollout, no review gate, no rollback. This is the first thing Kong would harden.</li>
+            <li><strong>Upstream astronomy dependency.</strong> The base calendar/solar-term library is the one layer Kong didn't write. Version-pinned, but no automated golden-chart net to catch drift.</li>
+            <li><strong>Solo human in the loop.</strong> A 7-agent fleet builds and maintains it; Kong routes between them and has written zero lines. Blind spots he structurally cannot see from inside — hence the roast.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SPEAKER 2: FERNANDI ============ -->
+    <section class="speaker-section">
+      <p class="speaker-section-label">Speaker 02</p>
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast-7/fernandi.jpg" alt="Fernandi presenting Canary Lab at Roast #7" class="speaker-photo">
+        <div class="speaker-info">
+          <p class="speaker-project">Canary Lab</p>
+          <h2>Fernandi</h2>
+          <p class="speaker-summary">Canary Lab verifies AI output independently before it ships: an AI repair loop for Playwright and a skill for coding tools. The discussion centred on persistent backend services, immutable requirements, inspectable state, Git diffs, and keeping execution deterministic.</p>
+          <div class="speaker-tags"><span>Playwright</span><span>Agent guardrails</span><span>Git diff</span><span>Claude CLI</span></div>
+          <div class="speaker-links">
+            <a href="https://www.linkedin.com/in/fernandi/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://github.com/ferterahadi/canary-lab/tree/main" target="_blank" rel="noopener" class="icon-link" title="GitHub"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0012 2z"/></svg></a>
+          </div>
+        </div>
+      </article>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">01</span><h3>Backend Services</h3></div>
+        <div class="topic-body">
+          <p>Running long-lived services in the backend instead of the browser allows them to:</p>
+          <ul class="topic-list">
+            <li>Survive browser refreshes.</li>
+            <li>Maintain agent state across sessions.</li>
+            <li>Avoid restarting workflows when the frontend reloads.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>Agent Guardrails</h3></div>
+        <div class="topic-body">
+          <p>A common issue is agents modifying requirements while implementing them. Possible guardrails:</p>
+          <ul class="topic-list">
+            <li>Make PRD files read-only for implementation agents.</li>
+            <li>Separate planning agents from coding agents.</li>
+            <li>Treat the PRD as the immutable source of truth throughout execution.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">03</span><h3>Claude CLI Workflow</h3></div>
+        <div class="topic-body">
+          <p><code>claude -p</code> bypasses the Claude TUI. It executes prompts directly from the terminal, making it better suited for automation and scripting.</p>
+          <p>The interactive REPL (TUI) remains useful when you need to interrupt long-running tasks, exercise more control over the execution process, or debug and experiment during development.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">04</span><h3>Data Management</h3></div>
+        <div class="topic-body">
+          <ul class="topic-list">
+            <li><strong>File-backed stores:</strong> Persist data in files rather than purely in memory. Users can directly inspect changes, improving transparency and debuggability.</li>
+            <li><strong>Git diff integration:</strong> Fernandi implemented Git diffs so users can compare previous and current data, review exactly what the AI changed, and build trust before accepting modifications.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">05</span><h3>AI-Powered Testing</h3></div>
+        <div class="topic-body">
+          <p><strong>Test case generation:</strong> Inputs are user stories and the existing codebase. The AI predicts deterministic test cases. Users validate results against video recordings or execution evidence.</p>
+          <p><strong>Cost optimisation:</strong> Only use LLMs where they provide meaningful value. AI generates test cases; test execution remains deterministic. Only failed application logs are sent to the LLM for diagnosis — successful logs are ignored. This minimises token usage while preserving AI assistance where it matters.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">06</span><h3>Demo</h3></div>
+        <div class="topic-body">
+          <video class="session-video" controls preload="metadata" poster="assets/roast-7/fernandi.jpg"><source src="assets/roast-7/canary-lab-promo.mp4" type="video/mp4">Canary Lab promo video.</video>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SPEAKER 3: KRISHNA ============ -->
+    <section class="speaker-section">
+      <p class="speaker-section-label">Speaker 03</p>
+      <article class="speaker-card speaker-card-with-image">
+        <img src="assets/roast-7/krishna.jpg" alt="Krishna presenting Unfinal and exe.dev at Roast #7" class="speaker-photo">
+        <div class="speaker-info">
+          <p class="speaker-project">Unfinal / exe.dev</p>
+          <h2>Krishna</h2>
+          <p class="speaker-summary">A server-first approach to real-time products. exe.dev runs services on a VPS, while Phoenix LiveView keeps business logic on the server and handles UI updates. The session also covered research-led UI work, model behaviour, and coding harnesses.</p>
+          <div class="speaker-tags"><span>Phoenix</span><span>LiveView</span><span>WebSockets</span><span>UX research</span></div>
+          <div class="speaker-links">
+            <a href="https://linkedin.com/in/penukonda" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a>
+            <a href="https://github.com/tasercake/unfinal" target="_blank" rel="noopener" class="icon-link" title="GitHub"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0012 2z"/></svg></a>
+            <a href="https://www.unfinal.page/live" target="_blank" rel="noopener" class="icon-link" title="Website"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></a>
+          </div>
+        </div>
+      </article>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">01</span><h3>Real-Time Architecture</h3></div>
+        <div class="topic-body">
+          <p><strong>Server-first applications:</strong> For real-time applications, exe.dev runs services on a VPS, with everything happening on the server rather than in the browser.</p>
+          <p><strong>Phoenix + LiveView:</strong> Phoenix LiveView allows developers to write only server-side code. Business logic lives entirely on the server. Phoenix automatically handles UI diffing and updates, reducing frontend complexity while enabling real-time interactions.</p>
+          <p><strong>Persistent connections:</strong> A heartbeat mechanism keeps WebSocket connections alive, enabling continuous real-time communication between client and server.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">02</span><h3>UI/UX Design Workflow</h3></div>
+        <div class="topic-body">
+          <p><strong>Avoiding "AI Slop":</strong> Useful design reference libraries to steer AI-generated interfaces toward higher quality:</p>
+          <ul class="topic-list">
+            <li><a href="https://impeccable.style/slop/" target="_blank" rel="noopener">Impeccable Style</a> — AI Slop Gallery</li>
+            <li><a href="https://mobbin.com" target="_blank" rel="noopener">Mobbin</a></li>
+            <li><a href="https://www.toools.design" target="_blank" rel="noopener">Toools.design</a></li>
+            <li><a href="https://aura.build" target="_blank" rel="noopener">Aura.build</a></li>
+          </ul>
+          <p><strong>AI-assisted UI research:</strong> Instead of asking an LLM to design from scratch: research similar products, gather user feedback and reviews, identify common UI pain points, compile the findings into a comprehensive design prompt, and generate UI based on those insights rather than generic prompts. This grounds the design in real user preferences instead of the model's default patterns.</p>
+          <p><strong>Accessing auth-gated websites:</strong> Use <a href="https://github.com/injaneity/pi-computer-use" target="_blank" rel="noopener">Pi Computer Use</a> to interact with websites behind authentication that traditional crawlers cannot access.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">03</span><h3>LLM Behaviour</h3></div>
+        <div class="topic-body">
+          <p><strong>DeepSeek</strong> and <strong>Mimo</strong> observations: they tend to be eager to take action and may begin implementing solutions before fully validating requirements. Additional guardrails or planning steps are needed before execution.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <div class="topic-header"><span class="topic-number">04</span><h3>Coding Harnesses</h3></div>
+        <div class="topic-body">
+          <p>Areas to explore: <strong>Pi Code</strong> (pi.dev) as a coding harness, compared against <strong>OmO</strong> for Codex workflows. Evaluate based on developer experience, reliability, tool integration, and agent orchestration capabilities.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DEMOGRAPHICS ============ -->
+    <section class="demographic-section">
+      <p class="speaker-section-label">Who was in the room</p>
+      <h2>Demographic breakdown</h2>
+
+      <div class="demo-grid">
+        <div class="demo-chart">
+          <div class="pie" style="background: conic-gradient(#2563eb 0% 34.9%, #f59e0b 34.9% 61.9%, #0f766e 61.9% 80.9%, #7c3aed 80.9% 100%);"></div>
+          <p class="demo-chart-title">Organisation type</p>
+          <div class="pie-legend">
+            <div class="legend-item"><span class="legend-dot" style="background:#2563eb"></span> Startups <strong>34.9%</strong></div>
+            <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span> SMEs <strong>27.0%</strong></div>
+            <div class="legend-item"><span class="legend-dot" style="background:#0f766e"></span> Government <strong>19.0%</strong></div>
+            <div class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span> Corporate <strong>19.0%</strong></div>
+          </div>
+        </div>
+
+        <div class="demo-chart">
+          <div class="pie" style="background: conic-gradient(#2563eb 0% 40.0%, #84cc16 40.0% 72.0%, #dc2626 72.0% 89.3%, #06b6d4 89.3% 100%);"></div>
+          <p class="demo-chart-title">Seniority</p>
+          <div class="pie-legend">
+            <div class="legend-item"><span class="legend-dot" style="background:#2563eb"></span> Lead / IC <strong>40.0%</strong></div>
+            <div class="legend-item"><span class="legend-dot" style="background:#84cc16"></span> Junior <strong>32.0%</strong></div>
+            <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span> C-suite / Founder <strong>17.3%</strong></div>
+            <div class="legend-item"><span class="legend-dot" style="background:#06b6d4"></span> Student / Intern <strong>10.7%</strong></div>
+          </div>
+        </div>
+
+        <div class="demo-chart">
+          <div class="pie" style="background: conic-gradient(#2563eb 0% 57.3%, #f59e0b 57.3% 82.6%, #16a34a 82.6% 100%);"></div>
+          <p class="demo-chart-title">Role type</p>
+          <div class="pie-legend">
+            <div class="legend-item"><span class="legend-dot" style="background:#2563eb"></span> Developers / Engineering <strong>57.3%</strong></div>
+            <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span> Developer-curious / Other <strong>25.3%</strong></div>
+            <div class="legend-item"><span class="legend-dot" style="background:#16a34a"></span> Developer-adjacent <strong>17.3%</strong></div>
+          </div>
+        </div>
+      </div>
+      <p class="demo-note">Excludes unknown / self / not-applicable and higher-learning / student orgs.</p>
+    </section>
+
+    <!-- ============ VENUE SPONSOR ============ -->
+    <section class="venue-section">
+      <h2>Venue sponsor</h2>
+      <div class="venue-grid">
+        <img src="assets/roast-7/sginnovate.png" alt="SGInnovate" class="venue-logo">
+        <div class="venue-info">
+          <h3>SGInnovate</h3>
+          <p>PIC: <a href="https://www.linkedin.com/in/antinglim/" target="_blank" rel="noopener">An Ting</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EVENT OPS ============ -->
+    <section class="ops-section">
+      <p class="speaker-section-label">Event ops volunteers</p>
+      <div class="ops-grid">
+        <div class="ops-card"><span class="ops-emoji">⏳</span><h3>Time &amp; Mic Keeper</h3><p>YingZhao</p><a href="https://sg.linkedin.com/in/yzouyang" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">📸</span><h3>Memories Keeper</h3><p>Qi Jie</p><a href="https://www.linkedin.com/in/woshiqijie/" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">🎙</span><h3>Host</h3><p>Jesse Sng</p><a href="https://sg.linkedin.com/in/jesse-sng-05ab7944" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+        <div class="ops-card"><span class="ops-emoji">🧠</span><h3>Knowledge Keeper</h3><p>Han</p><a href="https://sg.linkedin.com/in/hanwai" target="_blank" rel="noopener" class="icon-link" title="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93S13 13.1 13 14.24V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.5c1.55 0 3.4.87 3.4 3.74z"/></svg></a></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
