@@ -1,0 +1,20 @@
+---
+import { Image } from "emdash/ui";
+import type { Member, Team } from "../../emdash-env";
+interface Props { profile: { data: Member | Team; edit: Record<string, Record<string, string>> }; showcase?: boolean; }
+const { profile, showcase = false } = Astro.props;
+const person = profile.data;
+const member = person as Member;
+const initials = person.title.split(" ").slice(0, 2).map(part => part[0]).join("");
+---
+<article class="profile-card">
+  <div class="profile-image" {...profile.edit.photo}>{person.photo ? <Image image={person.photo} /> : <div class="profile-placeholder" aria-hidden="true">{initials}</div>}</div>
+  <div class="profile-copy">
+    <h2 {...profile.edit.title}>{person.title}</h2>
+    {person.role && <p class="role" {...profile.edit.role}>{person.role}</p>}
+    {person.bio && <p {...profile.edit.bio}>{person.bio}</p>}
+    {showcase && member.building && <div class="profile-detail"><p class="metadata">Currently building</p><p {...profile.edit.building}>{member.building}</p>{member.project_url && <a class="text-link" href={member.project_url}>View the project ↗</a>}</div>}
+    {showcase && member.interests && <div class="profile-detail"><p class="metadata">Ask me about</p><p {...profile.edit.interests}>{member.interests}</p></div>}
+    <div class="profile-links">{person.linkedin && <a href={person.linkedin}>LinkedIn ↗</a>}{person.github && <a href={person.github}>GitHub ↗</a>}{person.website && <a href={person.website}>Website ↗</a>}</div>
+  </div>
+</article>

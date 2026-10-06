@@ -1,0 +1,81 @@
+---
+import {
+	getEmDashEntry,
+	getSeoMeta,
+	decodeSlug,
+	getSiteSettings,
+} from "emdash";
+import { Image, PortableText } from "emdash/ui";
+import Base from "../../layouts/Base.astro";
+import { resolveStarterSiteIdentity } from "../../utils/site-identity";
+
+const slug = decodeSlug(Astro.params.slug);
+
+if (!slug) {
+	return Astro.redirect("/404");
+}
+
+const { entry: post, cacheHint } = await getEmDashEntry("posts", slug);
+
+if (!post) {
+	return Astro.redirect("/404");
+}
+
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+const { siteTitle } = resolveStarterSiteIdentity(await getSiteSettings());
+
+// SEO meta from content fields
+const seo = getSeoMeta(post, {
+	siteTitle,
+	siteUrl: Astro.url.origin,
+	path: Astro.url.pathname.replace(/\/$/, ""),
+});
+
+// Taxonomy terms are already hydrated onto the entry by getEmDashEntry.
+const tags = post.data.terms?.tag ?? [];
+const categories = post.data.terms?.category ?? [];
+const dateValue = post.data.event_date || post.data.publishedAt;
+const date = dateValue ? new Date(dateValue) : null;
+---
+
+<Base
+	title={seo.title}
+	pageTitle={seo.ogTitle}
+	description={seo.description}
+	canonical={seo.canonical}
+	image={seo.ogImage}
+	content={{ collection: "posts", id: post.data.id, slug }}
+>
+	<article class="container">
+		<header class="page-heading">
+			<nav aria-label="Back to posts"><a class="back-link" href="/posts">← All posts</a></nav>
+			<h1 {...post.edit.title}>{post.data.title}</h1>
+			{post.data.excerpt && <p {...post.edit.excerpt}>{post.data.excerpt}</p>}
+			<div class="post-meta metadata">
+				{date && <time datetime={date.toISOString()}>{date.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Singapore" })}</time>}
+				{categories.map(c => <a href={`/category/${c.slug}`}>{c.label}</a>)}
+			</div>
+		</header>
+		{
+			post.data.featured_image && (
+				<div class="post-hero" {...post.edit.featured_image}>
+					<Image image={post.data.featured_image} />
+				</div>
+			)
+		}
+
+		<div class="prose"><PortableText value={post.data.content} />
+
+		{
+			tags.length > 0 && (
+				<div>
+					{tags.map((t) => (
+						<a href={`/tag/${t.slug}`}>{t.label}</a>
+					))}
+				</div>
+			)
+		}
+		{post.data.source_url && <p><a href={post.data.source_url}>Original published recap ↗</a></p>}
+		</div>
+	</article>
+</Base>

@@ -1,0 +1,17 @@
+---
+import { Image } from "emdash/ui";
+import type { Post } from "../../emdash-env";
+interface Props { post: { id: string; data: Post; edit: Record<string, Record<string, string>> }; heading?: "h2" | "h3"; }
+const { post, heading: Heading = "h2" } = Astro.props;
+const dateValue = post.data.event_date || post.data.publishedAt;
+const date = dateValue ? new Date(dateValue) : null;
+---
+<article class="post-card">
+  {post.data.featured_image && <a class="post-image" href={`/posts/${post.id}`} aria-label={`Read ${post.data.title}`} {...post.edit.featured_image}><Image image={post.data.featured_image} /></a>}
+  <div class="post-copy">
+    <p class="metadata">{date ? <time datetime={date.toISOString()}>{date.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Singapore" })}</time> : "From the community"}</p>
+    <Heading {...post.edit.title}><a href={`/posts/${post.id}`}>{post.data.title}</a></Heading>
+    {post.data.excerpt && <p {...post.edit.excerpt}>{post.data.excerpt}</p>}
+    <a class="text-link" href={`/posts/${post.id}`}>Read the post <span aria-hidden="true">↗</span></a>
+  </div>
+</article>

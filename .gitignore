@@ -1,2 +1,26 @@
-.vercel
-.env*
+node_modules
+dist
+.astro
+.emdash/migrations.json
+uploads
+data.db
+.wrangler
+
+# Environment / Wrangler secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+
+# Impeccable machine-local state; shared detector config stays tracked.
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/hook.pending.json
+.impeccable/*.png
+.impeccable/review/
+.impeccable/questions/
+.impeccable/live/server.json
+.impeccable/live/sessions/
+.impeccable/live/previews/
+.impeccable/live/cache/

@@ -1,0 +1,15 @@
+services:
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:${TECHIES_PORT:-8080}:4321"
+    environment:
+      EMDASH_SITE_URL: ${EMDASH_SITE_URL:-http://localhost:8080}
+      EMDASH_ENCRYPTION_KEY: ${EMDASH_ENCRYPTION_KEY:-}
+    volumes:
+      - techies-data:/data
+    restart: unless-stopped
+    init: true
+
+volumes:
+  techies-data:

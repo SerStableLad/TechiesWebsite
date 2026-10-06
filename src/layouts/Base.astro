@@ -1,0 +1,107 @@
+---
+import { getMenuWithCacheHint, getSiteSettingsWithCacheHint } from "emdash";
+import { EmDashHead, EmDashBodyStart, EmDashBodyEnd } from "emdash/ui";
+import { createPublicPageContext } from "emdash/page";
+import { resolveStarterSiteIdentity } from "../utils/site-identity";
+import "../styles/theme.css";
+
+interface Props {
+	title: string;
+	pageTitle?: string | null;
+	description?: string | null;
+	image?: string | null;
+	canonical?: string | null;
+	/** Pass content reference for plugin page contributions on content pages */
+	content?: { collection: string; id: string; slug?: string | null };
+}
+
+const { title, pageTitle, description, image, canonical, content } =
+	Astro.props;
+const [settingsResult, menuResult] = await Promise.all([
+	getSiteSettingsWithCacheHint(),
+	getMenuWithCacheHint("primary"),
+]);
+if (Astro.cache?.enabled) {
+	Astro.cache.set(settingsResult.cacheHint);
+	Astro.cache.set(menuResult.cacheHint);
+}
+
+const { siteTitle, siteTagline, siteLogo } = resolveStarterSiteIdentity(
+	settingsResult.data,
+);
+const titleIncludesSiteName =
+	title === siteTitle ||
+	title.endsWith(` | ${siteTitle}`) ||
+	title.endsWith(` — ${siteTitle}`);
+const fullTitle = titleIncludesSiteName ? title : `${title} — ${siteTitle}`;
+const pageDescription = description ?? siteTagline;
+const menu = menuResult.data;
+
+const pageCtx = createPublicPageContext({
+	Astro,
+	kind: content ? "content" : "custom",
+	pageType: "website",
+	title: fullTitle,
+	pageTitle: pageTitle ?? title,
+	description: pageDescription,
+	canonical: canonical ?? new URL(Astro.url.pathname, Astro.url.origin).href,
+	image,
+	content,
+	siteName: siteTitle,
+});
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{fullTitle}</title>
+		<EmDashHead page={pageCtx} />
+	</head>
+	<body>
+		<a class="skip-link" href="#main">Skip to content</a>
+		<EmDashBodyStart page={pageCtx} />
+
+		<header class="site-header">
+			<nav class="site-nav container" aria-label="Primary navigation">
+				<a class="wordmark" href="/" aria-label="Techies home">&gt;Techies<span>_</span></a>
+				<div class="nav-links">
+				{
+					menu?.items.map((item) => (
+						<a
+							href={item.url}
+							target={item.target}
+							rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
+							aria-current={Astro.url.pathname === item.url ? "page" : undefined}
+						>
+							{item.label}
+						</a>
+					))
+				}
+				<a class="nav-join" href="https://luma.com/APACtechies">Join us <span aria-hidden="true">↗</span></a>
+				</div>
+			</nav>
+		</header>
+
+		<main id="main" tabindex="-1">
+			<slot />
+		</main>
+		<footer class="site-footer">
+			<div class="container">
+				<div class="footer-grid">
+					<div class="footer-brand">
+						<img src={siteLogo?.url || "/brand/techies-wordmark.png"} alt={siteLogo?.alt || "Techies"} width="155" loading="lazy" />
+						<p>A 3rd space for devs, dev-adjacents, and technically curious people to geek out.</p>
+					</div>
+					<div class="footer-column"><h2>Get in the room</h2><a href="https://luma.com/APACtechies">Luma calendar ↗</a><a href="/#events">Our programmes</a><a href="/#about">About Techies</a></div>
+					<div class="footer-column"><h2>The community</h2><a href="/posts">Posts & event summaries</a><a href="/members">Member showcase</a><a href="/exco">Meet the Exco</a><a href="/#podcast">Listen to Season 1</a></div>
+					<div class="footer-column"><h2>Keep in touch</h2><a href="https://linkedin.com/company/apac-techies">LinkedIn ↗</a><a href="https://linktr.ee/techiesapac">Linktree ↗</a></div>
+				</div>
+				<div class="footer-bottom"><span>© {new Date().getFullYear()} Techies APAC</span><span>Serious about the craft; relaxed with the people.</span></div>
+			</div>
+		</footer>
+
+		<EmDashBodyEnd page={pageCtx} />
+	</body>
+</html>
