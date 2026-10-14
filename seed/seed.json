@@ -19,20 +19,85 @@
       "icon": "gift",
       "sortOrder": 0,
       "urlPattern": "/campaigns/{slug}",
-      "supports": ["drafts", "revisions"],
+      "supports": [
+        "drafts",
+        "revisions"
+      ],
       "hasSeo": false,
       "fields": [
-        { "slug": "title", "label": "Campaign title", "type": "string", "required": true },
-        { "slug": "entry_window", "label": "Campaign dates", "type": "json", "widget": "techies-campaigns:entry-window" },
-        { "slug": "description", "label": "Campaign description", "type": "portableText" },
-        { "slug": "rules", "label": "Rules and eligibility", "type": "portableText" },
-        { "slug": "image", "label": "Prize image", "type": "image" },
-        { "slug": "prize", "label": "Prize name", "type": "string" },
-        { "slug": "winner_count", "label": "Number of winners", "type": "integer", "validation": { "min": 1, "max": 20 } },
-        { "slug": "visibility", "label": "Campaign access", "type": "select", "widget": "techies-campaigns:campaign-access", "validation": { "options": ["public", "private"] } },
-        { "slug": "actions", "label": "Entry actions", "type": "json", "widget": "techies-campaigns:entry-actions" },
-        { "slug": "publishing", "label": "Publishing", "type": "json", "widget": "techies-campaigns:campaign-publishing" },
-        { "slug": "campaign_key", "label": "Managed campaign reference", "type": "string", "unique": true, "indexed": true, "widget": "techies-campaigns:managed-reference" }
+        {
+          "slug": "title",
+          "label": "Campaign title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "entry_window",
+          "label": "Campaign dates",
+          "type": "json",
+          "widget": "techies-campaigns:entry-window"
+        },
+        {
+          "slug": "description",
+          "label": "Campaign description",
+          "type": "portableText"
+        },
+        {
+          "slug": "rules",
+          "label": "Rules and eligibility",
+          "type": "portableText"
+        },
+        {
+          "slug": "image",
+          "label": "Prize image",
+          "type": "image"
+        },
+        {
+          "slug": "prize",
+          "label": "Prize name",
+          "type": "string"
+        },
+        {
+          "slug": "winner_count",
+          "label": "Number of winners",
+          "type": "integer",
+          "validation": {
+            "min": 1,
+            "max": 20
+          }
+        },
+        {
+          "slug": "visibility",
+          "label": "Campaign access",
+          "type": "select",
+          "widget": "techies-campaigns:campaign-access",
+          "validation": {
+            "options": [
+              "public",
+              "private"
+            ]
+          }
+        },
+        {
+          "slug": "actions",
+          "label": "Entry actions",
+          "type": "json",
+          "widget": "techies-campaigns:entry-actions"
+        },
+        {
+          "slug": "publishing",
+          "label": "Publishing",
+          "type": "json",
+          "widget": "techies-campaigns:campaign-publishing"
+        },
+        {
+          "slug": "campaign_key",
+          "label": "Managed campaign reference",
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "widget": "techies-campaigns:managed-reference"
+        }
       ]
     },
     {
@@ -44,7 +109,14 @@
         "revisions"
       ],
       "fields": [
-        { "slug": "campaign_ref", "label": "Managed campaign reference", "type": "string", "unique": true, "indexed": true, "widget": "techies-campaigns:managed-reference" },
+        {
+          "slug": "campaign_ref",
+          "label": "Managed campaign reference",
+          "type": "string",
+          "unique": true,
+          "indexed": true,
+          "widget": "techies-campaigns:managed-reference"
+        },
         {
           "slug": "title",
           "label": "Announcement text",
@@ -68,7 +140,7 @@
         },
         {
           "slug": "cta_url",
-          "label": "CTA link (https://… or /path)",
+          "label": "CTA link (https://\u2026 or /path)",
           "type": "string"
         },
         {
@@ -537,23 +609,13 @@
         },
         {
           "type": "custom",
-          "label": "Event Summaries",
-          "url": "/category/event-summaries"
-        },
-        {
-          "type": "custom",
           "label": "Partnership",
           "url": "/category/partnership-announcement"
         },
         {
+          "label": "People",
           "type": "custom",
-          "label": "Members",
-          "url": "/members"
-        },
-        {
-          "type": "custom",
-          "label": "Exco",
-          "url": "/exco"
+          "url": "/people"
         }
       ]
     }
@@ -566,9 +628,9 @@
         "status": "published",
         "data": {
           "title": "A 3rd space for devs to geek out.",
-          "intro": "Real stacks. Real constraints. Real conversations. We get into how things are actually built—and why. Bring your questions. Stay for supper.",
+          "intro": "Real stacks. Real constraints. Real conversations. We get into how things are actually built\u2014and why. Bring your questions. Stay for supper.",
           "about_intro": "Serious about the craft. Relaxed with the people. A room for developers, dev-adjacents, and technically curious people, whatever your title or experience.",
-          "supper_copy": "The agenda ends. The conversation doesn’t. Join us for supper, compare notes, and meet people to keep building with.",
+          "supper_copy": "The agenda ends. The conversation doesn\u2019t. Join us for supper, compare notes, and meet people to keep building with.",
           "supper_photo": {
             "$media": {
               "url": "https://apactechies.vercel.app/photos/2026-08-08%2012.01.58.jpg",
@@ -581,7 +643,7 @@
               "alt": "Techies members continuing the conversation over supper"
             }
           },
-          "podcast_copy": "Tech and AI developments through a builder’s lens. What matters, what’s overhyped, and what changes how you build. Season 1 is complete; the podcast is currently on pause.",
+          "podcast_copy": "Tech and AI developments through a builder\u2019s lens. What matters, what\u2019s overhyped, and what changes how you build. Season 1 is complete; the podcast is currently on pause.",
           "podcast_url": "https://open.spotify.com/show/3JhNpERWFXWIjGcmXDvu3f"
         }
       }
@@ -688,7 +750,7 @@
         "slug": "roast-2",
         "status": "published",
         "data": {
-          "title": "Roast My TechStack #2 · April 6, 2026 · Singapore",
+          "title": "Roast My TechStack #2 \u00b7 April 6, 2026 \u00b7 Singapore",
           "excerpt": "Three builders brought three very different stacks: a self-improving order-hub workflow, a Spanish-through-music app, and a drag-node automation tool. This recap preserves the practical decisions, trade-offs, and questions raised in the room.",
           "content": [
             {
@@ -747,7 +809,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "A self-improving software workflow: users report issues through a chatbot, complaints become GitHub issues, and an automation loop routes them into Claude Code to generate, apply, and ship fixes — with a human validating before redeploy.",
+                  "text": "A self-improving software workflow: users report issues through a chatbot, complaints become GitHub issues, and an automation loop routes them into Claude Code to generate, apply, and ship fixes \u2014 with a human validating before redeploy.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -761,7 +823,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Chatbot intake · GitHub issues · OpenClaw · Claude Code · Human validation",
+                  "text": "Chatbot intake \u00b7 GitHub issues \u00b7 OpenClaw \u00b7 Claude Code \u00b7 Human validation",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -837,7 +899,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "A user complains via the chatbot → the complaint becomes a GitHub issue → an OpenClaw cron pulls the issues → the issue goes into Claude Code → a Claude skill generates and applies a fix → changes push to GitHub → a human tests the software → if solved it redeploys, if not it returns for further fixes.",
+                  "text": "A user complains via the chatbot \u2192 the complaint becomes a GitHub issue \u2192 an OpenClaw cron pulls the issues \u2192 the issue goes into Claude Code \u2192 a Claude skill generates and applies a fix \u2192 changes push to GitHub \u2192 a human tests the software \u2192 if solved it redeploys, if not it returns for further fixes.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -946,7 +1008,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Kantaro · kantaro.live",
+                  "text": "Kantaro \u00b7 kantaro.live",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -982,7 +1044,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "An app that teaches Spanish through music — pulling real lyrics, front-end design via Stitch, and open-source components to keep the stack light. The roast pushed on where the API calls live and how to keep UI changes verifiable.",
+                  "text": "An app that teaches Spanish through music \u2014 pulling real lyrics, front-end design via Stitch, and open-source components to keep the stack light. The roast pushed on where the API calls live and how to keep UI changes verifiable.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -996,7 +1058,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "LRCLib · Stitch + Google MCP · Heartmula · Open-source streaming · Frontend API calls",
+                  "text": "LRCLib \u00b7 Stitch + Google MCP \u00b7 Heartmula \u00b7 Open-source streaming \u00b7 Frontend API calls",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -1127,7 +1189,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — an open-source music LLM — as an open-source music streaming / YouTube API alternative.",
+                  "text": " \u2014 an open-source music LLM \u2014 as an open-source music streaming / YouTube API alternative.",
                   "marks": [],
                   "_key": "s5"
                 }
@@ -1202,7 +1264,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " to check for better UI control — the AI should show its work before you approve it.",
+                  "text": " to check for better UI control \u2014 the AI should show its work before you approve it.",
                   "marks": [],
                   "_key": "s3"
                 }
@@ -1280,7 +1342,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Drag-and-drop flow · Model escalation · AI documentation",
+                  "text": "Drag-and-drop flow \u00b7 Model escalation \u00b7 AI documentation",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -1364,7 +1426,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — escalate the model accordingly as the task demands it.",
+                  "text": " \u2014 escalate the model accordingly as the task demands it.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -1388,7 +1450,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — get the AI to write it for you.",
+                  "text": " \u2014 get the AI to write it for you.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -1503,7 +1565,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🎚",
+                  "text": "\ud83c\udf9a",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -1545,7 +1607,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🎙",
+                  "text": "\ud83c\udf99",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -1587,7 +1649,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🏠",
+                  "text": "\ud83c\udfe0",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -1641,7 +1703,7 @@
         "slug": "roast-3",
         "status": "published",
         "data": {
-          "title": "Roast My TechStack #3 · April 17, 2026 · Singapore",
+          "title": "Roast My TechStack #3 \u00b7 April 17, 2026 \u00b7 Singapore",
           "excerpt": "Three builders brought three very different stacks: a pricing copilot that parses PDFs, the counter-intuitive storage structure behind Visigoth.ai, and a programmatic video toolchain. This recap preserves the practical decisions, trade-offs, and questions raised in the room.",
           "content": [
             {
@@ -1725,7 +1787,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "PDF parsing · Docling · MarkItDown · deterministic code · shadcn",
+                  "text": "PDF parsing \u00b7 Docling \u00b7 MarkItDown \u00b7 deterministic code \u00b7 shadcn",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -2003,7 +2065,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " for numeric analysis — less flexibility, but you keep a clean audit trail. And ",
+                  "text": " for numeric analysis \u2014 less flexibility, but you keep a clean audit trail. And ",
                   "marks": [],
                   "_key": "s2"
                 },
@@ -2146,7 +2208,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Visigoth.ai · Data Storage",
+                  "text": "Visigoth.ai \u00b7 Data Storage",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -2196,7 +2258,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Immutable storage · Functional programming · FastAPI · DuckDB · Postgres upsert",
+                  "text": "Immutable storage \u00b7 Functional programming \u00b7 FastAPI \u00b7 DuckDB \u00b7 Postgres upsert",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -2386,7 +2448,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — data flows through pure steps instead of mutating in place. Which raises the natural question: why not use a functional language for the whole stack?",
+                  "text": " \u2014 data flows through pure steps instead of mutating in place. Which raises the natural question: why not use a functional language for the whole stack?",
                   "marks": [],
                   "_key": "s2"
                 }
@@ -2414,7 +2476,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " instead of rolling your own with Flask — notably more maintainable.",
+                  "text": " instead of rolling your own with Flask \u2014 notably more maintainable.",
                   "marks": [],
                   "_key": "s2"
                 }
@@ -2490,7 +2552,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — once written, nothing needs to overwrite or coordinate on the same bytes.",
+                  "text": " \u2014 once written, nothing needs to overwrite or coordinate on the same bytes.",
                   "marks": [],
                   "_key": "s4"
                 }
@@ -2579,7 +2641,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Remotion · Voicebox · FFmpeg · Gemma",
+                  "text": "Remotion \u00b7 Voicebox \u00b7 FFmpeg \u00b7 Gemma",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -2683,7 +2745,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — build and render programmatic videos using React code.",
+                  "text": " \u2014 build and render programmatic videos using React code.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -2714,7 +2776,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — a local tool that clones your own voice for personalized audio.",
+                  "text": " \u2014 a local tool that clones your own voice for personalized audio.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -2745,7 +2807,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — the versatile framework to decode, encode, and process video and audio files.",
+                  "text": " \u2014 the versatile framework to decode, encode, and process video and audio files.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -2776,7 +2838,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — lightweight, open models capable of video summarization tasks.",
+                  "text": " \u2014 lightweight, open models capable of video summarization tasks.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -2890,7 +2952,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "⏳",
+                  "text": "\u23f3",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -2954,7 +3016,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "📸",
+                  "text": "\ud83d\udcf8",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -3018,7 +3080,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🎙",
+                  "text": "\ud83c\udf99",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -3082,7 +3144,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🧠",
+                  "text": "\ud83e\udde0",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -3164,7 +3226,7 @@
         "slug": "roast-4",
         "status": "published",
         "data": {
-          "title": "Roast My TechStack #4 · May 7, 2026 · Singapore",
+          "title": "Roast My TechStack #4 \u00b7 May 7, 2026 \u00b7 Singapore",
           "excerpt": "Three stacks on the table: a production-style personal LinkedIn analytics pipeline, a caregiver navigation app, and a voice-driven resume. This recap preserves the practical decisions, trade-offs, and questions raised in the room.",
           "content": [
             {
@@ -3234,7 +3296,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "A production-style personal analytics pipeline for LinkedIn, built with Databricks in a medallion architecture — and optimized for maximum reach. The roast covered getting the data, ETL done right, retries, and the One Big Table trade-off.",
+                  "text": "A production-style personal analytics pipeline for LinkedIn, built with Databricks in a medallion architecture \u2014 and optimized for maximum reach. The roast covered getting the data, ETL done right, retries, and the One Big Table trade-off.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -3248,7 +3310,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Databricks · Medallion ETL · One Big Table · API · Retries & backoff",
+                  "text": "Databricks \u00b7 Medallion ETL \u00b7 One Big Table \u00b7 API \u00b7 Retries & backoff",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -3370,7 +3432,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — the first-class route.",
+                  "text": " \u2014 the first-class route.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -3394,7 +3456,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — when the API doesn't give you what you need.",
+                  "text": " \u2014 when the API doesn't give you what you need.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -3418,7 +3480,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — as a complement or fallback.",
+                  "text": " \u2014 as a complement or fallback.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -3470,7 +3532,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " → ",
+                  "text": " \u2192 ",
                   "marks": [],
                   "_key": "s1"
                 },
@@ -3484,7 +3546,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " (bronze) · ",
+                  "text": " (bronze) \u00b7 ",
                   "marks": [],
                   "_key": "s3"
                 },
@@ -3498,7 +3560,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " → ",
+                  "text": " \u2192 ",
                   "marks": [],
                   "_key": "s5"
                 },
@@ -3512,7 +3574,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " (silver) · ",
+                  "text": " (silver) \u00b7 ",
                   "marks": [],
                   "_key": "s7"
                 },
@@ -3526,7 +3588,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " → ",
+                  "text": " \u2192 ",
                   "marks": [],
                   "_key": "s9"
                 },
@@ -3596,7 +3658,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — especially for LLM calls and APIs. This prevents a huge bill shock when a provider starts failing in burst.",
+                  "text": " \u2014 especially for LLM calls and APIs. This prevents a huge bill shock when a provider starts failing in burst.",
                   "marks": [],
                   "_key": "s2"
                 }
@@ -3652,7 +3714,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " approach beats a relationship database (e.g. Neo4j) for query speed and simplifies data consumption — fewer joins, one place to ask questions of.",
+                  "text": " approach beats a relationship database (e.g. Neo4j) for query speed and simplifies data consumption \u2014 fewer joins, one place to ask questions of.",
                   "marks": [],
                   "_key": "s2"
                 }
@@ -3727,7 +3789,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "An app that navigates caregivers to the right support resources — a RAG-over-LLM build that raises reliability over raw generation. The roast dug into RAG vs. web search, dynamic model selection, and where to store the knowledge base.",
+                  "text": "An app that navigates caregivers to the right support resources \u2014 a RAG-over-LLM build that raises reliability over raw generation. The roast dug into RAG vs. web search, dynamic model selection, and where to store the knowledge base.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -3741,7 +3803,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "RAG · n8n · Postgres · Dynamic model selector · Web search",
+                  "text": "RAG \u00b7 n8n \u00b7 Postgres \u00b7 Dynamic model selector \u00b7 Web search",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -3869,7 +3931,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — it increases reliability. And if you need the LLM to do a web search, ",
+                  "text": " \u2014 it increases reliability. And if you need the LLM to do a web search, ",
                   "marks": [],
                   "_key": "s2"
                 },
@@ -4009,7 +4071,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " for the RAG store. For cost efficiency, consider other LLMs for this use case — like GPT-5.4 mini or other open-weight models.",
+                  "text": " for the RAG store. For cost efficiency, consider other LLMs for this use case \u2014 like GPT-5.4 mini or other open-weight models.",
                   "marks": [],
                   "_key": "s2"
                 }
@@ -4124,7 +4186,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "A voice-driven resume — an AI-voice interview app that lets employers ask anything and get real-time answers. The roast covered voice recognition, budget compute, text-to-speech, and guardrailing AI applications.",
+                  "text": "A voice-driven resume \u2014 an AI-voice interview app that lets employers ask anything and get real-time answers. The roast covered voice recognition, budget compute, text-to-speech, and guardrailing AI applications.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -4138,7 +4200,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "ASR · Whisper TTS · Oracle Cloud free tier · Guardrails · persona.md",
+                  "text": "ASR \u00b7 Whisper TTS \u00b7 Oracle Cloud free tier \u00b7 Guardrails \u00b7 persona.md",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -4330,7 +4392,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": ": 24GB RAM, 4 CPU, and 10TB egress — plenty for a side project with a video-heavy workload.",
+                  "text": ": 24GB RAM, 4 CPU, and 10TB egress \u2014 plenty for a side project with a video-heavy workload.",
                   "marks": [],
                   "_key": "s2"
                 }
@@ -4386,7 +4448,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — encode who the AI is and what it will not do right in the prompt, checked before any answer ships.",
+                  "text": " \u2014 encode who the AI is and what it will not do right in the prompt, checked before any answer ships.",
                   "marks": [],
                   "_key": "s2"
                 }
@@ -4453,7 +4515,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " · Co-hosted with ",
+                  "text": " \u00b7 Co-hosted with ",
                   "marks": [],
                   "_key": "s2"
                 },
@@ -4501,7 +4563,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "⏳",
+                  "text": "\u23f3",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -4565,7 +4627,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "📸",
+                  "text": "\ud83d\udcf8",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -4629,7 +4691,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🎙",
+                  "text": "\ud83c\udf99",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -4693,7 +4755,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🧠",
+                  "text": "\ud83e\udde0",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -4775,7 +4837,7 @@
         "slug": "roast-5",
         "status": "published",
         "data": {
-          "title": "Roast My TechStack #5 · May 21, 2026 · Singapore",
+          "title": "Roast My TechStack #5 \u00b7 May 21, 2026 \u00b7 Singapore",
           "excerpt": "Three builds went under the knife: an agent system that hunts business opportunities, a pixel art app with an agentic future, and a Postgres-based graph layer for AI agents. This recap preserves the practical decisions, trade-offs, and questions raised in the room.",
           "content": [
             {
@@ -4845,7 +4907,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "How he built a multiple-agent system to hunt for business opportunities — an executive agent controlling many siloed, purpose-built child agents. The deck is available on GitHub along with the painful lessons about grounding and over-engineering.",
+                  "text": "How he built a multiple-agent system to hunt for business opportunities \u2014 an executive agent controlling many siloed, purpose-built child agents. The deck is available on GitHub along with the painful lessons about grounding and over-engineering.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -4859,7 +4921,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Multi-agent · Orchestration · Grounding · Containerised auth",
+                  "text": "Multi-agent \u00b7 Orchestration \u00b7 Grounding \u00b7 Containerised auth",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -4954,7 +5016,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Multiple agents work together: an executive agent controls many child agents. The critical design rule — a child agent must be ",
+                  "text": "Multiple agents work together: an executive agent controls many child agents. The critical design rule \u2014 a child agent must be ",
                   "marks": [],
                   "_key": "s0"
                 },
@@ -5024,7 +5086,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — no single grounding source is enough when agents are compounding their own context.",
+                  "text": " \u2014 no single grounding source is enough when agents are compounding their own context.",
                   "marks": [],
                   "_key": "s2"
                 }
@@ -5066,7 +5128,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Don't jump straight into micro-services — a ",
+                  "text": "Don't jump straight into micro-services \u2014 a ",
                   "marks": [],
                   "_key": "s0"
                 },
@@ -5136,7 +5198,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " rather than an agent. Never roll your own auth — ",
+                  "text": " rather than an agent. Never roll your own auth \u2014 ",
                   "marks": [],
                   "_key": "s2"
                 },
@@ -5259,7 +5321,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "An image app that pixelates and animates photos — roasted on its auth choice, its data schema, and how it can be made agent-friendly. The room also weighed image-generation cost and automating image evaluation.",
+                  "text": "An image app that pixelates and animates photos \u2014 roasted on its auth choice, its data schema, and how it can be made agent-friendly. The room also weighed image-generation cost and automating image evaluation.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -5273,7 +5335,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Supabase auth · Clerk · Data schema · Agents-ready · Imagen",
+                  "text": "Supabase auth \u00b7 Clerk \u00b7 Data schema \u00b7 Agents-ready \u00b7 Imagen",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -5349,7 +5411,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "The choice: create an auth after 3 plays for lower barrier of entry, natively integrated with supabase. The trade-off — ",
+                  "text": "The choice: create an auth after 3 plays for lower barrier of entry, natively integrated with supabase. The trade-off \u2014 ",
                   "marks": [],
                   "_key": "s0"
                 },
@@ -5433,7 +5495,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — don't let the framework decide it for you.",
+                  "text": " \u2014 don't let the framework decide it for you.",
                   "marks": [],
                   "_key": "s2"
                 }
@@ -5565,7 +5627,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " (6× cheaper) over competing generation models.",
+                  "text": " (6\u00d7 cheaper) over competing generation models.",
                   "marks": [],
                   "_key": "s4"
                 }
@@ -5688,7 +5750,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Evokoa · pgGraph",
+                  "text": "Evokoa \u00b7 pgGraph",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -5724,7 +5786,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "A virtual graph layer for AI agents built on Postgres — pgGraph. The session covered why graph databases are expensive, when graph beats RAG, and how database hydration unlocks use cases like fraud detection.",
+                  "text": "A virtual graph layer for AI agents built on Postgres \u2014 pgGraph. The session covered why graph databases are expensive, when graph beats RAG, and how database hydration unlocks use cases like fraud detection.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -5738,7 +5800,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Graph DB · PostgreSQL · RAG vs Graph · Hydration",
+                  "text": "Graph DB \u00b7 PostgreSQL \u00b7 RAG vs Graph \u00b7 Hydration",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -5839,7 +5901,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": "34× cheaper than Neo4j",
+                  "text": "34\u00d7 cheaper than Neo4j",
                   "marks": [
                     "strong"
                   ],
@@ -5889,7 +5951,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Database hydration (also known as object hydration) converts raw database query results — a row or an array — into fully functioning, in-memory programming objects. A big use case is ",
+                  "text": "Database hydration (also known as object hydration) converts raw database query results \u2014 a row or an array \u2014 into fully functioning, in-memory programming objects. A big use case is ",
                   "marks": [],
                   "_key": "s0"
                 },
@@ -6040,7 +6102,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " · Co-hosted with ",
+                  "text": " \u00b7 Co-hosted with ",
                   "marks": [],
                   "_key": "s2"
                 },
@@ -6088,7 +6150,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "⏳",
+                  "text": "\u23f3",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -6152,7 +6214,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "📸",
+                  "text": "\ud83d\udcf8",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -6216,7 +6278,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🎙",
+                  "text": "\ud83c\udf99",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -6280,7 +6342,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🧠",
+                  "text": "\ud83e\udde0",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -6362,7 +6424,7 @@
         "slug": "roast-6",
         "status": "published",
         "data": {
-          "title": "Roast My TechStack #6 · June 4, 2026 · Singapore",
+          "title": "Roast My TechStack #6 \u00b7 June 4, 2026 \u00b7 Singapore",
           "excerpt": "Two builds took the heat at SGInnovate: a parallel AI content pipeline and an evaluation harness for AI agents. This recap preserves the practical decisions, trade-offs, and questions raised in the room.",
           "content": [
             {
@@ -6446,7 +6508,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Parallel generation · Fail-continue · Imagen · GPT Image · Remotion · ComfyUI",
+                  "text": "Parallel generation \u00b7 Fail-continue \u00b7 Imagen \u00b7 GPT Image \u00b7 Remotion \u00b7 ComfyUI",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -6522,7 +6584,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "When you run a parallel workflow — one source, multiple outputs at once — always plan for ",
+                  "text": "When you run a parallel workflow \u2014 one source, multiple outputs at once \u2014 always plan for ",
                   "marks": [],
                   "_key": "s0"
                 },
@@ -6592,7 +6654,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": ". Do not discard the previous effort — partial success is still worth keeping. Fail-continue beats fail-fast when each branch is expensive to produce.",
+                  "text": ". Do not discard the previous effort \u2014 partial success is still worth keeping. Fail-continue beats fail-fast when each branch is expensive to produce.",
                   "marks": [],
                   "_key": "s2"
                 }
@@ -6656,7 +6718,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " remains affordable — or render and superimpose text over the image afterwards to save cost.",
+                  "text": " remains affordable \u2014 or render and superimpose text over the image afterwards to save cost.",
                   "marks": [],
                   "_key": "s3"
                 }
@@ -6865,7 +6927,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "A talk on evaluation for AI agents — where evals overlap with guardrails, how to bound an agent's blast radius, and when a deterministic check beats a model call. The clearest framework of the night for grading agent output.",
+                  "text": "A talk on evaluation for AI agents \u2014 where evals overlap with guardrails, how to bound an agent's blast radius, and when a deterministic check beats a model call. The clearest framework of the night for grading agent output.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -6879,7 +6941,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "LLM evals · Guardrails · Deterministic checks · Blast radius",
+                  "text": "LLM evals \u00b7 Guardrails \u00b7 Deterministic checks \u00b7 Blast radius",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -6955,7 +7017,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Evals and guardrails can overlap, but they are not the same job. A guardrail can be implemented as deterministic code — it doesn't need to be another model.",
+                  "text": "Evals and guardrails can overlap, but they are not the same job. A guardrail can be implemented as deterministic code \u2014 it doesn't need to be another model.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -7019,7 +7081,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — run agents on isolated resources (a separate Mac mini, a separate cloud account) so a failure can't reach production systems.",
+                  "text": " \u2014 run agents on isolated resources (a separate Mac mini, a separate cloud account) so a failure can't reach production systems.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -7043,7 +7105,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — make destructive actions progressive and reversible: draft an email instead of sending it, mark an email instead of deleting it.",
+                  "text": " \u2014 make destructive actions progressive and reversible: draft an email instead of sending it, mark an email instead of deleting it.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -7140,7 +7202,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "⏳",
+                  "text": "\u23f3",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -7204,7 +7266,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "📸",
+                  "text": "\ud83d\udcf8",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -7268,7 +7330,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🎙",
+                  "text": "\ud83c\udf99",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -7332,7 +7394,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🧠",
+                  "text": "\ud83e\udde0",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -7414,7 +7476,7 @@
         "slug": "roast-7",
         "status": "published",
         "data": {
-          "title": "Roast My TechStack #7 · July 2, 2026 · Singapore",
+          "title": "Roast My TechStack #7 \u00b7 July 2, 2026 \u00b7 Singapore",
           "excerpt": "Three builders unpacked an AI-native astrology product, an AI repair loop for Playwright, and a server-first real-time application. This recap preserves the practical decisions, trade-offs, and questions raised in the room.",
           "content": [
             {
@@ -7448,7 +7510,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Zhiji / 知己",
+                  "text": "Zhiji / \u77e5\u5df1",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -7498,7 +7560,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Vercel · Vanilla JS · Supabase / Postgres · Stripe · Claude / GPT / DeepSeek",
+                  "text": "Vercel \u00b7 Vanilla JS \u00b7 Supabase / Postgres \u00b7 Stripe \u00b7 Claude / GPT / DeepSeek",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -7721,7 +7783,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": "pending → completed / failed",
+                  "text": "pending \u2192 completed / failed",
                   "marks": [
                     "code"
                   ],
@@ -7825,7 +7887,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": "Stripe checkout, webhook, and portal. The coin ledger is idempotent per key — a retried webhook cannot double-grant. Paid readings are frozen and cache-keyed, never regenerated.",
+                  "text": "Stripe checkout, webhook, and portal. The coin ledger is idempotent per key \u2014 a retried webhook cannot double-grant. Paid readings are frozen and cache-keyed, never regenerated.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -7867,7 +7929,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "The astrology engine is homegrown (~89 modules): four pillars, ten gods, hidden stems, 納音, five-element weighting, luck cycles, full 紫微斗數 chart, 神煞, 用神, the 盲派 layer, and 易經 casting. Validated against an external golden reference (bazi.today) and the doctrine master's calibrated set.",
+                  "text": "The astrology engine is homegrown (~89 modules): four pillars, ten gods, hidden stems, \u7d0d\u97f3, five-element weighting, luck cycles, full \u7d2b\u5fae\u6597\u6578 chart, \u795e\u715e, \u7528\u795e, the \u76f2\u6d3e layer, and \u6613\u7d93 casting. Validated against an external golden reference (bazi.today) and the doctrine master's calibrated set.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -7881,7 +7943,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Three boundary bugs were found and fixed: the 子時 midnight day-roll, the month solar-term boundary, and 立春-day hour precision.",
+                  "text": "Three boundary bugs were found and fixed: the \u5b50\u6642 midnight day-roll, the month solar-term boundary, and \u7acb\u6625-day hour precision.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -7909,7 +7971,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": ", used only for raw calendar astronomy (Gregorian ↔ lunar conversion and solar-term instants). If its maths were ever off at a boundary, it would silently tilt every chart. De-risking today: exact-version pin, everything on top is homegrown, and golden-reference validation. Next step: an automated golden-chart regression suite.",
+                  "text": ", used only for raw calendar astronomy (Gregorian \u2194 lunar conversion and solar-term instants). If its maths were ever off at a boundary, it would silently tilt every chart. De-risking today: exact-version pin, everything on top is homegrown, and golden-reference validation. Next step: an automated golden-chart regression suite.",
                   "marks": [],
                   "_key": "s2"
                 }
@@ -8261,7 +8323,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " A 7-agent fleet builds and maintains it; Kong routes between them and has written zero lines. Blind spots he structurally cannot see from inside — hence the roast.",
+                  "text": " A 7-agent fleet builds and maintains it; Kong routes between them and has written zero lines. Blind spots he structurally cannot see from inside \u2014 hence the roast.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -8352,7 +8414,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Playwright · Agent guardrails · Git diff · Claude CLI",
+                  "text": "Playwright \u00b7 Agent guardrails \u00b7 Git diff \u00b7 Claude CLI",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -8797,7 +8859,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " Only use LLMs where they provide meaningful value. AI generates test cases; test execution remains deterministic. Only failed application logs are sent to the LLM for diagnosis — successful logs are ignored. This minimises token usage while preserving AI assistance where it matters.",
+                  "text": " Only use LLMs where they provide meaningful value. AI generates test cases; test execution remains deterministic. Only failed application logs are sent to the LLM for diagnosis \u2014 successful logs are ignored. This minimises token usage while preserving AI assistance where it matters.",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -8936,7 +8998,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Phoenix · LiveView · WebSockets · UX research",
+                  "text": "Phoenix \u00b7 LiveView \u00b7 WebSockets \u00b7 UX research",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -9174,7 +9236,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " — AI Slop Gallery",
+                  "text": " \u2014 AI Slop Gallery",
                   "marks": [],
                   "_key": "s1"
                 }
@@ -9873,7 +9935,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "⏳",
+                  "text": "\u23f3",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -9937,7 +9999,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "📸",
+                  "text": "\ud83d\udcf8",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -10001,7 +10063,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🎙",
+                  "text": "\ud83c\udf99",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -10065,7 +10127,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "🧠",
+                  "text": "\ud83e\udde0",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -10151,7 +10213,7 @@
         "data": {
           "title": "Roast My TechStack",
           "label": "01 / Architecture, under discussion",
-          "description": "Your demo works. What breaks first? Bring the stack, the constraints, and the decision you’re stuck on. Curious questions. Technical debate. No personal takedowns.",
+          "description": "Your demo works. What breaks first? Bring the stack, the constraints, and the decision you\u2019re stuck on. Curious questions. Technical debate. No personal takedowns.",
           "cover": {
             "$media": {
               "url": "https://images.lumacdn.com/uploads/93/ac98ed5d-5ed5-4de4-b256-b9a49188f4ce.png",
@@ -10170,7 +10232,7 @@
         "data": {
           "title": "Prod is DOWN!!!",
           "label": "02 / Lessons from production",
-          "description": "Everything was fine. Then production wasn’t. We unpack what broke, how the team recovered, and the guardrails they wish they’d had.",
+          "description": "Everything was fine. Then production wasn\u2019t. We unpack what broke, how the team recovered, and the guardrails they wish they\u2019d had.",
           "cover": {
             "$media": {
               "url": "https://images.lumacdn.com/uploads/mc/b5dd3dc0-ea86-40cd-aba5-771b96859ce5.png",
@@ -10189,7 +10251,7 @@
         "data": {
           "title": "Building Products: Starting Right w/ Techies",
           "label": "03 / Product thinking",
-          "description": "What should you build—and what can wait? Work through the business and engineering decisions before writing code. Part of Lorong AI’s Tinker Time series.",
+          "description": "What should you build\u2014and what can wait? Work through the business and engineering decisions before writing code. Part of Lorong AI\u2019s Tinker Time series.",
           "cover": {
             "$media": {
               "url": "https://images.lumacdn.com/uploads/3e/a30cc1f8-9036-4e02-9e70-49e05531a2f4.jpg",
@@ -10302,8 +10364,8 @@
         "data": {
           "title": "Marcus Liang",
           "linkedin": "https://www.linkedin.com/in/marcus-liang-zhu-041a0ab0/",
-          "role": "Roast My TechStack speaker · #2",
-          "interests": "Chatbot intake · GitHub issues · OpenClaw · Claude Code · Human validation",
+          "role": "Roast My TechStack speaker \u00b7 #2",
+          "interests": "Chatbot intake \u00b7 GitHub issues \u00b7 OpenClaw \u00b7 Claude Code \u00b7 Human validation",
           "bio": "Builds AI-assisted software workflows that connect user feedback to human-reviewed fixes.",
           "building": "Harwav Order Hub: chatbot feedback becomes GitHub issues, then AI-generated fixes for a human to review.",
           "sort_order": 0,
@@ -10314,7 +10376,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #2",
+                  "text": "Speaker \u00b7 Roast #2",
                   "marks": [
                     "link-4d012c14f0a70683"
                   ],
@@ -10379,8 +10441,8 @@
             }
           },
           "github": "https://github.com/EeOneLim/care-compass",
-          "role": "Roast My TechStack speaker · #2, #4",
-          "interests": "LRCLib · Stitch + Google MCP · Heartmula · Open-source streaming · Frontend API calls · RAG · n8n · Postgres · Dynamic model selector · Web search",
+          "role": "Roast My TechStack speaker \u00b7 #2, #4",
+          "interests": "LRCLib \u00b7 Stitch + Google MCP \u00b7 Heartmula \u00b7 Open-source streaming \u00b7 Frontend API calls \u00b7 RAG \u00b7 n8n \u00b7 Postgres \u00b7 Dynamic model selector \u00b7 Web search",
           "bio": "Builds apps for learning and care, from Spanish through music to finding caregiver support.",
           "building": "Kantaro, a music-based Spanish learning app, and Care Compass, a caregiver resource app using retrieval-augmented generation.",
           "sort_order": 1,
@@ -10391,7 +10453,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #2",
+                  "text": "Speaker \u00b7 Roast #2",
                   "marks": [
                     "link-4d012c14f0a70683"
                   ],
@@ -10413,7 +10475,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #4",
+                  "text": "Speaker \u00b7 Roast #4",
                   "marks": [
                     "link-e88c64250300c5af"
                   ],
@@ -10528,7 +10590,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " · ",
+                  "text": " \u00b7 ",
                   "marks": [],
                   "_key": "s1"
                 },
@@ -10571,8 +10633,8 @@
               "alt": "Jesse Sng, Community Experience Lead of Techies"
             }
           },
-          "role": "Roast My TechStack speaker · #2, #6",
-          "interests": "Drag-and-drop flow · Model escalation · AI documentation · Parallel generation · Fail-continue · Imagen · GPT Image · Remotion · ComfyUI",
+          "role": "Roast My TechStack speaker \u00b7 #2, #6",
+          "interests": "Drag-and-drop flow \u00b7 Model escalation \u00b7 AI documentation \u00b7 Parallel generation \u00b7 Fail-continue \u00b7 Imagen \u00b7 GPT Image \u00b7 Remotion \u00b7 ComfyUI",
           "bio": "Explores visual automation and AI content workflows across text, images, audio and video.",
           "building": "Drag Flow, a drag-and-drop workflow tool, and a pipeline that turns source material into podcasts, blogs, images and audio in parallel.",
           "sort_order": 2,
@@ -10583,7 +10645,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #2",
+                  "text": "Speaker \u00b7 Roast #2",
                   "marks": [
                     "link-4d012c14f0a70683"
                   ],
@@ -10605,7 +10667,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #6",
+                  "text": "Speaker \u00b7 Roast #6",
                   "marks": [
                     "link-0e2685236cdb2a7f"
                   ],
@@ -10700,8 +10762,8 @@
               "alt": "Fliou presenting TransPrice at Roast #3"
             }
           },
-          "role": "Roast My TechStack speaker · #3",
-          "interests": "PDF parsing · Docling · MarkItDown · deterministic code · shadcn",
+          "role": "Roast My TechStack speaker \u00b7 #3",
+          "interests": "PDF parsing \u00b7 Docling \u00b7 MarkItDown \u00b7 deterministic code \u00b7 shadcn",
           "bio": "Builds a pricing copilot that combines document processing with deterministic analysis.",
           "building": "TransPrice: a pricing copilot that turns PDFs into Markdown for downstream model work.",
           "sort_order": 3,
@@ -10712,7 +10774,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #3",
+                  "text": "Speaker \u00b7 Roast #3",
                   "marks": [
                     "link-edb36dabc1b4989f"
                   ],
@@ -10780,10 +10842,10 @@
             }
           },
           "github": "https://github.com/gauravmm/2026-04-Roast-My-Tech-Stack",
-          "role": "Roast My TechStack speaker · #3, #6",
-          "interests": "Immutable storage · Functional programming · FastAPI · DuckDB · Postgres upsert · LLM evals · Guardrails · Deterministic checks · Blast radius",
+          "role": "Roast My TechStack speaker \u00b7 #3, #6",
+          "interests": "Immutable storage \u00b7 Functional programming \u00b7 FastAPI \u00b7 DuckDB \u00b7 Postgres upsert \u00b7 LLM evals \u00b7 Guardrails \u00b7 Deterministic checks \u00b7 Blast radius",
           "bio": "Shares practical experience in immutable data storage, AI agent evaluations and guardrails.",
-          "building": "Visigoth.ai’s storage architecture, shared from a previous startup, and evaluation approaches for AI agents.",
+          "building": "Visigoth.ai\u2019s storage architecture, shared from a previous startup, and evaluation approaches for AI agents.",
           "sort_order": 4,
           "recaps": [
             {
@@ -10792,7 +10854,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #3",
+                  "text": "Speaker \u00b7 Roast #3",
                   "marks": [
                     "link-edb36dabc1b4989f"
                   ],
@@ -10814,7 +10876,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #6",
+                  "text": "Speaker \u00b7 Roast #6",
                   "marks": [
                     "link-0e2685236cdb2a7f"
                   ],
@@ -10843,7 +10905,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Visigoth.ai · Data Storage",
+                  "text": "Visigoth.ai \u00b7 Data Storage",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -10857,7 +10919,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "An immutable storage architecture from Gaurav’s previous startup.",
+                  "text": "An immutable storage architecture from Gaurav\u2019s previous startup.",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -10905,8 +10967,8 @@
           },
           "website": "https://arul.sg/",
           "project_url": "https://arul.sg/",
-          "role": "Roast My TechStack speaker · #3",
-          "interests": "Remotion · Voicebox · FFmpeg · Gemma",
+          "role": "Roast My TechStack speaker \u00b7 #3",
+          "interests": "Remotion \u00b7 Voicebox \u00b7 FFmpeg \u00b7 Gemma",
           "bio": "Works with programmatic video, voice cloning and open-weight models for media workflows.",
           "building": "A programmatic video workflow using Remotion, Voicebox, FFmpeg and Gemma for rendering, audio and video summarisation.",
           "sort_order": 5,
@@ -10917,7 +10979,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #3",
+                  "text": "Speaker \u00b7 Roast #3",
                   "marks": [
                     "link-edb36dabc1b4989f"
                   ],
@@ -11009,8 +11071,8 @@
           "github": "https://github.com/KunojiLym/databricks-linkedin-analytics",
           "website": "https://www.yzouyang.com/category/blog-series/build-your-own-linkedin-analytics/",
           "project_url": "https://www.yzouyang.com/category/blog-series/build-your-own-linkedin-analytics/",
-          "role": "Roast My TechStack speaker · #4",
-          "interests": "Databricks · Medallion ETL · One Big Table · API · Retries & backoff",
+          "role": "Roast My TechStack speaker \u00b7 #4",
+          "interests": "Databricks \u00b7 Medallion ETL \u00b7 One Big Table \u00b7 API \u00b7 Retries & backoff",
           "bio": "Applies production-style data engineering to personal analytics and understanding LinkedIn reach.",
           "building": "A LinkedIn analytics pipeline built with Databricks and a medallion architecture, with attention to ETL, retries and query trade-offs.",
           "sort_order": 6,
@@ -11021,7 +11083,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #4",
+                  "text": "Speaker \u00b7 Roast #4",
                   "marks": [
                     "link-e88c64250300c5af"
                   ],
@@ -11081,7 +11143,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " · ",
+                  "text": " \u00b7 ",
                   "marks": [],
                   "_key": "s1"
                 },
@@ -11132,8 +11194,8 @@
           "github": "https://github.com/Kaleb-Nim/nim-kaleb",
           "website": "https://kalebnim.dev/",
           "project_url": "https://kalebnim.dev/",
-          "role": "Roast My TechStack speaker · #4",
-          "interests": "ASR · Whisper TTS · Oracle Cloud free tier · Guardrails · persona.md",
+          "role": "Roast My TechStack speaker \u00b7 #4",
+          "interests": "ASR \u00b7 Whisper TTS \u00b7 Oracle Cloud free tier \u00b7 Guardrails \u00b7 persona.md",
           "bio": "Explores conversational AI interfaces, speech recognition and real-time voice responses.",
           "building": "Voice Resume: an AI-powered interview app with speech recognition, spoken responses and application guardrails.",
           "sort_order": 7,
@@ -11144,7 +11206,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #4",
+                  "text": "Speaker \u00b7 Roast #4",
                   "marks": [
                     "link-e88c64250300c5af"
                   ],
@@ -11209,7 +11271,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " · ",
+                  "text": " \u00b7 ",
                   "marks": [],
                   "_key": "s1"
                 },
@@ -11253,8 +11315,8 @@
             }
           },
           "github": "https://github.com/yaksheng/techies-scape-260521",
-          "role": "Roast My TechStack speaker · #5",
-          "interests": "Multi-agent · Orchestration · Grounding · Containerised auth",
+          "role": "Roast My TechStack speaker \u00b7 #5",
+          "interests": "Multi-agent \u00b7 Orchestration \u00b7 Grounding \u00b7 Containerised auth",
           "bio": "Builds multi-agent workflows for discovering business opportunities, with a focus on grounding and orchestration.",
           "building": "A business-opportunity discovery system with an executive agent coordinating siloed, purpose-built child agents.",
           "sort_order": 8,
@@ -11265,7 +11327,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #5",
+                  "text": "Speaker \u00b7 Roast #5",
                   "marks": [
                     "link-717d5e07bb653d11"
                   ],
@@ -11354,8 +11416,8 @@
               "alt": "Alec Teo presenting PixelPuggles at Roast #5"
             }
           },
-          "role": "Roast My TechStack speaker · #5",
-          "interests": "Supabase auth · Clerk · Data schema · Agents-ready · Imagen",
+          "role": "Roast My TechStack speaker \u00b7 #5",
+          "interests": "Supabase auth \u00b7 Clerk \u00b7 Data schema \u00b7 Agents-ready \u00b7 Imagen",
           "bio": "Builds playful image experiences and explores how apps can become more agent-friendly.",
           "building": "PixelPuggles: an app that pixelates and animates photos, with image-generation cost and evaluation among the design questions.",
           "sort_order": 9,
@@ -11366,7 +11428,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #5",
+                  "text": "Speaker \u00b7 Roast #5",
                   "marks": [
                     "link-717d5e07bb653d11"
                   ],
@@ -11435,10 +11497,10 @@
           },
           "github": "https://github.com/evokoa/pggraph",
           "project_url": "https://github.com/evokoa/pggraph",
-          "role": "Roast My TechStack speaker · #5",
-          "interests": "Graph DB · PostgreSQL · RAG vs Graph · Hydration",
+          "role": "Roast My TechStack speaker \u00b7 #5",
+          "interests": "Graph DB \u00b7 PostgreSQL \u00b7 RAG vs Graph \u00b7 Hydration",
           "bio": "Works on graph capabilities in PostgreSQL to help AI agents navigate relationships between entities.",
-          "building": "Evokoa’s pgGraph: a virtual graph layer for AI agents built on PostgreSQL.",
+          "building": "Evokoa\u2019s pgGraph: a virtual graph layer for AI agents built on PostgreSQL.",
           "sort_order": 10,
           "recaps": [
             {
@@ -11447,7 +11509,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #5",
+                  "text": "Speaker \u00b7 Roast #5",
                   "marks": [
                     "link-717d5e07bb653d11"
                   ],
@@ -11538,10 +11600,10 @@
           },
           "website": "https://www.zhiji.io",
           "project_url": "https://www.zhiji.io",
-          "role": "Roast My TechStack speaker · #7",
-          "interests": "Vercel · Vanilla JS · Supabase / Postgres · Stripe · Claude / GPT / DeepSeek",
+          "role": "Roast My TechStack speaker \u00b7 #7",
+          "interests": "Vercel \u00b7 Vanilla JS \u00b7 Supabase / Postgres \u00b7 Stripe \u00b7 Claude / GPT / DeepSeek",
           "bio": "A solo, non-technical founder building a paid AI companion with AI-assisted development.",
-          "building": "Zhiji / 知己: an AI companion that uses Chinese astrology charts to personalise conversations.",
+          "building": "Zhiji / \u77e5\u5df1: an AI companion that uses Chinese astrology charts to personalise conversations.",
           "sort_order": 11,
           "recaps": [
             {
@@ -11550,7 +11612,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #7",
+                  "text": "Speaker \u00b7 Roast #7",
                   "marks": [
                     "link-4749dc2f4498da3c"
                   ],
@@ -11579,7 +11641,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Zhiji / 知己",
+                  "text": "Zhiji / \u77e5\u5df1",
                   "marks": [],
                   "_key": "s0"
                 }
@@ -11641,8 +11703,8 @@
           },
           "github": "https://github.com/ferterahadi/canary-lab/tree/main",
           "project_url": "https://github.com/ferterahadi/canary-lab/tree/main",
-          "role": "Roast My TechStack speaker · #7",
-          "interests": "Playwright · Agent guardrails · Git diff · Claude CLI",
+          "role": "Roast My TechStack speaker \u00b7 #7",
+          "interests": "Playwright \u00b7 Agent guardrails \u00b7 Git diff \u00b7 Claude CLI",
           "bio": "Builds tools for independently verifying AI-generated code and making agent changes inspectable.",
           "building": "Canary Lab: an AI repair loop for Playwright and a skill for coding tools, with deterministic execution and reviewable Git diffs.",
           "sort_order": 12,
@@ -11653,7 +11715,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #7",
+                  "text": "Speaker \u00b7 Roast #7",
                   "marks": [
                     "link-4749dc2f4498da3c"
                   ],
@@ -11745,8 +11807,8 @@
           "github": "https://github.com/tasercake/unfinal",
           "website": "https://www.unfinal.page/live",
           "project_url": "https://www.unfinal.page/live",
-          "role": "Roast My TechStack speaker · #7",
-          "interests": "Phoenix · LiveView · WebSockets · UX research",
+          "role": "Roast My TechStack speaker \u00b7 #7",
+          "interests": "Phoenix \u00b7 LiveView \u00b7 WebSockets \u00b7 UX research",
           "bio": "Explores server-first, real-time products with Phoenix LiveView and research-led UX.",
           "building": "Unfinal, with a server-first stack using exe.dev, Phoenix LiveView and WebSockets for real-time interactions.",
           "sort_order": 13,
@@ -11757,7 +11819,7 @@
               "children": [
                 {
                   "_type": "span",
-                  "text": "Speaker · Roast #7",
+                  "text": "Speaker \u00b7 Roast #7",
                   "marks": [
                     "link-4749dc2f4498da3c"
                   ],
@@ -11822,7 +11884,7 @@
                 },
                 {
                   "_type": "span",
-                  "text": " · ",
+                  "text": " \u00b7 ",
                   "marks": [],
                   "_key": "s1"
                 },

@@ -14,7 +14,7 @@
     "deploy": "astro build && wrangler deploy",
     "typecheck": "astro check",
     "design:check": ".opencode/skills/impeccable/scripts/impeccable detect src/",
-    "design:check:site": ".opencode/skills/impeccable/scripts/impeccable detect http://127.0.0.1:4321/ http://127.0.0.1:4321/events http://127.0.0.1:4321/posts http://127.0.0.1:4321/exco http://127.0.0.1:4321/members http://127.0.0.1:4321/posts/roast-7"
+    "design:check:site": ".opencode/skills/impeccable/scripts/impeccable detect http://127.0.0.1:4321/ http://127.0.0.1:4321/events http://127.0.0.1:4321/people http://127.0.0.1:4321/posts http://127.0.0.1:4321/posts/roast-7"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.1",

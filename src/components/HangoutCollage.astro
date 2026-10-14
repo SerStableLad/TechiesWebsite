@@ -1,0 +1,34 @@
+---
+import { Image } from "emdash/ui";
+import type { Page } from "../../emdash-env";
+
+interface Props {
+  home?: { data: Page; edit: Record<string, Record<string, string>> } | null;
+}
+const { home } = Astro.props;
+---
+
+<div class="hang-collage" aria-label="Post-event supper photos">
+  {home?.data.supper_photo && <figure class="hang-photo" {...home.edit.supper_photo}><Image image={home.data.supper_photo} loading="lazy" /></figure>}
+  {home?.data.supper_photo_two && <figure class="hang-photo" {...home.edit.supper_photo_two}><Image image={home.data.supper_photo_two} loading="lazy" /></figure>}
+  <figure class="hang-photo"><Image image={{ id: "01M4W903A7WXGZMMD32ZPYWH46", src: "/_emdash/api/media/file/01M4W903A7WXGZMMD32ZPYWH46.01M4W903C135X14N6THYA9FY2K.jpg", alt: "Techies members chatting around tables at a post-event hangout", width: 1280, height: 960 }} loading="lazy" /></figure>
+  <figure class="hang-photo"><Image image={{ id: "01M4W903A8GWB4H3NP354Y1ASC", src: "/_emdash/api/media/file/01M4W903A8GWB4H3NP354Y1ASC.01M4W903C1CY8RC1335N2M1GVZ.jpeg", alt: "Techies members gathered along restaurant tables for supper after an event", width: 1280, height: 960 }} loading="lazy" /></figure>
+</div>
+
+<style>
+  .hang-collage { position: relative; isolation: isolate; aspect-ratio: 1.16; margin: 48px 24px 0; }
+  .hang-photo { position: absolute; z-index: 1; margin: 0; padding: 8px; background: var(--text); box-shadow: 0 18px 36px color-mix(in srgb, var(--bg) 40%, transparent); }
+  .hang-photo:first-child { width: 52%; left: 1%; top: 3%; transform: rotate(-5deg); }
+  .hang-photo:nth-child(2) { width: 50%; right: 0; top: 13%; transform: rotate(6deg); }
+  .hang-photo:nth-child(3) { width: 48%; left: 6%; top: 43%; z-index: 0; transform: rotate(-8deg); }
+  .hang-photo:nth-child(4) { width: 54%; right: 4%; top: 51%; transform: rotate(3deg); }
+  .hang-photo :global(img) { width: 100%; height: auto; }
+  @media (max-width: 700px) {
+    .hang-collage { aspect-ratio: .42; margin: 40px 12px 0; }
+    .hang-photo { padding: 6px; }
+    .hang-photo:first-child { width: 84%; left: 0; top: 0; }
+    .hang-photo:nth-child(2) { width: 84%; right: 0; top: 24%; }
+    .hang-photo:nth-child(3) { width: 84%; left: 1%; top: 49%; }
+    .hang-photo:nth-child(4) { width: 88%; right: 0; top: 65%; }
+  }
+</style>

@@ -1,90 +1,142 @@
 ---
-import { getEmDashCollection } from "emdash";
+import { getEmDashCollection, getEmDashEntry } from "emdash";
 import { Image } from "emdash/ui";
 import Base from "../layouts/Base.astro";
 import UpcomingEvents from "../components/UpcomingEvents.astro";
+import HangoutCollage from "../components/HangoutCollage.astro";
 
 const result = await getEmDashCollection("programmes", { orderBy: { sort_order: "asc" }, limit: 12 });
 if (Astro.cache?.enabled) Astro.cache.set(result.cacheHint);
-const details: Record<string, { objective: string; format: string; audience: string; context?: string }> = {
-  roast: {
-    objective: "Understand the constraints behind a real stack, question architecture decisions, and compare alternatives with the people building it.",
-    format: "Community demos followed by open technical Q&A. Bring the working reality, including bottlenecks and decisions still unresolved.",
-    audience: "Developers, technical leads, founders, and solo builders who want to go beyond the demo.",
-  },
-  "prod-down": {
-    objective: "Learn from production incidents: what failed, how the team contained the damage, and what could prevent it next time.",
-    format: "Candid incident discussions about recovery, failure modes, and the guardrails teams wish they’d had.",
-    audience: "Builders and engineering teams interested in operating systems and learning from real mistakes.",
-    context: "The linked session was hosted with Lorong AI’s After Dark programme.",
-  },
-  "starting-right": {
-    objective: "Connect product and business decisions to architecture. Work out what is worth building, what can wait, and which shortcuts have consequences.",
-    format: "A collaborative workshop comparing approaches to a product scenario, before writing code.",
-    audience: "Founders, developers, product managers, and anyone making early product and engineering decisions.",
-    context: "This workshop belongs to Lorong AI’s Tinker Time series. Its published title is retained here.",
-  },
-};
+const recapsResult = await getEmDashCollection("posts", { where: { category: "event-summaries" }, orderBy: { event_date: "desc" }, limit: 6 });
+if (Astro.cache?.enabled) Astro.cache.set(recapsResult.cacheHint);
+const recaps = recapsResult.entries;
+const homeResult = await getEmDashEntry("pages", "home");
+if (Astro.cache?.enabled) Astro.cache.set(homeResult.cacheHint);
+const home = homeResult.entry;
+const roast = result.entries.find(programme => programme.id === "roast");
+const otherProgrammes = result.entries.filter(programme => programme.id !== "roast");
+const dateFormat = new Intl.DateTimeFormat("en-SG", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Singapore" });
 ---
 
 <Base title="Events" description="Explore Techies event series: real-stack discussions, production incident lessons, and hands-on product workshops.">
   <div class="container">
     <header class="page-heading">
-      <h1>Different formats.<br /><span class="accent">The same curiosity.</span></h1>
-      <p>Real stacks, production mistakes, and product decisions. Explore what each event is for, how we get into the details, and which conversation you want to join.</p>
+      <h1>Go deep into the how.<br /><span class="accent">Always ask why.</span></h1>
+      <p>We run events that go deep into the technical details. Because understanding what someone built is only half the story. The constraints, trade-offs, and decisions behind it are where we learn.</p>
+      <p class="hero-invitation">Real stacks. Honest questions. No sales pitch.</p>
       <a class="button" href="#upcoming">See upcoming events <span aria-hidden="true">↓</span></a>
     </header>
-    <nav class="series-nav" aria-label="Event series">{result.entries.map(programme => <a class="text-link" href={`#${programme.id}`}>{programme.data.title} <span aria-hidden="true">↓</span></a>)}</nav>
   </div>
-  <section class="section" aria-label="Our event series">
-    <div class="container series-list">
-      {result.entries.map(programme => {
-        const detail = details[programme.id];
-        return <article class="series" id={programme.id}>
-          <a class="series-art" href={programme.data.url} aria-label={`View a past ${programme.data.title} session on Luma`} {...programme.edit.cover}>{programme.data.cover && <Image image={programme.data.cover} />}</a>
-          <div class="series-copy">
-            <h2 {...programme.edit.title}>{programme.data.title}</h2>
-            <p class="series-label" {...programme.edit.label}>{programme.data.label?.replace(/^\d+\s*\/\s*/, "")}</p>
-            <p {...programme.edit.description}>{programme.data.description}</p>
-            {detail && <dl>
-              <div><dt>Objective</dt><dd>{detail.objective}</dd></div>
-              <div><dt>Format</dt><dd>{detail.format}</dd></div>
-              <div><dt>Who it’s for</dt><dd>{detail.audience}</dd></div>
-            </dl>}
-            {detail?.context && <p class="partner-note">{detail.context}</p>}
-            <div class="series-actions"><a class="text-link" href={programme.data.url}>View a past session <span aria-hidden="true">↗</span></a>{programme.id === "roast" && <a class="text-link" href="/tag/roast-my-techstack">Read the recaps <span aria-hidden="true">→</span></a>}</div>
-          </div>
-        </article>;
-      })}
-      <aside class="workshop-note"><h2>Prod is Brewing</h2><p>Our workshop umbrella: hands-on sessions to compare product choices and engineering trade-offs before writing code. Starting Right above is a published partner workshop, with its own Tinker Time identity.</p></aside>
+  <section class="section" id="audience">
+    <div class="container">
+      <div class="section-heading"><h2>Who’s in the room?</h2><p>Depth is the conversation, not a credential at the door. Bring curiosity, whatever your title or experience.</p></div>
+      <div class="audience-list">
+        <article><h3>Developers & technical leads</h3><p>Getting into architecture, bottlenecks, and the reality of running systems.</p></article>
+        <article><h3>Solo builders & founders</h3><p>Making product and stack decisions with real constraints.</p></article>
+        <article><h3>Product people & designers</h3><p>Connecting what people need with how the thing actually works.</p></article>
+        <article><h3>The technically curious</h3><p>Here to ask better questions and learn from people building.</p></article>
+      </div>
+      <a class="text-link audience-link" href="/people">Meet the community <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="formats-title">
+    <div class="container">
+      <div class="section-heading"><h2 id="formats-title">Different formats.<br />Same technical curiosity.</h2><p>Put a real stack on the table, unpack a production failure, or work through what to build next.</p></div>
+      <div class="formats-grid">
+        {roast && <article class="flagship" id="roast">
+          <a class="series-art" href={roast.data.url} aria-label={`View a past ${roast.data.title} session on Luma`} {...roast.edit.cover}>{roast.data.cover && <Image image={roast.data.cover} />}</a>
+          <div class="flagship-heading"><h3 {...roast.edit.title}>{roast.data.title}</h3><span class="flagship-label">Flagship</span></div>
+          <p {...roast.edit.description}>{roast.data.description}</p>
+          <p class="format-detail">Community demos, open technical Q&A, and the decisions still keeping builders up. Challenge the architecture, not the person.</p>
+          <div class="series-actions"><a class="text-link" href={roast.data.url}>Explore a past session <span aria-hidden="true">↗</span></a><a class="text-link" href="/tag/roast-my-techstack">Read the recaps <span aria-hidden="true">→</span></a></div>
+        </article>}
+        <div class="other-formats">
+          {otherProgrammes.map(programme => <article class="other-format" id={programme.id}>
+            <a class="series-art" href={programme.data.url} aria-label={`View a past ${programme.data.title} session on Luma`} {...programme.edit.cover}>{programme.data.cover && <Image image={programme.data.cover} />}</a>
+            <div><h3 {...programme.edit.title}>{programme.data.title}</h3><p {...programme.edit.description}>{programme.data.description}</p>
+              {programme.id === "starting-right" && <p class="partner-note">A workshop in Lorong AI’s Tinker Time series.</p>}
+              {programme.id === "prod-down" && <p class="partner-note">The linked session was part of Lorong AI’s After Dark programme.</p>}
+              <a class="text-link" href={programme.data.url}>Explore a past session <span aria-hidden="true">↗</span></a>
+            </div>
+          </article>)}
+          <aside class="workshop-note"><h3>Prod is Brewing</h3><p>Our workshop umbrella for hands-on product choices and engineering trade-offs. Starting Right keeps its published partner-event identity.</p></aside>
+        </div>
+      </div>
     </div>
   </section>
   <section class="section upcoming-section" id="upcoming">
-    <div class="container"><div class="section-heading"><h2>Get in the room.</h2><p>The live calendar updates when a session is published. Bring your questions. Stay for supper.</p></div><UpcomingEvents /><p class="calendar-note">Registration and any approval requirements are shown on each event’s Luma page.</p><a class="text-link" href="https://luma.com/APACtechies">Open the full Luma calendar <span aria-hidden="true">↗</span></a></div>
+    <div class="container"><div class="section-heading"><h2>Upcoming events</h2><p>Straight from our Luma calendar. Bring your questions. Stay for supper.</p></div><UpcomingEvents /><p class="calendar-note">Registration and any approval requirements are shown on each event’s Luma page.</p><a class="text-link" href="https://luma.com/APACtechies">Open the full Luma calendar <span aria-hidden="true">↗</span></a></div>
+  </section>
+  <section class="section hang-section" id="after-hang">
+    <div class="container">
+      <div class="hang-copy"><h2>The agenda ends.<br /><span class="accent">The conversation doesn’t.</span></h2><p {...home?.edit.supper_copy}>{home?.data.supper_copy || "Come for the technical discussion. Stay for supper, half-finished debates, and people to keep building with."}</p></div>
+      <HangoutCollage home={home} />
+    </div>
+  </section>
+  <section class="section recaps-section" id="recaps">
+    <div class="container">
+      <div class="section-heading"><h2>What came out of it?</h2><p>Open an event for the short version. Dive into the full recap for the technical details.</p></div>
+      {recaps.length ? <div class="recap-list">{recaps.map(post => {
+        const dateValue = post.data.event_date || post.data.publishedAt;
+        const date = dateValue ? new Date(dateValue) : null;
+        return <details class="recap">
+          <summary><span class="recap-title" {...post.edit.title}>{post.data.title}</span>{date && <time datetime={date.toISOString()}>{dateFormat.format(date)}</time>}<span class="recap-toggle" aria-hidden="true"></span></summary>
+          <div class="recap-body">{post.data.excerpt ? <p {...post.edit.excerpt}>{post.data.excerpt}</p> : <p>Read the full recap for the discussion and technical details from this session.</p>}<a class="text-link" href={`/posts/${post.id}`}>Read the full recap <span aria-hidden="true">→</span></a></div>
+        </details>;
+      })}</div> : <p>No recaps published yet.</p>}
+      <a class="text-link archive-link" href="/category/event-summaries">All recaps <span aria-hidden="true">→</span></a>
+    </div>
   </section>
 </Base>
 
 <style>
+  .page-heading { max-width: 940px; padding-bottom: 80px; }
+  .page-heading .hero-invitation { margin-top: 20px; color: var(--text); font-size: 16px; }
   .page-heading .button { margin-top: 28px; }
-  .series-nav { display: flex; flex-wrap: wrap; gap: 16px 32px; padding-bottom: 40px; }
-  .series-nav a { padding-block: 8px; }
-  .series-list { display: grid; gap: 72px; }
-  .series { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); align-items: start; gap: 64px; scroll-margin-top: 32px; }
-  .series + .series { border-top: 1px solid var(--border); padding-top: 72px; }
-  .series-art { display: block; aspect-ratio: 1; border-radius: 12px; overflow: hidden; }
-  .series-art :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .series-copy h2 { font-size: clamp(28px, 3vw, 36px); }
-  .series-label { color: var(--orange); margin-block: 16px 20px; }
-  dl { margin-block: 28px; }
-  dl > div { padding-block: 16px; border-top: 1px solid var(--border); }
-  dt { font-weight: 600; margin-bottom: 6px; }
-  dd { margin: 0; color: var(--secondary); }
-  .partner-note, .calendar-note { font-size: 14px; margin-bottom: 24px; }
+  .audience-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 64px; }
+  .audience-list article { border-top: 1px solid var(--border); padding-top: 20px; }
+  .audience-list h3 { font-size: 20px; margin-bottom: 12px; }
+  .audience-link { margin-top: 32px; }
+  .formats-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: start; }
+  .series-art { display: block; border-radius: 12px; overflow: hidden; }
+  .series-art :global(img) { width: 100%; height: auto; }
+  .flagship-heading { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-block: 28px 20px; }
+  .flagship-heading h3 { font-size: clamp(28px, 3vw, 36px); }
+  .flagship-label { background: var(--orange); color: var(--bg); padding: 4px 12px; border-radius: 4px; font-size: 14px; font-weight: 700; }
+  .format-detail { margin-block: 16px 24px; }
+  .other-formats { display: grid; gap: 32px; }
+  .other-format { display: grid; grid-template-columns: 144px minmax(0, 1fr); gap: 24px; }
+  .other-format h3 { margin-bottom: 16px; }
+  .other-format .text-link { margin-top: 20px; }
+  .partner-note { font-size: 14px; margin-top: 12px; }
   .series-actions { display: flex; flex-wrap: wrap; gap: 20px 32px; }
-  .workshop-note { border-top: 1px solid var(--border); padding-top: 40px; display: grid; grid-template-columns: .85fr 1.15fr; gap: 64px; }
-  .workshop-note h2 { font-size: 28px; }
+  .workshop-note { border-top: 1px solid var(--border); padding-top: 28px; }
+  .workshop-note h3 { margin-bottom: 16px; }
   .upcoming-section { background: var(--surface); }
-  .calendar-note { margin-top: 20px; }
-  @media (max-width: 900px) { .series, .workshop-note { gap: 32px; } }
-  @media (max-width: 700px) { .series, .workshop-note { grid-template-columns: 1fr; } .series-art { max-width: 460px; width: 100%; } .series-list { gap: 48px; } .series + .series { padding-top: 48px; } }
+  .calendar-note { font-size: 14px; margin-block: 20px 24px; }
+  .hang-copy { max-width: 650px; }
+  .hang-copy p { margin-top: 24px; max-width: 540px; }
+  .recap { border-top: 1px solid var(--border); }
+  .recap:last-child { border-bottom: 1px solid var(--border); }
+  .recap summary { display: flex; align-items: center; gap: 24px; padding: 24px 8px; cursor: pointer; list-style: none; }
+  .recap summary::-webkit-details-marker { display: none; }
+  .recap summary:hover .recap-title { color: var(--orange); }
+  .recap-title { flex: 1; font-size: 20px; font-weight: 600; line-height: 1.4; }
+  .recap time { font-size: 14px; color: var(--secondary); white-space: nowrap; }
+  .recap-toggle { width: 12px; height: 12px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); flex-shrink: 0; margin: 0 4px 6px; }
+  .recap[open] .recap-toggle { transform: rotate(225deg); margin-block: 6px 0; }
+  .recap-body { padding: 0 40px 28px 28px; margin-left: 8px; border-left: 1px solid var(--control-border); }
+  .recap-body p { max-width: min(58ch, 560px); margin-bottom: 20px; }
+  .archive-link { margin-top: 28px; }
+  @media (max-width: 1000px) { .formats-grid { gap: 32px; } .other-format { grid-template-columns: 1fr; } .other-format .series-art { max-width: 200px; } }
+  @media (max-width: 700px) {
+    .page-heading { padding-bottom: 56px; }
+    .audience-list, .formats-grid { grid-template-columns: 1fr; }
+    .formats-grid { gap: 48px; }
+    .other-format { grid-template-columns: 112px minmax(0, 1fr); gap: 20px; }
+    .recap summary { flex-wrap: wrap; gap: 12px; }
+    .recap-title { flex-basis: calc(100% - 32px); font-size: 18px; }
+    .recap time { order: 3; flex-basis: 100%; }
+    .recap-body { padding-left: 16px; padding-right: 8px; }
+  }
 </style>

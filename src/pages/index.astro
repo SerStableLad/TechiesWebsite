@@ -1,9 +1,9 @@
 ---
 import { getEmDashCollection, getEmDashEntry } from "emdash";
-import { Image } from "emdash/ui";
 import Base from "../layouts/Base.astro";
 import PostCard from "../components/PostCard.astro";
 import UpcomingEvents from "../components/UpcomingEvents.astro";
+import HangoutCollage from "../components/HangoutCollage.astro";
 
 const [homeResult, postResult] = await Promise.all([
   getEmDashEntry("pages", "home"),
@@ -79,9 +79,9 @@ const home = homeResult.entry;
   </section>
 
   <section class="section supper-section">
-    <div class="container supper-grid">
+    <div class="container">
       <div class="supper-copy"><h2>Come for the event.<br /><span class="accent">Stay for the company.</span></h2><p {...home?.edit.supper_copy}>{home?.data.supper_copy}</p><a class="text-link" href="/members">Meet the community <span aria-hidden="true">↗</span></a></div>
-      <div class="supper-photos"><div class="supper-main" {...home?.edit.supper_photo}>{home?.data.supper_photo && <Image image={home.data.supper_photo} />}</div><div class="supper-second" {...home?.edit.supper_photo_two}>{home?.data.supper_photo_two && <Image image={home.data.supper_photo_two} />}</div><span class="photo-caption">Techies, off the clock.</span></div>
+      <HangoutCollage home={home} />
     </div>
   </section>
 
@@ -116,20 +116,15 @@ const home = homeResult.entry;
   .audience-list h3 { font-size: 20px; margin-bottom: 12px; }
   .audience-link { margin-top: 32px; }
   .supper-section { background: var(--surface); }
-  .supper-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 64px; align-items: center; }
+  .supper-copy { max-width: 650px; }
   .supper-copy h2 { margin: 22px 0; }
   .supper-copy > p:not(.eyebrow) { margin-bottom: 26px; }
-  .supper-photos { position: relative; padding: 0 30px 94px 0; }
-  .supper-main { border-radius: 12px; overflow: hidden; aspect-ratio: 4/3; }
-  .supper-main :global(img), .supper-second :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .supper-second { position: absolute; width: 49%; right: 0; bottom: 40px; aspect-ratio: 4/3; border: 6px solid var(--surface); border-radius: 12px; overflow: hidden; }
-  .photo-caption { position: absolute; bottom: 0; left: 0; font-size: 14px; color: var(--secondary); }
   #upcoming .section-heading { margin-bottom: 24px; }
   .calendar-link { margin-top: 12px; }
   .calendar-note { margin-top: 16px; font-size: 14px; }
   .podcast-panel { display: grid; grid-template-columns: 1fr 1.2fr; gap: 64px; align-items: start; }
   .podcast-status { margin-top: 18px; font-size: 14px; color: var(--secondary); }
   .podcast-copy > p { margin-bottom: 28px; max-width: 560px; }
-  @media (max-width: 900px) { .hero { gap: 32px; } .supper-grid { gap: 32px; } .podcast-panel { gap: 40px; } }
-  @media (max-width: 700px) { .hero { grid-template-columns: 1fr; padding-block: 50px; gap: 40px; } .hero h1 { max-width: 500px; } .hero-intro { font-size: 16px; } .hero-visual { max-width: 480px; width: 100%; } .pillars article, .audience-list, .supper-grid, .podcast-panel { grid-template-columns: 1fr; } .pillars article { gap: 14px; } .supper-copy { margin-bottom: 12px; } }
+  @media (max-width: 900px) { .hero { gap: 32px; } .podcast-panel { gap: 40px; } }
+  @media (max-width: 700px) { .hero { grid-template-columns: 1fr; padding-block: 50px; gap: 40px; } .hero h1 { max-width: 500px; } .hero-intro { font-size: 16px; } .hero-visual { max-width: 480px; width: 100%; } .pillars article, .audience-list, .podcast-panel { grid-template-columns: 1fr; } .pillars article { gap: 14px; } .supper-copy { margin-bottom: 12px; } }
 </style>

@@ -37,8 +37,13 @@ const titleIncludesSiteName =
 const fullTitle = titleIncludesSiteName ? title : `${title} — ${siteTitle}`;
 const pageDescription = description ?? siteTagline;
 const menu = menuResult.data;
-// Resolve the old homepage anchor for existing CMS menus as well as new seeds.
-const menuItems = menu?.items.map(item => ({ ...item, url: item.url === "/#events" ? "/events" : item.url }));
+// Keep existing CMS menus aligned without requiring a destructive reseed.
+const menuItems = (menu?.items ?? [])
+	.filter(item => !["/category/event-summaries", "/members", "/exco"].includes(item.url))
+	.map(item => ({ ...item, url: item.url === "/#events" ? "/events" : item.url }));
+if (!menuItems.some(item => item.url === "/people")) {
+	menuItems.push({ id: "people", label: "People", url: "/people", children: [] });
+}
 
 const pageCtx = createPublicPageContext({
 	Astro,
@@ -99,7 +104,7 @@ const pageCtx = createPublicPageContext({
 						<p>A 3rd space for devs, dev-adjacents, and technically curious people to geek out.</p>
 					</div>
 					<div class="footer-column"><h2>Get in the room</h2><a href="https://luma.com/APACtechies">Luma calendar ↗</a><a href="/events">Our event series</a><a href="/#about">About Techies</a><a href="/#audience">Who’s in the room</a></div>
-					<div class="footer-column"><h2>The community</h2><a href="/category/event-summaries">Event Summaries</a><a href="/category/partnership-announcement">Partnership</a><a href="/campaigns">Giveaways</a><a href="/members">Member showcase</a><a href="/exco">Meet the Exco</a><a href="/#podcast">Listen to Season 1</a></div>
+					<div class="footer-column"><h2>The community</h2><a href="/events#recaps">Event recaps</a><a href="/category/partnership-announcement">Partnership</a><a href="/campaigns">Giveaways</a><a href="/people#members">Member showcase</a><a href="/people#exco">Meet the Exco</a><a href="/#podcast">Listen to Season 1</a></div>
 					<div class="footer-column"><h2>Keep in touch</h2><a href="https://linkedin.com/company/apac-techies">LinkedIn ↗</a><a href="https://linktr.ee/techiesapac">Linktree ↗</a></div>
 				</div>
 				<div class="footer-bottom"><span>© {new Date().getFullYear()} Techies APAC</span><span>Serious about the craft; relaxed with the people.</span></div>

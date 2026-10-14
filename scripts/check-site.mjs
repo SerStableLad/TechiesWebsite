@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 
 const origin = process.env.CHECK_SITE_URL || 'http://127.0.0.1:4321';
 const partnershipSlugs = ['community-partner-ai-coding-summit-2027', 'community-partner-sincon-2026'];
-const paths = ['/', '/posts', '/members', '/exco', '/category/event-summaries', '/category/partnership-announcement', '/tag/roast-my-techstack', ...partnershipSlugs.map(slug => `/posts/${slug}`), ...[2, 3, 4, 5, 6, 7].map(n => `/posts/roast-${n}`)];
+const paths = ['/', '/posts', '/people', '/members', '/category/event-summaries', '/category/partnership-announcement', '/tag/roast-my-techstack', ...partnershipSlugs.map(slug => `/posts/${slug}`), ...[2, 3, 4, 5, 6, 7].map(n => `/posts/roast-${n}`)];
 const images = new Set();
 paths.push('/events');
 for (const path of paths) {
@@ -15,15 +15,26 @@ for (const path of paths) {
   assert.equal((html.match(/<h1(?:\s|>)/g) || []).length, 1, `${path}: one page heading`);
   assert.match(html, /name="description"/, `${path}: description`);
   const primaryNav = html.match(/<nav\b[^>]*aria-label="Primary navigation"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
-  assert.ok(primaryNav?.includes('/category/event-summaries'), 'Event Summaries menu item');
+  const navLabels = [...primaryNav.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)].map(match => match[1].replace(/<[^>]+>/g, '').trim());
+  assert.deepEqual(navLabels.slice(1, -1), ['About', 'Events', 'Partnership', 'People'], 'Four primary destinations');
+  for (const legacy of ['/category/event-summaries', '/members', '/exco']) assert.ok(!primaryNav.includes(`href="${legacy}"`), `${legacy}: not a primary tab`);
+  for (const anchor of ['/events#recaps', '/people#exco', '/people#members']) assert.ok(html.includes(`href="${anchor}"`), `${anchor}: footer section link`);
   assert.ok(primaryNav?.includes('/category/partnership-announcement'), 'Partnership menu item');
   assert.ok(!primaryNav?.includes('href="/posts"'), 'Posts menu replaced by separate pages');
   assert.ok(primaryNav?.includes('href="/events"'), 'Events links to its own page');
   if (path === '/events') {
     assert.match(primaryNav, /aria-current="page"[^>]*>\s*Events/);
-    for (const text of ['Roast My TechStack', 'Prod is DOWN!!!', 'Starting Right', 'Prod is Brewing', 'Objective', 'Format', 'Who it’s for']) assert.ok(html.includes(text), text);
+    for (const text of ['Roast My TechStack', 'Prod is DOWN!!!', 'Starting Right', 'Prod is Brewing', 'Flagship', 'Always ask why.', 'Who’s in the room?']) assert.ok(html.includes(text), text);
+    const sectionIds = ['audience', 'formats-title', 'upcoming', 'after-hang', 'recaps'];
+    for (let i = 1; i < sectionIds.length; i++) assert.ok(html.indexOf(`id="${sectionIds[i - 1]}"`) < html.indexOf(`id="${sectionIds[i]}"`), 'Events follow the agreed content order');
     assert.ok(html.includes('/tag/roast-my-techstack'), 'Past recaps linked');
     assert.match(html, /class="upcoming-events"/);
+    const recaps = html.slice(html.indexOf('id="recaps"'));
+    assert.match(recaps, /All recaps/);
+    assert.ok(recaps.includes('href="/category/event-summaries"'), 'Full recap archive retained');
+    assert.equal((recaps.match(/<details class="recap"/g) || []).length, 6, 'Six expandable seeded recaps');
+    assert.equal((recaps.match(/class="recap-body"/g) || []).length, 6, 'Each recap has an inline summary');
+    for (const slug of partnershipSlugs) assert.ok(!recaps.includes(`/posts/${slug}`), 'Recaps exclude partnerships');
   }
   if (path === '/category/partnership-announcement') {
     assert.ok(/aria-current="page"[^>]*>\s*Partnership/.test(primaryNav), 'Partnership menu selected');
@@ -32,7 +43,6 @@ for (const path of paths) {
   }
   if (path === '/category/event-summaries') {
     assert.match(html, /<h1>Event Summaries<\/h1>/);
-    assert.ok(/aria-current="page"[^>]*>\s*Event Summaries/.test(primaryNav), 'Event Summaries menu selected');
     for (const slug of partnershipSlugs) assert.ok(!html.includes(`/posts/${slug}`), 'Partnerships excluded from event summaries');
   }
   if (path === '/tag/roast-my-techstack') {
@@ -53,8 +63,32 @@ for (const path of paths) {
     assert.match(html, /Starting Right/);
     assert.match(html, /Season 1 complete/);
     assert.match(html, /\/posts\/roast-7/);
+    assert.ok(!html.includes('class="supper-photos"'), 'Old homepage photo layout removed');
   }
-  if (path === '/exco') for (const name of ['Leong Han Wai', 'Jesse Sng', 'Yingzhao Ouyang', 'Kai Ming N.', 'Esther Tan']) assert.ok(html.includes(name), name);
+  if (path === '/' || path === '/events') {
+    assert.equal((html.match(/class="hang-photo"/g) || []).length, 4, `${path}: shared collage shows all four photos`);
+    for (const id of ['01M4W903A7WXGZMMD32ZPYWH46', '01M4W903A8GWB4H3NP354Y1ASC']) assert.ok(html.includes(id), `${path}: new hangout photo retained`);
+  }
+  if (path === '/people' || path === '/members') {
+    assert.match(html, /id="exco"/, 'Legacy Exco anchor retained');
+    assert.match(html, /id="members"/);
+    for (const name of ['Leong Han Wai', 'Jesse Sng', 'Ying Zhao', 'Kai Ming N.', 'Esther Tan']) assert.ok(html.includes(name), name);
+    assert.equal((html.match(/<article\b[^>]*id="jesse-sng"/g) || []).length, 1, 'Exco speaker appears once');
+    assert.match(html, /id="yingzhao-ouyang"/, 'Alternate organiser anchor retained');
+    for (const slug of ['jesse-sng', 'ying-zhao']) {
+      const card = html.match(new RegExp(`<article\\b[^>]*id="${slug}"[\\s\\S]*?<\\/article>`))?.[0];
+      assert.match(card, /full-photo/, `${slug}: full photo shown`);
+      assert.ok(!card.includes('portrait-crop'), `${slug}: portrait zoom disabled`);
+    }
+    assert.match(html, /Presented at Roast My TechStack/);
+    assert.match(html, /aria-haspopup="dialog"/);
+    assert.match(html, /<dialog\b/);
+    for (const label of ['LinkedIn', 'Website', 'GitHub']) {
+      assert.ok(html.includes(`aria-label="Ying Zhao’s ${label}"`), `${label}: icon link has an accessible name`);
+    }
+    assert.match(html, /id="kong"/, 'Legacy speaker anchors retained');
+    if (path === '/people') assert.match(primaryNav, /aria-current="page"[^>]*>\s*People/);
+  }
   if (path === '/posts/roast-7') {
     assert.ok(html.includes('canary-lab-promo.mp4'), 'Speaker demo retained');
     assert.ok(html.includes('Vercel · Vanilla JS · Supabase'), 'Stack labels remain readable');
@@ -78,11 +112,14 @@ for (const [from, to] of [['/index.html', '/'], ['/exco.html', '/exco'], ...[2, 
   assert.equal(new URL(response.headers.get('location'), origin).pathname, to);
 }
 assert.equal((await fetch(origin + '/404')).status, 404);
+const excoRedirect = await fetch(origin + '/exco', { redirect: 'manual' });
+assert.equal(excoRedirect.status, 301);
+assert.equal(excoRedirect.headers.get('location'), '/people#exco');
 assert.equal((await fetch(origin + '/does-not-exist')).status, 404);
 for (const path of ['/unknown/event-summaries', '/category/missing-term', '/tag/missing-term']) {
   assert.equal((await fetch(origin + path)).status, 404, `${path}: taxonomy route rejects unknown taxonomies and terms`);
 }
-console.log(`Site check passed: ${paths.length} routes, ${images.size} stored images, 8 redirects, metadata and 404s.`);
+console.log(`Site check passed: ${paths.length} routes, ${images.size} stored images, 9 redirects, metadata and 404s.`);
 
 if (process.argv.includes('--cms-check')) {
   assert.ok(['localhost', '127.0.0.1'].includes(new URL(origin).hostname), 'CMS mutation checks are local-only');

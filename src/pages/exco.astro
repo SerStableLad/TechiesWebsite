@@ -1,13 +1,3 @@
 ---
-import { getEmDashCollection } from "emdash";
-import Base from "../layouts/Base.astro";
-import ProfileCard from "../components/ProfileCard.astro";
-const { entries: team, cacheHint } = await getEmDashCollection("team", { orderBy: { sort_order: "asc" }, limit: 100 });
-if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+return Astro.redirect('/people#exco', 301);
 ---
-<Base title="Meet the Exco" description="The people behind Techies. Building a space where engineers can connect, get geeky, challenge their craft, and learn from one another.">
-  <div class="container page-content">
-    <header class="page-heading"><h1>Meet the <span class="accent">Exco.</span></h1><p>We are building a space where engineers can connect, get geeky, challenge their craft, and learn from one another without the fluff.</p></header>
-    <section class="card-grid" aria-label="Techies executive committee">{team.map(profile => <ProfileCard profile={profile} />)}</section>
-  </div>
-</Base>

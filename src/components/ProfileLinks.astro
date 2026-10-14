@@ -1,0 +1,19 @@
+---
+import LinkedInLogo from "./LinkedInLogo";
+interface Props {
+  name: string;
+  links: { label: string; url?: string }[];
+}
+const { name, links } = Astro.props;
+---
+<nav class="profile-links" aria-label={`${name}’s links`}>
+  {links.map(link => <a href={link.url} aria-label={`${name}’s ${link.label}`} title={link.label}>
+    {link.label === "LinkedIn" ? <LinkedInLogo /> : link.label === "GitHub" ? <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 .75a11.25 11.25 0 0 0-3.56 21.92c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.73 1.16 1.73 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.56 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.1 1.15a10.8 10.8 0 0 1 5.64 0c2.15-1.46 3.1-1.15 3.1-1.15.62 1.55.23 2.7.12 2.98.72.79 1.16 1.8 1.16 3.02 0 4.33-2.63 5.28-5.14 5.56.4.35.76 1.03.76 2.09v3.1c0 .3.2.65.77.54A11.25 11.25 0 0 0 12 .75Z" /></svg> : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" /><ellipse cx="12" cy="12" rx="4" ry="9" /><path d="M3 12h18M5 6.5c4 2 10 2 14 0M5 17.5c4-2 10-2 14 0" /></svg>}
+  </a>)}
+</nav>
+<style>
+  .profile-links { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 0; }
+  .profile-links a { display: grid; place-items: center; width: 44px; height: 44px; color: var(--text); }
+  .profile-links a:hover { color: var(--orange); }
+  .profile-links :global(svg) { width: 22px; height: 22px; }
+</style>

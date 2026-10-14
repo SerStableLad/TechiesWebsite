@@ -1,37 +1,102 @@
 ---
 import { Image, PortableText } from "emdash/ui";
-import type { Member, Team } from "../../emdash-env";
-interface Props { profile: { id: string; data: Member | Team; edit: Record<string, Record<string, string>> }; showcase?: boolean; }
-const { profile, showcase = false } = Astro.props;
-const person = profile.data;
-const member = person as Member;
+import type { Member } from "../../emdash-env";
+import { presentationRecaps, zoomOutPortrait, type DirectoryProfile } from "../utils/people";
+import ProfileLinks from "./ProfileLinks.astro";
+
+interface Props { profile: DirectoryProfile; }
+const { profile } = Astro.props;
+const person = profile.data as Member;
 const initials = person.title.split(" ").slice(0, 2).map(part => part[0]).join("");
-const crop = member.portrait_crop as { x?: number; y?: number; size?: number } | undefined;
-const hasCrop = showcase && crop && Number.isFinite(crop.x) && Number.isFinite(crop.y) && Number.isFinite(crop.size) && crop.size! > 0 && crop.size! <= 1 && crop.x! >= 0 && crop.y! >= 0;
+const fullPhoto = ["jesse-sng", "ying-zhao"].includes(profile.id);
+let crop = (fullPhoto ? undefined : person.portrait_crop) as { x?: number; y?: number; size?: number } | undefined;
+const hasCrop = crop && Number.isFinite(crop.x) && Number.isFinite(crop.y) && Number.isFinite(crop.size) && crop.size! > 0 && crop.size! <= 1 && crop.x! >= 0 && crop.y! >= 0;
+if (hasCrop) crop = zoomOutPortrait(profile.id, crop as { x: number; y: number; size: number });
+const recaps = presentationRecaps(person.recaps);
+const links = [{ label: "LinkedIn", url: person.linkedin }, { label: "Website", url: person.website }, { label: "GitHub", url: person.github }].filter(link => link.url);
+const dialogId = `member-details-${profile.id}`;
 ---
-<article class:list={["profile-card", { "member-card": showcase }]} id={showcase ? profile.id : undefined}>
-  <div class:list={["profile-image", { "portrait-crop": hasCrop }]} style={hasCrop ? `--crop-x:${crop!.x};--crop-y:${crop!.y};--crop-size:${crop!.size}` : undefined} {...profile.edit.photo}>{person.photo ? <Image image={person.photo} /> : <div class="profile-placeholder" aria-hidden="true">{initials}</div>}</div>
-  <div class="profile-copy">
+<article class="profile-card member-card" id={profile.id}>
+  {profile.aliases.map(alias => <span id={alias} aria-hidden="true"></span>)}
+  <header class="card-heading">
     <h2 {...profile.edit.title}>{person.title}</h2>
-    {showcase ? member.recaps?.length && <div class="speaker-tags" {...profile.edit.recaps}><PortableText value={member.recaps} /></div> : person.role && <p class="role" {...profile.edit.role}>{person.role}</p>}
-    {person.bio && <p {...profile.edit.bio}>{person.bio}</p>}
-    <div class="profile-links">{person.linkedin && <a href={person.linkedin}>LinkedIn ↗</a>}{!showcase && person.github && <a href={person.github}>GitHub ↗</a>}{!showcase && person.website && <a href={person.website}>Website ↗</a>}</div>
-    {showcase && member.projects?.length && <section class="member-projects" aria-label={`${person.title}’s projects`} {...profile.edit.projects}><h3>Projects</h3><PortableText value={member.projects} /></section>}
+    {profile.excoRoles.length > 0 && <div class="exco-details"><span class="exco-tag">Exco</span><p>{profile.excoRoles.join(" · ")}</p></div>}
+  </header>
+  <div class:list={["profile-image", { "portrait-crop": hasCrop, "full-photo": fullPhoto }]} style={hasCrop ? `--crop-x:${crop!.x};--crop-y:${crop!.y};--crop-size:${crop!.size}` : undefined} {...profile.edit.photo}>
+    {person.photo ? <Image image={person.photo} /> : <div class="profile-placeholder" aria-hidden="true">{initials}</div>}
+  </div>
+  <div class="card-details">
+    {recaps.length > 0 && <div class="speaker-tags" {...profile.edit.recaps}><PortableText value={recaps} /></div>}
+    <div class="card-actions">
+      {links.length > 0 && <ProfileLinks name={person.title} links={links} />}
+      <button class="learn-more text-link" type="button" data-member-dialog={dialogId} aria-haspopup="dialog" aria-controls={dialogId}>Learn more <span class="sr-only">about {person.title}</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" focusable="false"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></button>
+    </div>
   </div>
 </article>
+<dialog id={dialogId} class="member-dialog" aria-labelledby={`${dialogId}-title`}>
+  <form method="dialog" class="dialog-close"><button class="button secondary" autofocus>Close <span class="sr-only">{person.title}’s profile</span><span aria-hidden="true">×</span></button></form>
+  {person.photo && <div class:list={["dialog-photo", { "portrait-crop": hasCrop, "full-photo": fullPhoto }]} style={hasCrop ? `--crop-x:${crop!.x};--crop-y:${crop!.y};--crop-size:${crop!.size}` : undefined}><Image image={person.photo} /></div>}
+  <h2 id={`${dialogId}-title`}>{person.title}</h2>
+  {profile.excoRoles.length > 0 && <div class="exco-details"><span class="exco-tag">Exco</span><p>{profile.excoRoles.join(" · ")}</p></div>}
+  {person.bio && <p class="member-bio" {...profile.edit.bio}>{person.bio}</p>}
+  {links.length > 0 && <ProfileLinks name={person.title} links={links} />}
+  {person.interests && <section class="member-detail"><h3>Interests</h3><p {...profile.edit.interests}>{person.interests}</p></section>}
+  {(person.projects?.length || person.building) && <section class="member-detail member-projects"><h3>Projects</h3>{person.projects?.length ? <div {...profile.edit.projects}><PortableText value={person.projects} /></div> : <p {...profile.edit.building}>{person.building}</p>}</section>}
+  {person.project_url && <a class="text-link" href={person.project_url}>View project <span aria-hidden="true">↗</span></a>}
+  {recaps.length > 0 && <section class="member-detail"><h3>Presentations</h3><div class="speaker-tags" {...profile.edit.recaps}><PortableText value={recaps} /></div></section>}
+</dialog>
+
+<script>
+  document.addEventListener("click", event => {
+    const trigger = (event.target as Element).closest<HTMLButtonElement>("[data-member-dialog]");
+    if (!trigger) return;
+    const dialog = document.getElementById(trigger.dataset.memberDialog!);
+    if (dialog instanceof HTMLDialogElement) {
+      trigger.focus();
+      dialog.showModal();
+    }
+  });
+</script>
+
 <style>
-  .profile-card { scroll-margin-top: 24px; }
-  .profile-card:target { outline: 2px solid var(--orange); outline-offset: 4px; }
-  .member-card .profile-image { position: relative; width: 160px; aspect-ratio: 1; margin: 26px 26px 0; border-radius: 12px; }
+  .member-card { position: relative; display: flex; flex-direction: column; align-self: start; scroll-margin-top: 24px; }
+  .member-card:target, .member-card:has(> span:target) { outline: 2px solid var(--orange); outline-offset: 4px; }
+  .member-card > span { position: absolute; top: 0; }
+  .card-heading { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .card-heading h2 { font-size: 26px; margin: 0; }
+  .member-card .profile-image { position: relative; width: 100%; aspect-ratio: 1; margin: 0; border-radius: 0; }
+  .member-card .profile-placeholder { font-size: 64px; background: var(--card); }
   .portrait-crop :global(img) { position: absolute; width: calc(100% / var(--crop-size)); max-width: none; height: auto; left: calc(-100% * var(--crop-x) / var(--crop-size)); top: calc(-100% * var(--crop-y) / var(--crop-size)); }
-  .speaker-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .card-details { padding: 16px 16px 12px; display: flex; flex-direction: column; gap: 12px; }
+  .card-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+  .exco-details { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+  .exco-details p { font-size: 14px; }
+  .exco-tag { color: var(--orange); font-size: 14px; font-weight: 700; }
+  .speaker-tags { display: flex; flex-wrap: wrap; gap: 4px 16px; }
   .speaker-tags :global(p) { font-size: 14px; }
-  .speaker-tags :global(a) { display: inline-block; color: var(--orange); border: 1px solid var(--control-border); border-radius: 4px; padding: 3px 8px; }
-  .speaker-tags :global(a:hover) { color: var(--text); border-color: var(--orange); }
-  .member-projects { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
-  .member-projects > h3 { font-size: 20px; margin-bottom: 16px; }
-  .member-projects :global(h4) { font-size: 16px; line-height: 1.5; margin: 20px 0 6px; }
-  .member-projects :global(p) { margin-top: 6px; }
-  .member-projects :global(a), .member-card .profile-links a { color: var(--text); text-decoration: underline; text-underline-offset: 4px; }
-  .member-projects :global(a:hover), .member-card .profile-links a:hover { color: var(--orange); }
+  .speaker-tags :global(a) { display: inline-block; color: var(--secondary); text-decoration: underline; text-underline-offset: 4px; padding-block: 4px; }
+  .speaker-tags :global(a:hover) { color: var(--orange); }
+  .learn-more { margin-left: auto; min-height: 44px; gap: 8px; padding: 8px 4px; border: 0; background: transparent; color: var(--orange); cursor: pointer; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .member-dialog { width: min(720px, calc(100% - 48px)); max-height: calc(100dvh - 64px); padding: 32px; border: 1px solid var(--control-border); border-radius: 12px; background: var(--surface); color: var(--text); overflow-y: auto; overflow-wrap: anywhere; }
+  .member-dialog::backdrop { background: color-mix(in srgb, var(--bg) 75%, transparent); }
+  .dialog-close { display: flex; justify-content: end; margin-bottom: 24px; }
+  .dialog-photo { position: relative; width: 128px; height: 128px; margin-bottom: 24px; border-radius: 12px; overflow: hidden; }
+  .dialog-photo :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .dialog-photo.portrait-crop :global(img) { width: calc(100% / var(--crop-size)); height: auto; }
+  .full-photo :global(img) { object-fit: contain; }
+  .member-dialog h2 { font-size: 32px; margin-bottom: 20px; }
+  .member-dialog .exco-details { margin-bottom: 20px; }
+  .member-bio { margin-bottom: 24px; }
+  .member-detail { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .member-detail h3 { margin-bottom: 16px; }
+  .member-detail + a { margin-top: 20px; }
+  .member-projects :global(h4) { font-size: 18px; line-height: 1.5; margin: 20px 0 6px; }
+  .member-projects :global(p + p) { margin-top: 12px; }
+  .member-projects :global(a) { color: var(--text); text-decoration: underline; text-underline-offset: 4px; }
+  .member-projects :global(a:hover) { color: var(--orange); }
+  :global(body:has(.member-dialog[open])) { overflow: hidden; }
+  @media (max-width: 640px) {
+    .member-dialog { width: 100%; height: 100dvh; max-height: 100dvh; max-width: 100%; margin: 0; padding: 24px 20px; border: 0; border-radius: 0; }
+  }
 </style>
