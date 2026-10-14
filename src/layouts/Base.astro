@@ -3,6 +3,7 @@ import { getMenuWithCacheHint, getSiteSettingsWithCacheHint } from "emdash";
 import { EmDashHead, EmDashBodyStart, EmDashBodyEnd } from "emdash/ui";
 import { createPublicPageContext } from "emdash/page";
 import { resolveStarterSiteIdentity } from "../utils/site-identity";
+import AnnouncementBanner from "../components/AnnouncementBanner.astro";
 import "../styles/theme.css";
 
 interface Props {
@@ -36,6 +37,8 @@ const titleIncludesSiteName =
 const fullTitle = titleIncludesSiteName ? title : `${title} — ${siteTitle}`;
 const pageDescription = description ?? siteTagline;
 const menu = menuResult.data;
+// Resolve the old homepage anchor for existing CMS menus as well as new seeds.
+const menuItems = menu?.items.map(item => ({ ...item, url: item.url === "/#events" ? "/events" : item.url }));
 
 const pageCtx = createPublicPageContext({
 	Astro,
@@ -62,13 +65,14 @@ const pageCtx = createPublicPageContext({
 	<body>
 		<a class="skip-link" href="#main">Skip to content</a>
 		<EmDashBodyStart page={pageCtx} />
+		<AnnouncementBanner />
 
 		<header class="site-header">
 			<nav class="site-nav container" aria-label="Primary navigation">
 				<a class="wordmark" href="/" aria-label="Techies home">&gt;Techies<span>_</span></a>
 				<div class="nav-links">
 				{
-					menu?.items.map((item) => (
+					menuItems?.map((item) => (
 						<a
 							href={item.url}
 							target={item.target}
@@ -94,8 +98,8 @@ const pageCtx = createPublicPageContext({
 						<img src={siteLogo?.url || "/brand/techies-wordmark.png"} alt={siteLogo?.alt || "Techies"} width="155" loading="lazy" />
 						<p>A 3rd space for devs, dev-adjacents, and technically curious people to geek out.</p>
 					</div>
-					<div class="footer-column"><h2>Get in the room</h2><a href="https://luma.com/APACtechies">Luma calendar ↗</a><a href="/#events">Our programmes</a><a href="/#about">About Techies</a></div>
-					<div class="footer-column"><h2>The community</h2><a href="/posts">Posts & event summaries</a><a href="/members">Member showcase</a><a href="/exco">Meet the Exco</a><a href="/#podcast">Listen to Season 1</a></div>
+					<div class="footer-column"><h2>Get in the room</h2><a href="https://luma.com/APACtechies">Luma calendar ↗</a><a href="/events">Our event series</a><a href="/#about">About Techies</a><a href="/#audience">Who’s in the room</a></div>
+					<div class="footer-column"><h2>The community</h2><a href="/category/event-summaries">Event Summaries</a><a href="/category/partnership-announcement">Partnership</a><a href="/campaigns">Giveaways</a><a href="/members">Member showcase</a><a href="/exco">Meet the Exco</a><a href="/#podcast">Listen to Season 1</a></div>
 					<div class="footer-column"><h2>Keep in touch</h2><a href="https://linkedin.com/company/apac-techies">LinkedIn ↗</a><a href="https://linktr.ee/techiesapac">Linktree ↗</a></div>
 				</div>
 				<div class="footer-bottom"><span>© {new Date().getFullYear()} Techies APAC</span><span>Serious about the craft; relaxed with the people.</span></div>

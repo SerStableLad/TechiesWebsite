@@ -176,6 +176,218 @@ def entry(slug, data, status="published", **other):
     return dict(id=slug, slug=slug, status=status, data=data, **other)
 
 
+def member_profiles():
+    """Curated introductions; identity, photos, links and topics come from Roast #2–#7."""
+    introductions = {
+        "Marcus Liang": ("Marcus presented Harwav Order Hub at Roast #2, connecting user feedback to an AI-assisted software repair workflow with human validation before deployment.", "Harwav Order Hub: chatbot feedback becomes GitHub issues, then AI-generated fixes for a human to review."),
+        "Ee One Lim": ("Ee One brought two builds to the room: Kantaro, which teaches Spanish through music, and Care Compass, which helps caregivers find support resources.", "Kantaro, a music-based Spanish learning app, and Care Compass, a caregiver resource app using retrieval-augmented generation."),
+        "Jesse Sng": ("Jesse shared Drag Flow at Roast #2 and an AI content pipeline at Roast #6, exploring visual automation and reliable generation across multiple media formats.", "Drag Flow, a drag-and-drop workflow tool, and a pipeline that turns source material into podcasts, blogs, images and audio in parallel."),
+        "Abdelrahman Fliou": ("Abdelrahman presented TransPrice at Roast #3, exploring how document parsing and deterministic analysis can support an AI pricing copilot.", "TransPrice: a pricing copilot that turns PDFs into Markdown for downstream model work."),
+        "Gaurav Kumar Manek": ("Gaurav shared the immutable storage architecture of his previous startup, Visigoth.ai, at Roast #3, then returned at Roast #6 to discuss evaluating AI agents and bounding their blast radius.", "Visigoth.ai’s storage architecture, shared from a previous startup, and evaluation approaches for AI agents."),
+        "Arul Kumaran": ("Arul presented a programmatic video toolchain at Roast #3, combining React-based rendering, local voice cloning, media processing and open-weight models.", "A programmatic video workflow using Remotion, Voicebox, FFmpeg and Gemma for rendering, audio and video summarisation."),
+        "Ying Zhao": ("Ying shared a personal LinkedIn analytics pipeline at Roast #4, applying production-style data engineering to understand reach and performance.", "A LinkedIn analytics pipeline built with Databricks and a medallion architecture, with attention to ETL, retries and query trade-offs."),
+        "Kaleb Nim": ("Kaleb presented Voice Resume at Roast #4, exploring a conversational way for employers to ask questions and receive real-time answers from a resume.", "Voice Resume: an AI-powered interview app with speech recognition, spoken responses and application guardrails."),
+        "Richard Lee": ("Richard shared a multi-agent system for finding business opportunities at Roast #5, including lessons on grounding, orchestration and avoiding unnecessary complexity.", "A business-opportunity discovery system with an executive agent coordinating siloed, purpose-built child agents."),
+        "Alec Teo": ("Alec presented PixelPuggles at Roast #5, bringing questions about authentication, data design and agent-friendly interfaces to an image app.", "PixelPuggles: an app that pixelates and animates photos, with image-generation cost and evaluation among the design questions."),
+        "Dalton Prescott Ng": ("Dalton presented pgGraph at Roast #5, exploring how graph capabilities can live in Postgres and help AI agents work with relationships between entities.", "Evokoa’s pgGraph: a virtual graph layer for AI agents built on PostgreSQL."),
+        "Kong": ("Kong is a solo, non-technical founder who presented Zhiji at Roast #7, sharing how he built a paid AI astrology companion without a human engineer in the loop.", "Zhiji / 知己: an AI companion that uses Chinese astrology charts to personalise conversations."),
+        "Fernandi": ("Fernandi presented Canary Lab at Roast #7, focusing on independently verifying AI-generated output before it ships and keeping agent changes inspectable.", "Canary Lab: an AI repair loop for Playwright and a skill for coding tools, with deterministic execution and reviewable Git diffs."),
+        "Krishna": ("Krishna shared Unfinal and a server-first approach to real-time products at Roast #7, bringing together Phoenix LiveView, persistent services and research-led UX.", "Unfinal, with a server-first stack using exe.dev, Phoenix LiveView and WebSockets for real-time interactions."),
+    }
+    bios = {
+        "Marcus Liang": "Builds AI-assisted software workflows that connect user feedback to human-reviewed fixes.",
+        "Ee One Lim": "Builds apps for learning and care, from Spanish through music to finding caregiver support.",
+        "Jesse Sng": "Explores visual automation and AI content workflows across text, images, audio and video.",
+        "Abdelrahman Fliou": "Builds a pricing copilot that combines document processing with deterministic analysis.",
+        "Gaurav Kumar Manek": "Shares practical experience in immutable data storage, AI agent evaluations and guardrails.",
+        "Arul Kumaran": "Works with programmatic video, voice cloning and open-weight models for media workflows.",
+        "Ying Zhao": "Applies production-style data engineering to personal analytics and understanding LinkedIn reach.",
+        "Kaleb Nim": "Explores conversational AI interfaces, speech recognition and real-time voice responses.",
+        "Richard Lee": "Builds multi-agent workflows for discovering business opportunities, with a focus on grounding and orchestration.",
+        "Alec Teo": "Builds playful image experiences and explores how apps can become more agent-friendly.",
+        "Dalton Prescott Ng": "Works on graph capabilities in PostgreSQL to help AI agents navigate relationships between entities.",
+        "Kong": "A solo, non-technical founder building a paid AI companion with AI-assisted development.",
+        "Fernandi": "Builds tools for independently verifying AI-generated code and making agent changes inspectable.",
+        "Krishna": "Explores server-first, real-time products with Phoenix LiveView and research-led UX.",
+    }
+    project_descriptions = {
+        "Harwav Order Hub": "Turns chatbot feedback into GitHub issues and AI-generated fixes, with human review before deployment.",
+        "Kantaro · kantaro.live": "Teaches Spanish through music, using real lyrics and open-source components.",
+        "Drag Flow": "Connects automation workflows by dragging and linking nodes.",
+        "TransPrice": "A pricing copilot that turns PDFs into Markdown before model work.",
+        "Visigoth.ai · Data Storage": "An immutable storage architecture from Gaurav’s previous startup.",
+        "Programmatic Video Toolchain": "Combines Remotion, Voicebox, FFmpeg and Gemma for video rendering, voice cloning and summarisation.",
+        "Personal LinkedIn Analytics Pipeline": "A Databricks pipeline using medallion ETL to analyse LinkedIn performance.",
+        "Care Compass": "Helps caregivers find support resources using retrieval-augmented generation.",
+        "Voice Resume": "Lets employers ask questions and receive real-time spoken answers from an AI-powered resume.",
+        "Agents To Find Business Opportunities": "An executive agent coordinates purpose-built child agents to discover business opportunities.",
+        "PixelPuggles": "Pixelates and animates photos, with agent-friendly interaction among its design goals.",
+        "Evokoa · pgGraph": "A virtual graph layer for AI agents built on PostgreSQL.",
+        "AI Content Pipeline": "Turns source material into podcasts, blogs, images and audio in parallel.",
+        "Zhiji / 知己": "An AI companion that uses Chinese astrology charts to personalise conversations.",
+        "Canary Lab": "Independently verifies AI output with an AI repair loop for Playwright and a skill for coding tools.",
+        "Unfinal / exe.dev": "A server-first real-time product using exe.dev, Phoenix LiveView and WebSockets.",
+    }
+    # Square head-and-shoulders crops, in fractions of the original image width.
+    crops = {
+        "Ee One Lim": {"x": .36, "y": .35, "size": .29},
+        "Jesse Sng": {"x": .12, "y": .05, "size": .40},
+        "Ying Zhao": {"x": .12, "y": .06, "size": .42},
+        "Abdelrahman Fliou": {"x": .03, "y": .48, "size": .22},
+        "Gaurav Kumar Manek": {"x": .50, "y": .17, "size": .22},
+        "Arul Kumaran": {"x": .17, "y": .49, "size": .23},
+        "Kaleb Nim": {"x": .30, "y": .10, "size": .55},
+        "Richard Lee": {"x": .05, "y": .05, "size": .26},
+        "Alec Teo": {"x": .02, "y": .00, "size": .32},
+        "Dalton Prescott Ng": {"x": .10, "y": .015, "size": .28},
+        "Kong": {"x": .10, "y": .08, "size": .43},
+        "Fernandi": {"x": .39, "y": .16, "size": .29},
+        "Krishna": {"x": .25, "y": .39, "size": .22},
+    }
+    people = {}
+    for edition in range(2, 8):
+        for card in source(f"roast-{edition}.html").find("article"):
+            if "speaker-card" not in card.attrs.get("class", "").split():
+                continue
+            name = next(card.find("h2")).text()
+            links = list(card.find("a"))
+            linkedin = next(a.attrs["href"] for a in links if a.attrs.get("title") == "LinkedIn")
+            # Roast #2 says Jesse Lim but links to Jesse Sng, as does Roast #6.
+            if linkedin == "https://www.linkedin.com/in/jesse-sng-05ab7944/":
+                name = "Jesse Sng"
+            person = people.setdefault(linkedin, {"title": name, "linkedin": linkedin, "editions": [], "topics": [], "projects": []})
+            person["editions"].append(edition)
+            tags = next(n for n in card.find("div") if "speaker-tags" in n.attrs.get("class", "").split())
+            for tag in tags.find("span"):
+                if tag.text() not in person["topics"]:
+                    person["topics"].append(tag.text())
+            photo = next(card.find("img"), None)
+            if photo:
+                person["photo"] = image(photo.attrs["src"], photo.attrs.get("alt", name))
+            for link in links:
+                label, href = link.attrs.get("title", ""), link.attrs["href"]
+                if "GitHub" in label:
+                    person["github"] = href.replace("http://github.com/", "https://github.com/")
+                elif label in {"Website", "Blog series"}:
+                    person.setdefault("website", href)
+                    person["project_url"] = href
+            if name in {"Dalton Prescott Ng", "Fernandi"}:
+                person["project_url"] = person["github"]
+            project_name = next(p.text() for p in card.find("p") if "speaker-project" in p.attrs.get("class", "").split())
+            # Agent evals was a talk, rather than a separate product.
+            if project_name == "Evals for AI Agents":
+                continue
+            title = {"Kantaro · kantaro.live": "Kantaro", "Evokoa · pgGraph": "pgGraph", "Unfinal / exe.dev": "Unfinal"}.get(project_name, project_name)
+            heading, summary, project_links = Node(), Node(), Node()
+            heading.children = [title]
+            summary.children = [project_descriptions[project_name]]
+            for link in links:
+                label = link.attrs.get("title", "")
+                if label not in {"Website", "Blog series", "GitHub", "Slides on GitHub"}:
+                    continue
+                if project_links.children:
+                    project_links.children.append(" · ")
+                anchor = Node("a", [("href", link.attrs["href"].replace("http://github.com/", "https://github.com/"))])
+                anchor.children = ["Slides on GitHub" if name == "Richard Lee" and label == "GitHub" else label]
+                project_links.children.append(anchor)
+            person["projects"].extend([block(heading, "h4"), block(summary)])
+            if project_links.children:
+                person["projects"].append(block(project_links))
+    members = []
+    for i, person in enumerate(people.values()):
+        editions = person.pop("editions")
+        person["role"] = "Roast My TechStack speaker · " + ", ".join(f"#{n}" for n in editions)
+        person["recaps"] = []
+        for edition in editions:
+            wrapper = Node()
+            link = Node("a", [("href", f"/posts/roast-{edition}")])
+            link.children = [f"Speaker · Roast #{edition}"]
+            wrapper.children = [link]
+            recap = block(wrapper)
+            # Internal links must stay on this site, rather than the legacy origin.
+            recap["markDefs"][0]["href"] = f"/posts/roast-{edition}"
+            recap["_key"] = f"recap-{edition}"
+            recap["children"][0]["_key"] = "s0"
+            person["recaps"].append(recap)
+        person["interests"] = " · ".join(person.pop("topics"))
+        person["bio"] = bios[person["title"]]
+        person["building"] = introductions[person["title"]][1]
+        if person["title"] in crops:
+            person["portrait_crop"] = crops[person["title"]]
+        for i_block, project in enumerate(person["projects"]):
+            project["_key"] = f"project-{i_block}"
+            for j, span in enumerate(project["children"]):
+                span["_key"] = f"s{j}"
+        person["sort_order"] = i
+        slug = re.sub(r"[^a-z0-9]+", "-", person["title"].lower()).strip("-")
+        members.append(entry(slug, person))
+    # Use the existing close-up portraits for members who are also on the Exco.
+    for article in source("exco.html").find("article"):
+        link = next(article.find("a"), None)
+        if not link:
+            continue
+        profile = next((m["data"] for m in members if m["data"]["linkedin"].rstrip("/").replace("www.", "").replace("sg.", "") == link.attrs["href"].rstrip("/").replace("www.", "").replace("sg.", "")), None)
+        if profile:
+            photo = next(article.find("img"))
+            profile["photo"] = image(photo.attrs["src"], photo.attrs.get("alt", profile["title"]))
+    return members
+
+
+def link_member_profiles(posts, members):
+    names = {m["data"]["title"]: m["slug"] for m in members}
+    names["Jesse Lim"] = names["Jesse Sng"]
+    for post in posts:
+        if post["slug"] not in {f"roast-{n}" for n in range(2, 8)}:
+            continue
+        for item in post["data"]["content"]:
+            name = "".join(s["text"] for s in item.get("children", []))
+            if item.get("style") != "h2" or name not in names:
+                continue
+            mark = "member-profile"
+            item["markDefs"] = [d for d in item.get("markDefs", []) if d["_key"] != mark]
+            item["markDefs"].append({"_key": mark, "_type": "link", "href": f"/members#{names[name]}"})
+            for span in item["children"]:
+                span["marks"] = list(dict.fromkeys([*span.get("marks", []), mark]))
+
+
+def configure_member_editor(seed):
+    schema = next(c for c in seed["collections"] if c["slug"] == "members")
+    suggestions = sorted({tag.strip() for member in seed["content"]["members"] for tag in member["data"].get("interests", "").split(" · ") if tag.strip()}, key=str.casefold)
+    widgets = {"sort_order": "hidden", "portrait_crop": "hidden", "interests": "interests", "recaps": "recaps"}
+    for i, definition in enumerate(schema["fields"]):
+        widget = widgets.get(definition["slug"])
+        if widget:
+            schema["fields"][i] = {**definition, "widget": f"techies-members:{widget}"}
+            if definition["slug"] == "interests":
+                schema["fields"][i]["options"] = {"suggestions": suggestions}
+
+
+def write_members():
+    """Update only members in the existing seed, preserving other curated content."""
+    path = ROOT / "seed" / "seed.json"
+    seed = json.loads(path.read_text())
+    members = member_profiles()
+    if seed["content"]["members"]:
+        updated = {m["slug"]: m["data"] for m in members}
+        for member in seed["content"]["members"]:
+            if member["slug"] in updated:
+                for field_name in ("bio", "photo", "portrait_crop", "projects", "recaps"):
+                    if field_name in updated[member["slug"]]:
+                        member["data"][field_name] = updated[member["slug"]][field_name]
+    else:
+        seed["content"]["members"] = members
+    schema = next(c for c in seed["collections"] if c["slug"] == "members")
+    if not any(f["slug"] == "recaps" for f in schema["fields"]):
+        schema["fields"].append(field("recaps", "Event recaps", "portableText"))
+    for new_field in (field("projects", "Projects", "portableText"), field("portrait_crop", "Portrait crop (x, y, size)", "json")):
+        if not any(f["slug"] == new_field["slug"] for f in schema["fields"]):
+            schema["fields"].append(new_field)
+    link_member_profiles(seed["content"]["posts"], members)
+    configure_member_editor(seed)
+    path.write_text(json.dumps(seed, ensure_ascii=False, indent=2) + "\n")
+    print(f"Seed ready: {len(seed['content']['members'])} member profiles from Roast #2–#7.")
+
+
 def main():
     logo = ROOT / "public" / "brand" / "techies-wordmark.png"
     if not logo.exists():
@@ -235,21 +447,25 @@ def main():
         "$schema": "https://emdashcms.com/seed.schema.json", "version": "1", "meta": {"name": "Techies", "description": "Techies community website and original event summaries", "author": "Techies APAC"},
         "settings": {"title": "Techies", "tagline": "A 3rd space for devs to geek out.", "timezone": "Asia/Singapore"},
         "collections": [
+            json.loads((ROOT / "seed" / "campaigns.schema.json").read_text()),
+            {"slug": "announcements", "label": "Announcements", "labelSingular": "Announcement", "supports": ["drafts", "revisions"], "fields": [field("campaign_ref", "Managed campaign reference", unique=True, indexed=True, widget="techies-campaigns:managed-reference"), field("title", "Announcement text", "text", required=True), field("starts_at", "Show from (optional)", "datetime"), field("ends_at", "Hide at (optional)", "datetime"), field("cta_label", "CTA text (optional)"), field("cta_url", "CTA link (https://… or /path)"), field("cta_new_tab", "Open CTA in new tab", "boolean")]},
             collection("posts", "Posts", [field("title", "Title", required=True, searchable=True), field("featured_image", "Featured image", "image"), field("content", "Content", "portableText", searchable=True), field("excerpt", "Excerpt", "text"), field("event_date", "Event date", "datetime"), field("source_url", "Original source", "url")], "/posts/{slug}"),
             collection("pages", "Pages", [field("title", "Title", required=True, searchable=True), field("content", "Content", "portableText", searchable=True), field("intro", "Hero introduction", "text"), field("about_intro", "About introduction", "text"), field("supper_copy", "Supper copy", "text"), field("supper_photo", "Supper photo", "image"), field("supper_photo_two", "Second supper photo", "image"), field("podcast_copy", "Podcast copy", "text"), field("podcast_url", "Podcast link", "url")], "/{slug}"),
             collection("programmes", "Programmes", [field("title", "Title", required=True), field("label", "Label"), field("description", "Description", "text"), field("cover", "Cover artwork", "image"), field("url", "Registration link", "url"), field("accent", "Accent", "select", validation={"options": ["amber", "red", "teal"]}, options={"options": ["amber", "red", "teal"]}), field("sort_order", "Display order", "integer")], "/#events"),
             collection("team", "Exco profiles", profile_fields, "/exco"),
-            collection("members", "Members", profile_fields + [field("building", "What they are building", "text"), field("interests", "Technical interests", "text"), field("project_url", "Project link", "url")], "/members"),
+            collection("members", "Members", profile_fields + [field("building", "What they are building", "text"), field("interests", "Technical interests", "text"), field("project_url", "Project link", "url"), field("recaps", "Event recaps", "portableText"), field("projects", "Projects", "portableText"), field("portrait_crop", "Portrait crop (x, y, size)", "json")], "/members"),
         ],
         "taxonomies": [
             {"name": "category", "label": "Categories", "labelSingular": "Category", "hierarchical": True, "collections": ["posts"], "terms": [{"slug": "event-summaries", "label": "Event summaries"}]},
             {"name": "tag", "label": "Tags", "labelSingular": "Tag", "hierarchical": False, "collections": ["posts"], "terms": [{"slug": "roast-my-techstack", "label": "Roast My TechStack"}]},
         ],
         "menus": [{"name": "primary", "label": "Primary navigation", "items": [{"type": "custom", "label": label, "url": url} for label, url in [("About", "/#about"), ("Events", "/#events"), ("Posts", "/posts"), ("Members", "/members"), ("Exco", "/exco")]]}],
-        "content": {"pages": [home], "posts": list(reversed(posts)), "programmes": programmes, "team": team, "members": []},
+        "content": {"pages": [home], "posts": list(reversed(posts)), "programmes": programmes, "team": team, "members": member_profiles()},
     }
+    link_member_profiles(seed["content"]["posts"], seed["content"]["members"])
+    configure_member_editor(seed)
     (ROOT / "seed" / "seed.json").write_text(json.dumps(seed, ensure_ascii=False, indent=2) + "\n")
-    print("Seed ready: homepage, 3 programmes, 6 posts, 5 Exco profiles. Members await curation.")
+    print("Seed ready: homepage, 3 programmes, 6 posts, 5 Exco profiles, 14 member profiles.")
 
 
 def check():
@@ -266,8 +482,52 @@ def check():
     assert video[0]["markDefs"][0]["href"] == ORIGIN + "demo.mp4"
     tags = portable(Parser('<div class="speaker-tags"><span>Postgres</span><span>RAG</span></div>').root)
     assert tags[0]["children"][0]["text"] == "Postgres · RAG"
+    members = member_profiles()
+    assert len(members) == len({m["data"]["linkedin"] for m in members}) == 14
+    by_name = {m["data"]["title"]: m["data"] for m in members}
+    assert "#2, #6" in by_name["Jesse Sng"]["role"]
+    assert "Drag Flow" in by_name["Jesse Sng"]["building"]
+    assert "#2, #4" in by_name["Ee One Lim"]["role"]
+    assert by_name["Ee One Lim"]["website"] == "https://kantaro.live"
+    assert by_name["Ee One Lim"]["project_url"] == "https://care-compass-iota.vercel.app/"
+    assert "#3, #6" in by_name["Gaurav Kumar Manek"]["role"]
+    assert "Immutable storage" in by_name["Gaurav Kumar Manek"]["interests"]
+    assert "LLM evals" in by_name["Gaurav Kumar Manek"]["interests"]
+    assert sum("photo" in m["data"] for m in members) == 13
+    assert all(m["data"]["bio"] and m["data"]["building"] for m in members)
+    assert all(len(m["data"]["bio"]) < 170 and m["data"]["projects"] for m in members)
+    ee_one_projects = by_name["Ee One Lim"]["projects"]
+    headings = ["".join(s["text"] for s in b["children"]) for b in ee_one_projects if b.get("style") == "h4"]
+    assert headings == ["Kantaro", "Care Compass"]
+    links = [d["href"] for b in ee_one_projects for d in b.get("markDefs", [])]
+    assert "https://kantaro.live" in links and "https://care-compass-iota.vercel.app/" in links
+    assert "https://github.com/EeOneLim/care-compass" in links
+    assert "assets/exco/jesse-sng.jpg" in by_name["Jesse Sng"]["photo"]["$media"]["url"]
+    assert "assets/exco/yingzhao.jpg" in by_name["Ying Zhao"]["photo"]["$media"]["url"]
+    for member in members:
+        crop = member["data"].get("portrait_crop")
+        if crop:
+            assert 0 <= crop["x"] < 1 and 0 <= crop["y"] < 1 and 0 < crop["size"] <= 1
+    posts = [{"slug": f"roast-{n}", "data": {"content": portable(next(source(f"roast-{n}.html").find("main")))}} for n in range(2, 8)]
+    link_member_profiles(posts, members)
+    linked = [d["href"] for p in posts for b in p["data"]["content"] for d in b.get("markDefs", []) if d["_key"] == "member-profile"]
+    assert len(linked) == 17
+    assert set(linked) == {f"/members#{m['slug']}" for m in members}
+    for member in members:
+        for recap in member["data"]["recaps"]:
+            slug = recap["markDefs"][0]["href"].removeprefix("/posts/")
+            post = next(p for p in posts if p["slug"] == slug)
+            assert any(d["href"] == f"/members#{member['slug']}" for b in post["data"]["content"] for d in b.get("markDefs", []))
+    link_member_profiles(posts, members)
+    assert sum(d["_key"] == "member-profile" for p in posts for b in p["data"]["content"] for d in b.get("markDefs", [])) == 17
     print("Legacy conversion check passed: formatting, links, nested lists, images and demos.")
+    print("Member check passed: 14 unique speakers, merged appearances, projects, links and 13 photos.")
 
 
 if __name__ == "__main__":
-    check() if "--check" in sys.argv else main()
+    if "--check" in sys.argv:
+        check()
+    elif "--members-only" in sys.argv:
+        write_members()
+    else:
+        main()

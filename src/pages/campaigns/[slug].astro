@@ -1,0 +1,17 @@
+---
+import Base from "../../layouts/Base.astro";
+import CampaignEntry from "../../components/CampaignEntry";
+import { campaignQuery } from "../../plugins/campaigns/public-query";
+import type { CampaignSummary, PublicCampaign } from "../../plugins/campaigns/model";
+import { decodeSlug } from "emdash";
+if (Astro.cache?.enabled) Astro.cache.set(false);
+Astro.response.headers.set("Cache-Control", "private, no-store");
+let campaign: CampaignSummary | PublicCampaign | null;
+try { ({ campaign } = await campaignQuery<{ campaign: CampaignSummary | PublicCampaign | null }>(Astro.locals, Astro.url, "detail", { slug: decodeSlug(Astro.params.slug) ?? "" })); }
+catch { return new Response("Could not load this campaign. Please try again shortly.", { status: 503 }); }
+if (!campaign) return Astro.rewrite("/404");
+if (campaign.visibility === "private") Astro.response.headers.set("X-Robots-Tag", "noindex, nofollow");
+---
+<Base title={campaign.title ?? "Campaign"} description={campaign.description?.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) ?? campaign.prize} image={campaign.image} canonical={new URL(`/campaigns/${campaign.slug}`, Astro.url).href}>
+	<CampaignEntry initial={campaign} client:load />
+</Base>

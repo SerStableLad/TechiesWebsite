@@ -13,6 +13,72 @@
   },
   "collections": [
     {
+      "slug": "campaigns",
+      "label": "Campaigns",
+      "labelSingular": "Campaign",
+      "icon": "gift",
+      "sortOrder": 0,
+      "urlPattern": "/campaigns/{slug}",
+      "supports": ["drafts", "revisions"],
+      "hasSeo": false,
+      "fields": [
+        { "slug": "title", "label": "Campaign title", "type": "string", "required": true },
+        { "slug": "entry_window", "label": "Campaign dates", "type": "json", "widget": "techies-campaigns:entry-window" },
+        { "slug": "description", "label": "Campaign description", "type": "portableText" },
+        { "slug": "rules", "label": "Rules and eligibility", "type": "portableText" },
+        { "slug": "image", "label": "Prize image", "type": "image" },
+        { "slug": "prize", "label": "Prize name", "type": "string" },
+        { "slug": "winner_count", "label": "Number of winners", "type": "integer", "validation": { "min": 1, "max": 20 } },
+        { "slug": "visibility", "label": "Campaign access", "type": "select", "widget": "techies-campaigns:campaign-access", "validation": { "options": ["public", "private"] } },
+        { "slug": "actions", "label": "Entry actions", "type": "json", "widget": "techies-campaigns:entry-actions" },
+        { "slug": "publishing", "label": "Publishing", "type": "json", "widget": "techies-campaigns:campaign-publishing" },
+        { "slug": "campaign_key", "label": "Managed campaign reference", "type": "string", "unique": true, "indexed": true, "widget": "techies-campaigns:managed-reference" }
+      ]
+    },
+    {
+      "slug": "announcements",
+      "label": "Announcements",
+      "labelSingular": "Announcement",
+      "supports": [
+        "drafts",
+        "revisions"
+      ],
+      "fields": [
+        { "slug": "campaign_ref", "label": "Managed campaign reference", "type": "string", "unique": true, "indexed": true, "widget": "techies-campaigns:managed-reference" },
+        {
+          "slug": "title",
+          "label": "Announcement text",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "starts_at",
+          "label": "Show from (optional)",
+          "type": "datetime"
+        },
+        {
+          "slug": "ends_at",
+          "label": "Hide at (optional)",
+          "type": "datetime"
+        },
+        {
+          "slug": "cta_label",
+          "label": "CTA text (optional)",
+          "type": "string"
+        },
+        {
+          "slug": "cta_url",
+          "label": "CTA link (https://… or /path)",
+          "type": "string"
+        },
+        {
+          "slug": "cta_new_tab",
+          "label": "Open CTA in new tab",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
       "slug": "posts",
       "label": "Posts",
       "labelSingular": "Post",
@@ -300,7 +366,8 @@
         {
           "slug": "sort_order",
           "label": "Display order",
-          "type": "integer"
+          "type": "integer",
+          "widget": "techies-members:hidden"
         },
         {
           "slug": "building",
@@ -310,12 +377,109 @@
         {
           "slug": "interests",
           "label": "Technical interests",
-          "type": "text"
+          "type": "text",
+          "widget": "techies-members:interests",
+          "options": {
+            "suggestions": [
+              "Agent guardrails",
+              "Agents-ready",
+              "AI documentation",
+              "API",
+              "ASR",
+              "Blast radius",
+              "Chatbot intake",
+              "Claude / GPT / DeepSeek",
+              "Claude CLI",
+              "Claude Code",
+              "Clerk",
+              "ComfyUI",
+              "Containerised auth",
+              "Data schema",
+              "Databricks",
+              "Deterministic checks",
+              "deterministic code",
+              "Docling",
+              "Drag-and-drop flow",
+              "DuckDB",
+              "Dynamic model selector",
+              "Fail-continue",
+              "FastAPI",
+              "FFmpeg",
+              "Frontend API calls",
+              "Functional programming",
+              "Gemma",
+              "Git diff",
+              "GitHub issues",
+              "GPT Image",
+              "Graph DB",
+              "Grounding",
+              "Guardrails",
+              "Heartmula",
+              "Human validation",
+              "Hydration",
+              "Imagen",
+              "Immutable storage",
+              "LiveView",
+              "LLM evals",
+              "LRCLib",
+              "MarkItDown",
+              "Medallion ETL",
+              "Model escalation",
+              "Multi-agent",
+              "n8n",
+              "One Big Table",
+              "Open-source streaming",
+              "OpenClaw",
+              "Oracle Cloud free tier",
+              "Orchestration",
+              "Parallel generation",
+              "PDF parsing",
+              "persona.md",
+              "Phoenix",
+              "Playwright",
+              "Postgres",
+              "Postgres upsert",
+              "PostgreSQL",
+              "RAG",
+              "RAG vs Graph",
+              "Remotion",
+              "Retries & backoff",
+              "shadcn",
+              "Stitch + Google MCP",
+              "Stripe",
+              "Supabase / Postgres",
+              "Supabase auth",
+              "UX research",
+              "Vanilla JS",
+              "Vercel",
+              "Voicebox",
+              "Web search",
+              "WebSockets",
+              "Whisper TTS"
+            ]
+          }
         },
         {
           "slug": "project_url",
           "label": "Project link",
           "type": "url"
+        },
+        {
+          "slug": "recaps",
+          "label": "Event recaps",
+          "type": "portableText",
+          "widget": "techies-members:recaps"
+        },
+        {
+          "slug": "projects",
+          "label": "Projects",
+          "type": "portableText"
+        },
+        {
+          "slug": "portrait_crop",
+          "label": "Portrait crop (x, y, size)",
+          "type": "json",
+          "widget": "techies-members:hidden"
         }
       ]
     }
@@ -333,6 +497,10 @@
         {
           "slug": "event-summaries",
           "label": "Event summaries"
+        },
+        {
+          "slug": "partnership-announcement",
+          "label": "Partnership Announcement"
         }
       ]
     },
@@ -365,12 +533,17 @@
         {
           "type": "custom",
           "label": "Events",
-          "url": "/#events"
+          "url": "/events"
         },
         {
           "type": "custom",
-          "label": "Posts",
-          "url": "/posts"
+          "label": "Event Summaries",
+          "url": "/category/event-summaries"
+        },
+        {
+          "type": "custom",
+          "label": "Partnership",
+          "url": "/category/partnership-announcement"
         },
         {
           "type": "custom",
@@ -415,6 +588,102 @@
     ],
     "posts": [
       {
+        "id": "community-partner-ai-coding-summit-2027",
+        "slug": "community-partner-ai-coding-summit-2027",
+        "status": "published",
+        "data": {
+          "title": "Community Partner for AI Coding Summit 2027",
+          "excerpt": "Techies is a community partner for AI Coding Summit Asia 2027. Get 10% off with promo code TECHIES.",
+          "content": [
+            {
+              "_type": "block",
+              "_key": "ai-coding-partnership",
+              "style": "normal",
+              "markDefs": [],
+              "children": [
+                {
+                  "_type": "span",
+                  "_key": "text",
+                  "text": "Techies is a community partner for AI Coding Summit Asia 2027.",
+                  "marks": []
+                }
+              ]
+            },
+            {
+              "_type": "block",
+              "_key": "ai-coding-discount",
+              "style": "normal",
+              "markDefs": [],
+              "children": [
+                {
+                  "_type": "span",
+                  "_key": "text",
+                  "text": "The Techies community gets 10% off tickets. Use promo code TECHIES at checkout, or book through the discount link below.",
+                  "marks": []
+                }
+              ]
+            },
+            {
+              "_type": "block",
+              "_key": "ai-coding-booking",
+              "style": "normal",
+              "markDefs": [
+                {
+                  "_type": "link",
+                  "_key": "booking",
+                  "href": "https://ti.to/gitnation/ai-coding-summit-asia-2027/discount/TECHIES"
+                }
+              ],
+              "children": [
+                {
+                  "_type": "span",
+                  "_key": "text",
+                  "text": "Get AI Coding Summit 2027 tickets with 10% off",
+                  "marks": [
+                    "booking"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "taxonomies": {
+          "category": [
+            "partnership-announcement"
+          ]
+        }
+      },
+      {
+        "id": "community-partner-sincon-2026",
+        "slug": "community-partner-sincon-2026",
+        "status": "published",
+        "data": {
+          "title": "Community Partner for SINCON 2026",
+          "excerpt": "Techies is a community partner for SINCON 2026.",
+          "content": [
+            {
+              "_type": "block",
+              "_key": "sincon-partnership",
+              "style": "normal",
+              "markDefs": [],
+              "children": [
+                {
+                  "_type": "span",
+                  "_key": "text",
+                  "text": "Techies is a community partner for SINCON 2026. We're pleased to support SINCON through this community partnership.",
+                  "marks": []
+                }
+              ]
+            }
+          ]
+        },
+        "taxonomies": {
+          "category": [
+            "partnership-announcement"
+          ]
+        }
+      },
+      {
         "id": "roast-2",
         "slug": "roast-2",
         "status": "published",
@@ -457,11 +726,19 @@
                 {
                   "_type": "span",
                   "text": "Marcus Liang",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#marcus-liang"
+                }
+              ],
               "_key": "roast-2-2"
             },
             {
@@ -684,11 +961,19 @@
                 {
                   "_type": "span",
                   "text": "Ee One Lim",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#ee-one-lim"
+                }
+              ],
               "_key": "roast-2-14"
             },
             {
@@ -960,11 +1245,19 @@
                 {
                   "_type": "span",
                   "text": "Jesse Lim",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#jesse-sng"
+                }
+              ],
               "_key": "roast-2-26"
             },
             {
@@ -1397,11 +1690,19 @@
                 {
                   "_type": "span",
                   "text": "Abdelrahman Fliou",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#abdelrahman-fliou"
+                }
+              ],
               "_key": "roast-3-3"
             },
             {
@@ -1860,11 +2161,19 @@
                 {
                   "_type": "span",
                   "text": "Gaurav Kumar Manek",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#gaurav-kumar-manek"
+                }
+              ],
               "_key": "roast-3-21"
             },
             {
@@ -2235,11 +2544,19 @@
                 {
                   "_type": "span",
                   "text": "Arul Kumaran",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#arul-kumaran"
+                }
+              ],
               "_key": "roast-3-38"
             },
             {
@@ -2896,11 +3213,19 @@
                 {
                   "_type": "span",
                   "text": "Ying Zhao",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#ying-zhao"
+                }
+              ],
               "_key": "roast-4-3"
             },
             {
@@ -3381,11 +3706,19 @@
                 {
                   "_type": "span",
                   "text": "Ee One Lim",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#ee-one-lim"
+                }
+              ],
               "_key": "roast-4-24"
             },
             {
@@ -3770,11 +4103,19 @@
                 {
                   "_type": "span",
                   "text": "Kaleb Nim",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#kaleb-nim"
+                }
+              ],
               "_key": "roast-4-41"
             },
             {
@@ -4483,11 +4824,19 @@
                 {
                   "_type": "span",
                   "text": "Richard Lee",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#richard-lee"
+                }
+              ],
               "_key": "roast-5-3"
             },
             {
@@ -4889,11 +5238,19 @@
                 {
                   "_type": "span",
                   "text": "Alec Teo",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#alec-teo"
+                }
+              ],
               "_key": "roast-5-23"
             },
             {
@@ -5346,11 +5703,19 @@
                 {
                   "_type": "span",
                   "text": "Dalton Prescott Ng",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#dalton-prescott-ng"
+                }
+              ],
               "_key": "roast-5-45"
             },
             {
@@ -6046,11 +6411,19 @@
                 {
                   "_type": "span",
                   "text": "Jesse Sng",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#jesse-sng"
+                }
+              ],
               "_key": "roast-6-3"
             },
             {
@@ -6471,11 +6844,19 @@
                 {
                   "_type": "span",
                   "text": "Gaurav Kumar Manek",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#gaurav-kumar-manek"
+                }
+              ],
               "_key": "roast-6-23"
             },
             {
@@ -7082,11 +7463,19 @@
                 {
                   "_type": "span",
                   "text": "Kong",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#kong"
+                }
+              ],
               "_key": "roast-7-3"
             },
             {
@@ -7928,11 +8317,19 @@
                 {
                   "_type": "span",
                   "text": "Fernandi",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#fernandi"
+                }
+              ],
               "_key": "roast-7-45"
             },
             {
@@ -8504,11 +8901,19 @@
                 {
                   "_type": "span",
                   "text": "Krishna",
-                  "marks": [],
+                  "marks": [
+                    "member-profile"
+                  ],
                   "_key": "s0"
                 }
               ],
-              "markDefs": [],
+              "markDefs": [
+                {
+                  "_key": "member-profile",
+                  "_type": "link",
+                  "href": "/members#krishna"
+                }
+              ],
               "_key": "roast-7-79"
             },
             {
@@ -9889,6 +10294,1564 @@
         }
       }
     ],
-    "members": []
+    "members": [
+      {
+        "id": "marcus-liang",
+        "slug": "marcus-liang",
+        "status": "published",
+        "data": {
+          "title": "Marcus Liang",
+          "linkedin": "https://www.linkedin.com/in/marcus-liang-zhu-041a0ab0/",
+          "role": "Roast My TechStack speaker · #2",
+          "interests": "Chatbot intake · GitHub issues · OpenClaw · Claude Code · Human validation",
+          "bio": "Builds AI-assisted software workflows that connect user feedback to human-reviewed fixes.",
+          "building": "Harwav Order Hub: chatbot feedback becomes GitHub issues, then AI-generated fixes for a human to review.",
+          "sort_order": 0,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #2",
+                  "marks": [
+                    "link-4d012c14f0a70683"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-4d012c14f0a70683",
+                  "_type": "link",
+                  "href": "/posts/roast-2"
+                }
+              ],
+              "_key": "recap-2"
+            }
+          ],
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Harwav Order Hub",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Turns chatbot feedback into GitHub issues and AI-generated fixes, with human review before deployment.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            }
+          ]
+        }
+      },
+      {
+        "id": "ee-one-lim",
+        "slug": "ee-one-lim",
+        "status": "published",
+        "data": {
+          "title": "Ee One Lim",
+          "linkedin": "https://www.linkedin.com/in/eeonelim/",
+          "website": "https://kantaro.live",
+          "project_url": "https://care-compass-iota.vercel.app/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/roast4/eeone.jpg",
+              "alt": "Ee One Lim presenting Care Compass at Roast #4"
+            }
+          },
+          "github": "https://github.com/EeOneLim/care-compass",
+          "role": "Roast My TechStack speaker · #2, #4",
+          "interests": "LRCLib · Stitch + Google MCP · Heartmula · Open-source streaming · Frontend API calls · RAG · n8n · Postgres · Dynamic model selector · Web search",
+          "bio": "Builds apps for learning and care, from Spanish through music to finding caregiver support.",
+          "building": "Kantaro, a music-based Spanish learning app, and Care Compass, a caregiver resource app using retrieval-augmented generation.",
+          "sort_order": 1,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #2",
+                  "marks": [
+                    "link-4d012c14f0a70683"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-4d012c14f0a70683",
+                  "_type": "link",
+                  "href": "/posts/roast-2"
+                }
+              ],
+              "_key": "recap-2"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #4",
+                  "marks": [
+                    "link-e88c64250300c5af"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-e88c64250300c5af",
+                  "_type": "link",
+                  "href": "/posts/roast-4"
+                }
+              ],
+              "_key": "recap-4"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.36,
+            "y": 0.35,
+            "size": 0.29
+          },
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Kantaro",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Teaches Spanish through music, using real lyrics and open-source components.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Website",
+                  "marks": [
+                    "link-36f3c609962068ee"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-36f3c609962068ee",
+                  "_type": "link",
+                  "href": "https://kantaro.live"
+                }
+              ],
+              "_key": "project-2"
+            },
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Care Compass",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-3"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Helps caregivers find support resources using retrieval-augmented generation.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-4"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "GitHub",
+                  "marks": [
+                    "link-7b9fdc7c76ef18d2"
+                  ],
+                  "_key": "s0"
+                },
+                {
+                  "_type": "span",
+                  "text": " · ",
+                  "marks": [],
+                  "_key": "s1"
+                },
+                {
+                  "_type": "span",
+                  "text": "Website",
+                  "marks": [
+                    "link-bd71596b1d72e28e"
+                  ],
+                  "_key": "s2"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-7b9fdc7c76ef18d2",
+                  "_type": "link",
+                  "href": "https://github.com/EeOneLim/care-compass"
+                },
+                {
+                  "_key": "link-bd71596b1d72e28e",
+                  "_type": "link",
+                  "href": "https://care-compass-iota.vercel.app/"
+                }
+              ],
+              "_key": "project-5"
+            }
+          ]
+        }
+      },
+      {
+        "id": "jesse-sng",
+        "slug": "jesse-sng",
+        "status": "published",
+        "data": {
+          "title": "Jesse Sng",
+          "linkedin": "https://www.linkedin.com/in/jesse-sng-05ab7944/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/exco/jesse-sng.jpg",
+              "alt": "Jesse Sng, Community Experience Lead of Techies"
+            }
+          },
+          "role": "Roast My TechStack speaker · #2, #6",
+          "interests": "Drag-and-drop flow · Model escalation · AI documentation · Parallel generation · Fail-continue · Imagen · GPT Image · Remotion · ComfyUI",
+          "bio": "Explores visual automation and AI content workflows across text, images, audio and video.",
+          "building": "Drag Flow, a drag-and-drop workflow tool, and a pipeline that turns source material into podcasts, blogs, images and audio in parallel.",
+          "sort_order": 2,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #2",
+                  "marks": [
+                    "link-4d012c14f0a70683"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-4d012c14f0a70683",
+                  "_type": "link",
+                  "href": "/posts/roast-2"
+                }
+              ],
+              "_key": "recap-2"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #6",
+                  "marks": [
+                    "link-0e2685236cdb2a7f"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-0e2685236cdb2a7f",
+                  "_type": "link",
+                  "href": "/posts/roast-6"
+                }
+              ],
+              "_key": "recap-6"
+            }
+          ],
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Drag Flow",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Connects automation workflows by dragging and linking nodes.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            },
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "AI Content Pipeline",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-2"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Turns source material into podcasts, blogs, images and audio in parallel.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-3"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.12,
+            "y": 0.05,
+            "size": 0.4
+          }
+        }
+      },
+      {
+        "id": "abdelrahman-fliou",
+        "slug": "abdelrahman-fliou",
+        "status": "published",
+        "data": {
+          "title": "Abdelrahman Fliou",
+          "linkedin": "https://www.linkedin.com/in/abdelrahman-fliou/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/roast3/fliou.jpg",
+              "alt": "Fliou presenting TransPrice at Roast #3"
+            }
+          },
+          "role": "Roast My TechStack speaker · #3",
+          "interests": "PDF parsing · Docling · MarkItDown · deterministic code · shadcn",
+          "bio": "Builds a pricing copilot that combines document processing with deterministic analysis.",
+          "building": "TransPrice: a pricing copilot that turns PDFs into Markdown for downstream model work.",
+          "sort_order": 3,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #3",
+                  "marks": [
+                    "link-edb36dabc1b4989f"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-edb36dabc1b4989f",
+                  "_type": "link",
+                  "href": "/posts/roast-3"
+                }
+              ],
+              "_key": "recap-3"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.03,
+            "y": 0.48,
+            "size": 0.22
+          },
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "TransPrice",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "A pricing copilot that turns PDFs into Markdown before model work.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            }
+          ]
+        }
+      },
+      {
+        "id": "gaurav-kumar-manek",
+        "slug": "gaurav-kumar-manek",
+        "status": "published",
+        "data": {
+          "title": "Gaurav Kumar Manek",
+          "linkedin": "https://www.linkedin.com/in/gauravmanek/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/roast6/gaurav-manek.png",
+              "alt": "Gaurav Kumar Manek presenting on evals at Roast #6"
+            }
+          },
+          "github": "https://github.com/gauravmm/2026-04-Roast-My-Tech-Stack",
+          "role": "Roast My TechStack speaker · #3, #6",
+          "interests": "Immutable storage · Functional programming · FastAPI · DuckDB · Postgres upsert · LLM evals · Guardrails · Deterministic checks · Blast radius",
+          "bio": "Shares practical experience in immutable data storage, AI agent evaluations and guardrails.",
+          "building": "Visigoth.ai’s storage architecture, shared from a previous startup, and evaluation approaches for AI agents.",
+          "sort_order": 4,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #3",
+                  "marks": [
+                    "link-edb36dabc1b4989f"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-edb36dabc1b4989f",
+                  "_type": "link",
+                  "href": "/posts/roast-3"
+                }
+              ],
+              "_key": "recap-3"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #6",
+                  "marks": [
+                    "link-0e2685236cdb2a7f"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-0e2685236cdb2a7f",
+                  "_type": "link",
+                  "href": "/posts/roast-6"
+                }
+              ],
+              "_key": "recap-6"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.5,
+            "y": 0.17,
+            "size": 0.22
+          },
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Visigoth.ai · Data Storage",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "An immutable storage architecture from Gaurav’s previous startup.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Slides on GitHub",
+                  "marks": [
+                    "link-93f9a97da91cc9ca"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-93f9a97da91cc9ca",
+                  "_type": "link",
+                  "href": "https://github.com/gauravmm/2026-04-Roast-My-Tech-Stack"
+                }
+              ],
+              "_key": "project-2"
+            }
+          ]
+        }
+      },
+      {
+        "id": "arul-kumaran",
+        "slug": "arul-kumaran",
+        "status": "published",
+        "data": {
+          "title": "Arul Kumaran",
+          "linkedin": "https://www.linkedin.com/in/arulkumaran/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/roast3/arul.jpg",
+              "alt": "Arul presenting programmatic video tooling at Roast #3"
+            }
+          },
+          "website": "https://arul.sg/",
+          "project_url": "https://arul.sg/",
+          "role": "Roast My TechStack speaker · #3",
+          "interests": "Remotion · Voicebox · FFmpeg · Gemma",
+          "bio": "Works with programmatic video, voice cloning and open-weight models for media workflows.",
+          "building": "A programmatic video workflow using Remotion, Voicebox, FFmpeg and Gemma for rendering, audio and video summarisation.",
+          "sort_order": 5,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #3",
+                  "marks": [
+                    "link-edb36dabc1b4989f"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-edb36dabc1b4989f",
+                  "_type": "link",
+                  "href": "/posts/roast-3"
+                }
+              ],
+              "_key": "recap-3"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.17,
+            "y": 0.49,
+            "size": 0.23
+          },
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Programmatic Video Toolchain",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Combines Remotion, Voicebox, FFmpeg and Gemma for video rendering, voice cloning and summarisation.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Website",
+                  "marks": [
+                    "link-253ab765f4c88e58"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-253ab765f4c88e58",
+                  "_type": "link",
+                  "href": "https://arul.sg/"
+                }
+              ],
+              "_key": "project-2"
+            }
+          ]
+        }
+      },
+      {
+        "id": "ying-zhao",
+        "slug": "ying-zhao",
+        "status": "published",
+        "data": {
+          "title": "Ying Zhao",
+          "linkedin": "https://www.linkedin.com/in/yzouyang/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/exco/yingzhao.jpg",
+              "alt": "Yingzhao Ouyang, Programming Ops Lead of Techies"
+            }
+          },
+          "github": "https://github.com/KunojiLym/databricks-linkedin-analytics",
+          "website": "https://www.yzouyang.com/category/blog-series/build-your-own-linkedin-analytics/",
+          "project_url": "https://www.yzouyang.com/category/blog-series/build-your-own-linkedin-analytics/",
+          "role": "Roast My TechStack speaker · #4",
+          "interests": "Databricks · Medallion ETL · One Big Table · API · Retries & backoff",
+          "bio": "Applies production-style data engineering to personal analytics and understanding LinkedIn reach.",
+          "building": "A LinkedIn analytics pipeline built with Databricks and a medallion architecture, with attention to ETL, retries and query trade-offs.",
+          "sort_order": 6,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #4",
+                  "marks": [
+                    "link-e88c64250300c5af"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-e88c64250300c5af",
+                  "_type": "link",
+                  "href": "/posts/roast-4"
+                }
+              ],
+              "_key": "recap-4"
+            }
+          ],
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Personal LinkedIn Analytics Pipeline",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "A Databricks pipeline using medallion ETL to analyse LinkedIn performance.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "GitHub",
+                  "marks": [
+                    "link-afe4c23fde0821d4"
+                  ],
+                  "_key": "s0"
+                },
+                {
+                  "_type": "span",
+                  "text": " · ",
+                  "marks": [],
+                  "_key": "s1"
+                },
+                {
+                  "_type": "span",
+                  "text": "Blog series",
+                  "marks": [
+                    "link-ae3defd22571bbd0"
+                  ],
+                  "_key": "s2"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-afe4c23fde0821d4",
+                  "_type": "link",
+                  "href": "https://github.com/KunojiLym/databricks-linkedin-analytics"
+                },
+                {
+                  "_key": "link-ae3defd22571bbd0",
+                  "_type": "link",
+                  "href": "https://www.yzouyang.com/category/blog-series/build-your-own-linkedin-analytics/"
+                }
+              ],
+              "_key": "project-2"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.12,
+            "y": 0.06,
+            "size": 0.42
+          }
+        }
+      },
+      {
+        "id": "kaleb-nim",
+        "slug": "kaleb-nim",
+        "status": "published",
+        "data": {
+          "title": "Kaleb Nim",
+          "linkedin": "https://www.linkedin.com/in/kaleb-nim/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/roast4/kaleb.jpg",
+              "alt": "Kaleb presenting the Voice Resume at Roast #4"
+            }
+          },
+          "github": "https://github.com/Kaleb-Nim/nim-kaleb",
+          "website": "https://kalebnim.dev/",
+          "project_url": "https://kalebnim.dev/",
+          "role": "Roast My TechStack speaker · #4",
+          "interests": "ASR · Whisper TTS · Oracle Cloud free tier · Guardrails · persona.md",
+          "bio": "Explores conversational AI interfaces, speech recognition and real-time voice responses.",
+          "building": "Voice Resume: an AI-powered interview app with speech recognition, spoken responses and application guardrails.",
+          "sort_order": 7,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #4",
+                  "marks": [
+                    "link-e88c64250300c5af"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-e88c64250300c5af",
+                  "_type": "link",
+                  "href": "/posts/roast-4"
+                }
+              ],
+              "_key": "recap-4"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.3,
+            "y": 0.1,
+            "size": 0.55
+          },
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Voice Resume",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Lets employers ask questions and receive real-time spoken answers from an AI-powered resume.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "GitHub",
+                  "marks": [
+                    "link-d86cb67bf30199bd"
+                  ],
+                  "_key": "s0"
+                },
+                {
+                  "_type": "span",
+                  "text": " · ",
+                  "marks": [],
+                  "_key": "s1"
+                },
+                {
+                  "_type": "span",
+                  "text": "Website",
+                  "marks": [
+                    "link-499992e0f579a3f3"
+                  ],
+                  "_key": "s2"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-d86cb67bf30199bd",
+                  "_type": "link",
+                  "href": "https://github.com/Kaleb-Nim/nim-kaleb"
+                },
+                {
+                  "_key": "link-499992e0f579a3f3",
+                  "_type": "link",
+                  "href": "https://kalebnim.dev/"
+                }
+              ],
+              "_key": "project-2"
+            }
+          ]
+        }
+      },
+      {
+        "id": "richard-lee",
+        "slug": "richard-lee",
+        "status": "published",
+        "data": {
+          "title": "Richard Lee",
+          "linkedin": "https://www.linkedin.com/in/yaksheng/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/roast5/richard-lee.png",
+              "alt": "Richard Lee presenting on agents at Roast #5"
+            }
+          },
+          "github": "https://github.com/yaksheng/techies-scape-260521",
+          "role": "Roast My TechStack speaker · #5",
+          "interests": "Multi-agent · Orchestration · Grounding · Containerised auth",
+          "bio": "Builds multi-agent workflows for discovering business opportunities, with a focus on grounding and orchestration.",
+          "building": "A business-opportunity discovery system with an executive agent coordinating siloed, purpose-built child agents.",
+          "sort_order": 8,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #5",
+                  "marks": [
+                    "link-717d5e07bb653d11"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-717d5e07bb653d11",
+                  "_type": "link",
+                  "href": "/posts/roast-5"
+                }
+              ],
+              "_key": "recap-5"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.05,
+            "y": 0.05,
+            "size": 0.26
+          },
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Agents To Find Business Opportunities",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "An executive agent coordinates purpose-built child agents to discover business opportunities.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Slides on GitHub",
+                  "marks": [
+                    "link-f075371ab0a9a4c6"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-f075371ab0a9a4c6",
+                  "_type": "link",
+                  "href": "https://github.com/yaksheng/techies-scape-260521"
+                }
+              ],
+              "_key": "project-2"
+            }
+          ]
+        }
+      },
+      {
+        "id": "alec-teo",
+        "slug": "alec-teo",
+        "status": "published",
+        "data": {
+          "title": "Alec Teo",
+          "linkedin": "https://www.linkedin.com/in/alexgteo/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/roast5/alec-teo.png",
+              "alt": "Alec Teo presenting PixelPuggles at Roast #5"
+            }
+          },
+          "role": "Roast My TechStack speaker · #5",
+          "interests": "Supabase auth · Clerk · Data schema · Agents-ready · Imagen",
+          "bio": "Builds playful image experiences and explores how apps can become more agent-friendly.",
+          "building": "PixelPuggles: an app that pixelates and animates photos, with image-generation cost and evaluation among the design questions.",
+          "sort_order": 9,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #5",
+                  "marks": [
+                    "link-717d5e07bb653d11"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-717d5e07bb653d11",
+                  "_type": "link",
+                  "href": "/posts/roast-5"
+                }
+              ],
+              "_key": "recap-5"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.02,
+            "y": 0.0,
+            "size": 0.32
+          },
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "PixelPuggles",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Pixelates and animates photos, with agent-friendly interaction among its design goals.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            }
+          ]
+        }
+      },
+      {
+        "id": "dalton-prescott-ng",
+        "slug": "dalton-prescott-ng",
+        "status": "published",
+        "data": {
+          "title": "Dalton Prescott Ng",
+          "linkedin": "https://www.linkedin.com/in/dalton-prescott-ng/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/roast5/dalton-ng.png",
+              "alt": "Dalton Prescott Ng presenting pgGraph at Roast #5"
+            }
+          },
+          "github": "https://github.com/evokoa/pggraph",
+          "project_url": "https://github.com/evokoa/pggraph",
+          "role": "Roast My TechStack speaker · #5",
+          "interests": "Graph DB · PostgreSQL · RAG vs Graph · Hydration",
+          "bio": "Works on graph capabilities in PostgreSQL to help AI agents navigate relationships between entities.",
+          "building": "Evokoa’s pgGraph: a virtual graph layer for AI agents built on PostgreSQL.",
+          "sort_order": 10,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #5",
+                  "marks": [
+                    "link-717d5e07bb653d11"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-717d5e07bb653d11",
+                  "_type": "link",
+                  "href": "/posts/roast-5"
+                }
+              ],
+              "_key": "recap-5"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.1,
+            "y": 0.015,
+            "size": 0.28
+          },
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "pgGraph",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "A virtual graph layer for AI agents built on PostgreSQL.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "GitHub",
+                  "marks": [
+                    "link-c4002bc6997b9627"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-c4002bc6997b9627",
+                  "_type": "link",
+                  "href": "https://github.com/evokoa/pggraph"
+                }
+              ],
+              "_key": "project-2"
+            }
+          ]
+        }
+      },
+      {
+        "id": "kong",
+        "slug": "kong",
+        "status": "published",
+        "data": {
+          "title": "Kong",
+          "linkedin": "https://www.linkedin.com/in/kongleesg/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/roast-7/kong.jpg",
+              "alt": "Kong presenting Zhiji at Roast #7"
+            }
+          },
+          "website": "https://www.zhiji.io",
+          "project_url": "https://www.zhiji.io",
+          "role": "Roast My TechStack speaker · #7",
+          "interests": "Vercel · Vanilla JS · Supabase / Postgres · Stripe · Claude / GPT / DeepSeek",
+          "bio": "A solo, non-technical founder building a paid AI companion with AI-assisted development.",
+          "building": "Zhiji / 知己: an AI companion that uses Chinese astrology charts to personalise conversations.",
+          "sort_order": 11,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #7",
+                  "marks": [
+                    "link-4749dc2f4498da3c"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-4749dc2f4498da3c",
+                  "_type": "link",
+                  "href": "/posts/roast-7"
+                }
+              ],
+              "_key": "recap-7"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.1,
+            "y": 0.08,
+            "size": 0.43
+          },
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Zhiji / 知己",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "An AI companion that uses Chinese astrology charts to personalise conversations.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Website",
+                  "marks": [
+                    "link-c943d061b60de4f8"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-c943d061b60de4f8",
+                  "_type": "link",
+                  "href": "https://www.zhiji.io"
+                }
+              ],
+              "_key": "project-2"
+            }
+          ]
+        }
+      },
+      {
+        "id": "fernandi",
+        "slug": "fernandi",
+        "status": "published",
+        "data": {
+          "title": "Fernandi",
+          "linkedin": "https://www.linkedin.com/in/fernandi/",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/roast-7/fernandi.jpg",
+              "alt": "Fernandi presenting Canary Lab at Roast #7"
+            }
+          },
+          "github": "https://github.com/ferterahadi/canary-lab/tree/main",
+          "project_url": "https://github.com/ferterahadi/canary-lab/tree/main",
+          "role": "Roast My TechStack speaker · #7",
+          "interests": "Playwright · Agent guardrails · Git diff · Claude CLI",
+          "bio": "Builds tools for independently verifying AI-generated code and making agent changes inspectable.",
+          "building": "Canary Lab: an AI repair loop for Playwright and a skill for coding tools, with deterministic execution and reviewable Git diffs.",
+          "sort_order": 12,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #7",
+                  "marks": [
+                    "link-4749dc2f4498da3c"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-4749dc2f4498da3c",
+                  "_type": "link",
+                  "href": "/posts/roast-7"
+                }
+              ],
+              "_key": "recap-7"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.39,
+            "y": 0.16,
+            "size": 0.29
+          },
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Canary Lab",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Independently verifies AI output with an AI repair loop for Playwright and a skill for coding tools.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "GitHub",
+                  "marks": [
+                    "link-e84359869d060ae2"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-e84359869d060ae2",
+                  "_type": "link",
+                  "href": "https://github.com/ferterahadi/canary-lab/tree/main"
+                }
+              ],
+              "_key": "project-2"
+            }
+          ]
+        }
+      },
+      {
+        "id": "krishna",
+        "slug": "krishna",
+        "status": "published",
+        "data": {
+          "title": "Krishna",
+          "linkedin": "https://linkedin.com/in/penukonda",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/roast-7/krishna.jpg",
+              "alt": "Krishna presenting Unfinal and exe.dev at Roast #7"
+            }
+          },
+          "github": "https://github.com/tasercake/unfinal",
+          "website": "https://www.unfinal.page/live",
+          "project_url": "https://www.unfinal.page/live",
+          "role": "Roast My TechStack speaker · #7",
+          "interests": "Phoenix · LiveView · WebSockets · UX research",
+          "bio": "Explores server-first, real-time products with Phoenix LiveView and research-led UX.",
+          "building": "Unfinal, with a server-first stack using exe.dev, Phoenix LiveView and WebSockets for real-time interactions.",
+          "sort_order": 13,
+          "recaps": [
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Speaker · Roast #7",
+                  "marks": [
+                    "link-4749dc2f4498da3c"
+                  ],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-4749dc2f4498da3c",
+                  "_type": "link",
+                  "href": "/posts/roast-7"
+                }
+              ],
+              "_key": "recap-7"
+            }
+          ],
+          "portrait_crop": {
+            "x": 0.25,
+            "y": 0.39,
+            "size": 0.22
+          },
+          "projects": [
+            {
+              "_type": "block",
+              "style": "h4",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "Unfinal",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-0"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "A server-first real-time product using exe.dev, Phoenix LiveView and WebSockets.",
+                  "marks": [],
+                  "_key": "s0"
+                }
+              ],
+              "markDefs": [],
+              "_key": "project-1"
+            },
+            {
+              "_type": "block",
+              "style": "normal",
+              "children": [
+                {
+                  "_type": "span",
+                  "text": "GitHub",
+                  "marks": [
+                    "link-3ccd80a19ce78dab"
+                  ],
+                  "_key": "s0"
+                },
+                {
+                  "_type": "span",
+                  "text": " · ",
+                  "marks": [],
+                  "_key": "s1"
+                },
+                {
+                  "_type": "span",
+                  "text": "Website",
+                  "marks": [
+                    "link-1d9493d771dba54c"
+                  ],
+                  "_key": "s2"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "link-3ccd80a19ce78dab",
+                  "_type": "link",
+                  "href": "https://github.com/tasercake/unfinal"
+                },
+                {
+                  "_key": "link-1d9493d771dba54c",
+                  "_type": "link",
+                  "href": "https://www.unfinal.page/live"
+                }
+              ],
+              "_key": "project-2"
+            }
+          ]
+        }
+      }
+    ]
   }
 }

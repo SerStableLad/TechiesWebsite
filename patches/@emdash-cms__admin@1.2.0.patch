@@ -1,0 +1,286 @@
+diff --git a/dist/index.js b/dist/index.js
+index b453c18bd03731805358ae73cde4afcbf8f5505b..abc49f16a1aff5cd33a3b6424fcbb8ce983c9fef 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -582,6 +582,15 @@ async function publishContent(collection, id, options) {
+ 		_rev: data._rev
+ 	};
+ }
++// Campaign launch owns immediate and scheduled public/unlisted publication.
++async function publishCampaignDraft(savedItem) {
++	const result = await parseApiResponse(await apiFetch(`${API_BASE}/plugins/techies-campaigns/admin/launch`, {
++		method: "POST", headers: { "Content-Type": "application/json" },
++		body: JSON.stringify({ contentId: savedItem.id, contentRevision: savedItem._rev })
++	}), "Failed to publish campaign");
++	if (!result.ok) throw new Error(result.error || "Failed to publish campaign");
++	return savedItem;
++}
+ /**
+ * Unpublish content - removes from public, preserves draft
+ */
+@@ -18081,13 +18090,17 @@ function ScheduleActions({ publishingState, canSchedule, isScheduling, isUnsched
+ * (isDirty, isSaving, isAutosaving) stop here instead of re-rendering the
+ * rest of the editor.
+ */
+-function EditorActions({ collectionLabel, isNew, isDirty, isSaving, isAutosaving, saveDisabled, isLive, hasPendingChanges, publishingState, publishingPending, publishDisabled, liveViewUrl, supportsPreview, isLoadingPreview, onPreview, onPublish, onUnpublish, onMenuOpenChange, beforePublish }) {
++function EditorActions({ collection, collectionLabel, isNew, isDirty, isSaving, isAutosaving, saveDisabled, isLive, hasPendingChanges, publishingState, publishingPending, publishDisabled, liveViewUrl, supportsPreview, isLoadingPreview, onPreview, onPublish, onUnpublish, onMenuOpenChange, beforePublish }) {
+ 	const { _: _t6 } = useLingui();
+ 	const busy = isSaving || Boolean(isAutosaving);
+ 	return /* @__PURE__ */ jsxs("div", {
+ 		className: "flex min-w-0 flex-wrap items-center justify-end gap-1.5",
+ 		children: [
+-			/* @__PURE__ */ jsx(SaveButton, {
++			collection === "campaigns" ? /* @__PURE__ */ jsx(Button, {
++				type: "submit", size: "sm", variant: "secondary",
++				loading: busy, disabled: saveDisabled || publishingPending,
++				children: _t6({ id: "campaigns.save-draft", message: "Save as draft" })
++			}) : /* @__PURE__ */ jsx(SaveButton, {
+ 				type: "submit",
+ 				size: "sm",
+ 				variant: !isDirty && !busy ? "ghost" : isNew ? "primary" : "secondary",
+@@ -18121,7 +18134,19 @@ function EditorActions({ collectionLabel, isNew, isDirty, isSaving, isAutosaving
+ 				onPreview
+ 			}),
+ 			beforePublish,
+-			!isNew && /* @__PURE__ */ jsx(PublishActions, {
++			collection === "campaigns" ? /* @__PURE__ */ jsxs(Fragment, { children: [
++				/* @__PURE__ */ jsx(Button, {
++					type: "button", size: "sm", variant: "primary",
++					loading: publishingPending, disabled: publishDisabled || busy || !onPublish,
++					onClick: (event) => { if (event.currentTarget.form?.reportValidity()) onPublish(); },
++							children: collectionLabel === "Schedule campaign" ? _t6({ id: "campaigns.schedule", message: "Schedule campaign" }) : _t6({ id: "campaigns.publish", message: "Publish immediately" })
++				}),
++				isLive && onUnpublish && /* @__PURE__ */ jsx(Button, {
++					type: "button", size: "sm", variant: "outline", disabled: publishDisabled || busy || publishingPending,
++					onClick: onUnpublish,
++					children: _t6({ id: "campaigns.unpublish", message: "Unpublish" })
++				})
++			] }) : !isNew && /* @__PURE__ */ jsx(PublishActions, {
+ 				collectionLabel,
+ 				isNew,
+ 				isLive,
+@@ -18366,7 +18391,7 @@ const ContentSettingsPanel = React$1.memo(function ContentSettingsPanel({ collec
+ 							})
+ 						}), /* @__PURE__ */ jsxs("div", {
+ 							className: "grid gap-4",
+-							children: [/* @__PURE__ */ jsx(Input, {
++							children: [collection !== "campaigns" && /* @__PURE__ */ jsx(Input, {
+ 								label: _t7({
+ 									id: "L85WcV",
+ 									message: "Slug"
+@@ -34246,6 +34271,7 @@ function ContentEditor({ collection, collectionLabel, item, fields, isNew, entry
+ 	};
+ 	const handlePublish = React$1.useCallback(() => {
+ 		if (isPublishingRef.current || !onPublish || hasInvalidUrls(formDataRef.current) || hasUnsupportedPortableTextMarks || hasSaveConflictRef.current) return;
++		if (collection === "campaigns" && !window.dispatchEvent(new Event("campaigns:before-publish", { cancelable: true }))) return;
+ 		cancelPendingAutosave();
+ 		const payload = createSavePayload();
+ 		const savedState = serializeEditorState({
+@@ -34275,7 +34301,8 @@ function ContentEditor({ collection, collectionLabel, item, fields, isNew, entry
+ 		createSavePayload,
+ 		hasInvalidUrls,
+ 		hasUnsupportedPortableTextMarks,
+-		onPublish
++		onPublish,
++		collection
+ 	]);
+ 	const runScheduleChange = React$1.useCallback((action, invalidFieldsMessage, { allowUnmodifiedConflict = false } = {}) => {
+ 		if (isPublishingRef.current) return Promise.reject(new Error(_t({
+@@ -34508,7 +34535,8 @@ function ContentEditor({ collection, collectionLabel, item, fields, isNew, entry
+ 							captureDraft: captureEditorDraft,
+ 							onDraftResponse: handleEditorDraftResponse
+ 						}) : null,
+-						/* @__PURE__ */ jsx(EditorActions, {
++						collection !== "campaigns" && /* @__PURE__ */ jsx(EditorActions, {
++							collection,
+ 							collectionLabel,
+ 							isNew,
+ 							isDirty,
+@@ -34543,7 +34571,7 @@ function ContentEditor({ collection, collectionLabel, item, fields, isNew, entry
+ 								inline: true
+ 							})] }) : null
+ 						}),
+-						!isDistractionFree && isBelowLg && /* @__PURE__ */ jsx(MobileSettingsButton, {})
++						collection !== "campaigns" && !isDistractionFree && isBelowLg && /* @__PURE__ */ jsx(MobileSettingsButton, {})
+ 					]
+ 				}), /* @__PURE__ */ jsx(Button, {
+ 					variant: "ghost",
+@@ -34578,12 +34606,12 @@ function ContentEditor({ collection, collectionLabel, item, fields, isNew, entry
+ 	});
+ 	return /* @__PURE__ */ jsxs("form", {
+ 		onSubmit: handleSubmit,
+-		className: cn("flex h-full flex-col bg-kumo-elevated", isDistractionFree && "fixed inset-0 z-50"),
++		className: cn("flex h-full flex-col bg-kumo-elevated", collection === "campaigns" && "campaign-editor", isDistractionFree && "fixed inset-0 z-50"),
+ 		children: [
+ 			/* @__PURE__ */ jsxs(Sidebar.Provider, {
+ 				contained: !isBelowLg,
+-				defaultOpen: true,
+-				open: isBelowLg ? void 0 : true,
++				defaultOpen: collection !== "campaigns",
++				open: collection === "campaigns" ? Boolean(blockSidebarPanel) : isBelowLg ? void 0 : true,
+ 				side: panelSide,
+ 				collapsible: "offcanvas",
+ 				resizable: true,
+@@ -34604,7 +34632,7 @@ function ContentEditor({ collection, collectionLabel, item, fields, isNew, entry
+ 							"data-emdash-editor-canvas": "",
+ 							className: "min-w-0 flex-1 overflow-y-auto [--emdash-editor-sticky-top:0px]",
+ 							children: [!pinEditorBar && editorBar, /* @__PURE__ */ jsxs("div", {
+-								className: "emdash-editor-page mx-auto max-w-[52rem] space-y-6 pt-8 pb-16 sm:pt-12",
++								className: collection === "campaigns" ? "emdash-editor-page campaign-editor-page" : "emdash-editor-page mx-auto max-w-[52rem] space-y-6 pt-8 pb-16 sm:pt-12",
+ 								children: [
+ 									notice,
+ 									editorDraftError ? /* @__PURE__ */ jsx(Banner, {
+@@ -34653,10 +34681,11 @@ function ContentEditor({ collection, collectionLabel, item, fields, isNew, entry
+ 											}),
+ 											/* @__PURE__ */ jsx("div", {
+ 												className: "space-y-6 [&_input]:text-base [&_input]:font-normal [&_textarea]:text-base [&_textarea]:font-normal [&_[role=combobox]]:text-base",
+-												children: Object.entries(fields).map(([name, field]) => {
++												children: (() => {
++												const renderField = ([name, field]) => {
+ 													const fieldKey = `${name}:${item?.id ?? "new"}`;
+ 													const isDocumentBody = field.kind === "portableText" && name === "content";
+-													return /* @__PURE__ */ jsx(FieldRenderer, {
++														return /* @__PURE__ */ jsxs(Fragment, { children: [/* @__PURE__ */ jsx(FieldRenderer, {
+ 														name,
+ 														field,
+ 														value: formData[name],
+@@ -34678,8 +34707,19 @@ function ContentEditor({ collection, collectionLabel, item, fields, isNew, entry
+ 														onLoadMoreReferences: handleLoadMoreReferences,
+ 														onRetryReferences: handleRetryReferences,
+ 														entryLocale: item?.locale ?? entryLocale
+-													}, fieldKey);
+-												})
++														}, fieldKey), collection === "campaigns" && name === documentTitleField && /* @__PURE__ */ jsx(Input, {
++															label: _t({ id: "campaigns.slug", message: "Campaign slug" }),
++															value: slug, onChange: (event) => handleSlugChange(event.target.value),
++																placeholder: "my-campaign"
++															}), collection === "campaigns" && name === documentTitleField && jsx("p", { className: "campaign-url-preview", children: `/campaigns/${slug || "my-campaign"}` })] }, fieldKey);
++												};
++												if (collection !== "campaigns") return Object.entries(fields).map(renderField);
++												const group = (title, names) => jsxs("section", { className: "campaign-editor-section", "aria-label": title, children: [jsx("h2", { children: title }), ...names.filter(name => fields[name]).map(name => renderField([name, fields[name]]))] }, title);
++												return jsxs("div", { className: "campaign-editor-layout", children: [
++													jsxs("div", { className: "campaign-editor-main", children: [group("Campaign details", ["title", "entry_window", "description", "rules"]), group("Prize and access", ["image", "prize", "winner_count", "visibility"]), group("Entry actions", ["actions"]), fields.campaign_key && renderField(["campaign_key", fields.campaign_key])] }),
++													jsxs("aside", { className: "campaign-editor-publishing", "aria-label": "Publishing", children: [jsx("h2", { children: "Publishing" }), fields.publishing && renderField(["publishing", fields.publishing]), jsx(EditorActions, { collection, collectionLabel: formData.publishing?.mode === "schedule" ? "Schedule campaign" : collectionLabel, isNew, isDirty, isSaving: Boolean(saveFeedbackActive), isAutosaving: autosaveFeedbackActive, saveDisabled: isContentSaveBlocked, isLive, hasPendingChanges, publishingState, publishingPending, publishDisabled: hasSaveConflict, onPublish: handlePublish, onUnpublish: handleUnpublish })] })
++												] });
++												})()
+ 											})
+ 										]
+ 									})
+@@ -34691,7 +34731,7 @@ function ContentEditor({ collection, collectionLabel, item, fields, isNew, entry
+ 								id: "Tz0i8g",
+ 								message: "Settings"
+ 							}),
+-							className: cn(isDistractionFree && "hidden"),
++							className: cn((isDistractionFree || collection === "campaigns" && !blockSidebarPanel) && "hidden"),
+ 							children: [/* @__PURE__ */ jsx("fieldset", {
+ 								disabled: readOnly,
+ 								className: "contents",
+@@ -37986,8 +38026,43 @@ function renderItemCount({ searchQuery, filteredCount, total, hasMore, serverSea
+ 		}
+ 	});
+ }
++function getContentListImage(data, fields) {
++	const names = Object.keys(fields).filter((name) => fields[name].kind === "image");
++	if (names.includes("featured_image")) {
++		names.splice(names.indexOf("featured_image"), 1);
++		names.unshift("featured_image");
++	}
++	for (const name of names) {
++		const value = data[name];
++		if (!value || typeof value !== "string" && !value.src && !value.previewUrl && !value.id) continue;
++		const url = mediaDisplayUrl(value);
++		if (url) return { value, url };
++	}
++}
++function ContentListThumbnail({ image }) {
++	const [broken, setBroken] = React$1.useState(false);
++	React$1.useEffect(() => setBroken(false), [image?.url]);
++	return /* @__PURE__ */ jsx("span", {
++		"data-testid": "content-thumbnail",
++		"aria-hidden": "true",
++		className: "inline-flex shrink-0 items-center justify-center overflow-hidden rounded bg-kumo-tint text-kumo-subtle",
++		style: { width: 40, height: 40 },
++		children: image && !broken ? /* @__PURE__ */ jsx("img", {
++			key: image.url,
++			src: getMediaThumbnailUrl(image.url, image.value.mimeType || "image/jpeg", 80),
++			alt: "", width: 40, height: 40, loading: "lazy", decoding: "async",
++			style: { width: "100%", height: "100%", objectFit: "cover", objectPosition: getMediaObjectPosition(image.value) },
++			onError: (event) => {
++				if (event.currentTarget.src.includes("/_image?") && !event.currentTarget.dataset.thumbFallback) fallbackToOriginalThumbnail(event.currentTarget, image.url);
++				else setBroken(true);
++			}
++		}) : /* @__PURE__ */ jsx(ImageSquare, { size: 20 })
++	});
++}
+ function ContentListItem({ item, visibleItems, collection, onDelete, onDuplicate, showLocale, i18n, urlPattern, titleField, dateField, listColumns, selectable, selected, onToggleSelect, extensionColumns }) {
+ 	const { _: _t4 } = useLingui();
++	const { data: manifest } = useQuery({ queryKey: ["manifest"], queryFn: fetchManifest });
++	const image = getContentListImage(item.data, manifest?.collections[collection]?.fields ?? {});
+ 	const title = getEntryTitle(item, titleField);
+ 	const date = (dateField ? parseListDate(item.data[dateField]) : null) ?? parseTimestamp(item.updatedAt || item.createdAt);
+ 	return /* @__PURE__ */ jsxs("tr", {
+@@ -38014,8 +38089,11 @@ function ContentListItem({ item, visibleItems, collection, onDelete, onDuplicate
+ 						id: item.id
+ 					},
+ 					search: { locale: item.locale },
+-					className: "font-medium hover:text-kumo-link",
+-					children: title
++					className: "inline-flex items-center gap-3 font-medium hover:text-kumo-link",
++					children: /* @__PURE__ */ jsxs(Fragment, { children: [
++						/* @__PURE__ */ jsx(ContentListThumbnail, { image }),
++						/* @__PURE__ */ jsx("span", { children: title })
++					] })
+ 				})
+ 			}),
+ 			listColumns.map((column) => /* @__PURE__ */ jsx(ContentListCustomCell, {
+@@ -78647,10 +78725,17 @@ function ContentNewPage() {
+ 	});
+ 	const pickerLocale = locale ?? manifest?.i18n?.defaultLocale;
+ 	const createMutation = useMutation({
+-		mutationFn: (data) => createContent(collection, {
+-			...data,
+-			locale: pickerLocale
+-		}),
++		mutationFn: async (data) => {
++			const publishCampaign = collection === "campaigns" && data.status === "published";
++			const savedItem = await createContent(collection, { ...data, status: publishCampaign ? "draft" : data.status, locale: pickerLocale });
++			if (!publishCampaign) return savedItem;
++			try { return await publishCampaignDraft(savedItem); }
++			catch (error) {
++				// Preserve a failed publication as an editable draft rather than creating duplicates on retry.
++				navigate({ to: "/content/$collection/$id", params: { collection, id: savedItem.id }, search: { locale: savedItem.locale } });
++				throw error;
++			}
++		},
+ 		onSuccess: (result) => {
+ 			queryClient.invalidateQueries({ queryKey: ["content", collection] });
+ 			navigate({
+@@ -78728,6 +78813,7 @@ function ContentNewPage() {
+ 		i18n: manifest?.i18n,
+ 		isSaving: createMutation.isPending,
+ 		onSave: handleSave,
++		onPublish: collection === "campaigns" ? (payload) => createMutation.mutateAsync({ ...payload, status: "published" }) : void 0,
+ 		pluginBlocks,
+ 		availableBylines: bylinesData?.items,
+ 		availableBylinesLoaded: bylinesLoaded,
+@@ -79514,6 +79600,11 @@ function ContentEditPage() {
+ 				source: "editor",
+ 				changes: payload
+ 			}));
++			if (collection === "campaigns") {
++				try { await publishCampaignDraft(savedItem); }
++				catch (error) { toastManager.add({ title: "Failed to publish campaign", description: error.message, variant: "error" }); throw error; }
++				return;
++			}
+ 			await publishMutation.mutateAsync({
+ 				revision: savedItem._rev,
+ 				savedReferences: Boolean(payload.references)
+@@ -79528,6 +79619,8 @@ function ContentEditPage() {
+ 		activeLocale,
+ 		id,
+ 		publishMutation.mutateAsync,
++		collection,
++		toastManager,
+ 		rawItem?.locale,
+ 		serializeEditorSave,
+ 		updateMutation.mutateAsync

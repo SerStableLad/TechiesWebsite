@@ -1,0 +1,67 @@
+.campaign-admin { max-width: 1100px; margin-inline: auto; color: var(--text-color-kumo-default, currentColor); }
+.campaign-admin h1 { font-size: 28px; font-weight: 600; }
+.campaign-admin h2 { font-size: 21px; font-weight: 600; margin-block: 24px 12px; }
+.campaign-admin h3, .campaign-admin h4 { font-weight: 600; }
+.campaign-admin p { margin-block: 8px 16px; max-width: 75ch; color: var(--text-color-kumo-default, currentColor); }
+.campaign-admin label { display: grid; gap: 8px; font-weight: 500; margin-block: 12px; }
+.campaign-admin label span { font-weight: 400; }
+.campaign-admin fieldset { border: 0; min-width: 0; padding: 0; margin: 0 0 24px; }
+.campaign-admin textarea, .campaign-admin select { width: 100%; min-height: 40px; border: 1px solid var(--color-kumo-line); border-radius: 8px; padding: 10px 12px; background: var(--color-kumo-control); color: var(--color-kumo-default); font: inherit; }
+.campaign-admin textarea { resize: vertical; }
+.campaign-admin :is(input, textarea, select):focus-visible { outline: 2px solid var(--color-kumo-brand); outline-offset: 3px; }
+.campaign-admin :disabled { cursor: not-allowed; opacity: .65; }
+.campaign-admin a { text-decoration: underline; text-underline-offset: 3px; }
+.ca-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 8px 24px; }
+.campaign-admin .ca-action { border: 1px solid var(--color-kumo-line); border-radius: 8px; padding: 20px; margin-block: 20px; }
+.ca-action summary { cursor: pointer; font-weight: 600; overflow-wrap: anywhere; }
+.ca-action summary:focus-visible { outline: 2px solid var(--color-kumo-brand); outline-offset: 3px; }
+.ca-action[open] summary { margin-bottom: 20px; }
+.campaign-admin .ca-action fieldset { margin-bottom: 0; }
+.campaign-results-panel { min-width: 0; padding-bottom: 24px; }
+.ca-results-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-block: 24px 16px; }
+.ca-results-heading :is(h2, h3) { margin: 0; line-height: 1.4; letter-spacing: normal; }
+.ca-results-heading h3 { font-size: 17px; }
+.campaign-results-panel > .ca-results-heading { margin-top: 0; }
+.ca-table-scroll { max-width: 100%; overflow-x: auto; border: 1px solid var(--color-kumo-line); border-radius: 8px; }
+.ca-table-scroll:focus-visible, .ca-management summary:focus-visible { outline: 2px solid var(--color-kumo-brand); outline-offset: 3px; }
+.ca-data-table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 14px; line-height: 1.5; text-align: left; }
+.ca-data-table :is(th, td) { padding: 12px 16px; vertical-align: top; border-bottom: 1px solid var(--color-kumo-line); overflow-wrap: anywhere; }
+.ca-data-table th { font-weight: 600; }
+.ca-data-table :is(th, td):not(:first-child) { white-space: nowrap; }
+.ca-data-table thead { background: var(--color-kumo-tint); }
+.ca-data-table tbody tr:last-child > * { border-bottom: 0; }
+.ca-data-table tbody th { min-width: 120px; }
+.ca-management { margin-top: 24px; padding-block: 16px; border-top: 1px solid var(--color-kumo-line); }
+.ca-management summary { font-weight: 500; cursor: pointer; }
+.ca-management[open] summary { margin-bottom: 16px; }
+.ca-management button { margin: 8px 12px 8px 0; }
+.ca-table-help { display: none; }
+@media (max-width: 640px) { .ca-table-help { display: block; } }
+.campaign-admin .ca-error { color: var(--text-color-kumo-danger, currentColor); }
+.campaign-admin .ca-archived { display: flex; align-items: center; gap: 12px; }
+.campaign-native-window, .campaign-native-actions { min-width: 0; border: 0; padding: 0; }
+.campaign-native-window > legend, .campaign-native-actions > legend { font-weight: 500; margin-bottom: 12px; }
+/* Public prose tokens must not wash out the native editor on light Kumo surfaces. */
+html[data-theme="classic"]:has(.campaign-native-window) .tiptap,
+html[data-theme="classic"]:has(.campaign-native-window) .tiptap :is(p, li, strong, b, em, i, u, s, h1, h2, h3, h4, blockquote, code, pre) { color: var(--text-color-kumo-default); }
+.campaign-admin strong { color: inherit; }
+/* Keep public display-heading styles out of the native campaign action bar. */
+form:has(.campaign-native-window) h1.truncate { font-size: 16px; font-weight: 500; line-height: 1.5; letter-spacing: normal; margin: 0; }
+.campaign-linkedin-logo { display: inline-block; vertical-align: middle; margin-inline-end: 10px; flex-shrink: 0; }
+@media (max-width: 640px) { .ca-grid { grid-template-columns: 1fr; } }
+.campaign-editor-page { max-width: 1200px; padding: 32px 24px 64px; }
+.campaign-editor-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; align-items: start; gap: 32px; }
+.campaign-editor-main { min-width: 0; }
+.campaign-editor-section { padding-block: 0 32px; margin-bottom: 32px; border-bottom: 1px solid var(--color-kumo-line); display: grid; gap: 24px; }
+.campaign-editor-section > h2, .campaign-editor-publishing > h2 { font: inherit; font-size: 21px; font-weight: 600; margin: 0; letter-spacing: normal; }
+.campaign-editor-publishing { position: sticky; top: 24px; display: grid; gap: 24px; min-width: 0; padding: 24px; border: 1px solid var(--color-kumo-line); border-radius: 8px; }
+.campaign-editor-publishing > div:last-child { display: grid; justify-content: stretch; gap: 12px; }
+.campaign-editor-publishing button { width: 100%; min-height: 44px; }
+.campaign-editor-publishing :is(div, input, select) { min-width: 0; max-width: 100%; }
+.campaign-editor-publishing .campaign-admin { width: 100%; }
+.campaign-editor-publishing input[type="datetime-local"] { font-size: 14px; }
+.campaign-native-actions > legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.campaign-url-preview { overflow-wrap: anywhere; color: var(--text-color-kumo-default); margin-top: -16px; }
+.campaign-editor-section .campaign-admin { width: 100%; }
+@media (max-width: 1100px) { .campaign-editor-layout { grid-template-columns: minmax(0, 1fr); gap: 32px; } .campaign-editor-publishing { position: static; } }
+@media (max-width: 640px) { .campaign-editor-page { padding: 24px 16px 48px; } }

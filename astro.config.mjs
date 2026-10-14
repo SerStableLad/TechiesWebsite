@@ -4,6 +4,10 @@ import { d1, r2 } from "@emdash-cms/cloudflare";
 import { defineConfig, passthroughImageService, sessionDrivers } from "astro/config";
 import emdash, { local } from "emdash/astro";
 import { sqlite } from "emdash/db";
+import { fileURLToPath } from "node:url";
+
+const campaignsAdmin = fileURLToPath(new URL("./src/plugins/campaigns/admin.tsx", import.meta.url));
+const membersAdmin = fileURLToPath(new URL("./src/plugins/members/admin.tsx", import.meta.url));
 
 const nodeRuntime = process.env.EMDASH_RUNTIME === "node";
 const adapter = nodeRuntime
@@ -30,6 +34,15 @@ export default defineConfig({
 	integrations: [
 		react(),
 		emdash({
+			plugins: [{
+				id: "techies-campaigns", version: "0.3.2", format: "native",
+				entrypoint: fileURLToPath(new URL("./src/plugins/campaigns/index.ts", import.meta.url)),
+				adminEntry: campaignsAdmin, options: { adminEntry: campaignsAdmin },
+			}, {
+				id: "techies-members", version: "0.1.0", format: "native",
+				entrypoint: fileURLToPath(new URL("./src/plugins/members/index.ts", import.meta.url)),
+				adminEntry: membersAdmin, options: { adminEntry: membersAdmin },
+			}],
 			database: nodeRuntime ? sqlite({ url: "file:/data/techies.db" }) : d1({ binding: "DB", session: "auto" }),
 			storage: nodeRuntime
 				? local({ directory: "/data/uploads", baseUrl: "/_emdash/api/media/file" })

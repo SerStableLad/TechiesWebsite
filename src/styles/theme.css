@@ -79,8 +79,6 @@ strong { color: var(--text); }
 .profile-copy .role { color: var(--orange); font-size: 14px; margin-bottom: 16px; }
 .profile-links { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 24px; font-size: 14px; }
 .profile-links a:hover { color: var(--orange); }
-.profile-detail { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
-.profile-detail .metadata { margin-bottom: 8px; }
 .empty-state { border: 1px solid var(--border); background: var(--surface); border-radius: 20px; padding: clamp(28px, 5vw, 64px); }
 .empty-state h2 { margin-bottom: 18px; }
 .empty-state p { max-width: 640px; margin-bottom: 26px; }

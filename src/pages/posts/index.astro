@@ -6,10 +6,11 @@ const cursor = Astro.url.searchParams.get("cursor") || undefined;
 const { entries: posts, cacheHint, nextCursor } = await getEmDashCollection("posts", { orderBy: { published_at: "desc" }, limit: 12, cursor });
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 ---
-<Base title="Posts & event summaries" description="The stacks, constraints, decisions and open questions from the Techies community.">
+<Base title="Posts" description="Event summaries and partnership announcements from the Techies community.">
   <div class="container page-content">
-    <header class="page-heading"><h1>Posts & event summaries</h1><p>Event summaries, engineering trade-offs, and questions worth taking back to your own build. The working reality, preserved.</p></header>
-    {posts.length ? <div class="card-grid">{posts.map(post => <PostCard post={post} />)}</div> : <p>No posts published yet. Join a session while we get the notes together.</p>}
+    <header class="page-heading"><h1>Posts</h1><p>Event summaries, engineering trade-offs, and partnership announcements from the Techies community.</p>
+    </header>
+    {posts.length ? <div class="card-grid">{posts.map(post => <PostCard post={post} />)}</div> : <p>No posts in this category yet.</p>}
     <nav class="pagination" aria-label="Post pagination">{cursor && <a class="text-link" href="/posts">First page</a>}{nextCursor && <a class="text-link" href={`/posts?cursor=${encodeURIComponent(nextCursor)}`}>More posts →</a>}</nav>
   </div>
 </Base>

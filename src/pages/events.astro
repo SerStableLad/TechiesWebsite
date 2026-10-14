@@ -1,0 +1,90 @@
+---
+import { getEmDashCollection } from "emdash";
+import { Image } from "emdash/ui";
+import Base from "../layouts/Base.astro";
+import UpcomingEvents from "../components/UpcomingEvents.astro";
+
+const result = await getEmDashCollection("programmes", { orderBy: { sort_order: "asc" }, limit: 12 });
+if (Astro.cache?.enabled) Astro.cache.set(result.cacheHint);
+const details: Record<string, { objective: string; format: string; audience: string; context?: string }> = {
+  roast: {
+    objective: "Understand the constraints behind a real stack, question architecture decisions, and compare alternatives with the people building it.",
+    format: "Community demos followed by open technical Q&A. Bring the working reality, including bottlenecks and decisions still unresolved.",
+    audience: "Developers, technical leads, founders, and solo builders who want to go beyond the demo.",
+  },
+  "prod-down": {
+    objective: "Learn from production incidents: what failed, how the team contained the damage, and what could prevent it next time.",
+    format: "Candid incident discussions about recovery, failure modes, and the guardrails teams wish they’d had.",
+    audience: "Builders and engineering teams interested in operating systems and learning from real mistakes.",
+    context: "The linked session was hosted with Lorong AI’s After Dark programme.",
+  },
+  "starting-right": {
+    objective: "Connect product and business decisions to architecture. Work out what is worth building, what can wait, and which shortcuts have consequences.",
+    format: "A collaborative workshop comparing approaches to a product scenario, before writing code.",
+    audience: "Founders, developers, product managers, and anyone making early product and engineering decisions.",
+    context: "This workshop belongs to Lorong AI’s Tinker Time series. Its published title is retained here.",
+  },
+};
+---
+
+<Base title="Events" description="Explore Techies event series: real-stack discussions, production incident lessons, and hands-on product workshops.">
+  <div class="container">
+    <header class="page-heading">
+      <h1>Different formats.<br /><span class="accent">The same curiosity.</span></h1>
+      <p>Real stacks, production mistakes, and product decisions. Explore what each event is for, how we get into the details, and which conversation you want to join.</p>
+      <a class="button" href="#upcoming">See upcoming events <span aria-hidden="true">↓</span></a>
+    </header>
+    <nav class="series-nav" aria-label="Event series">{result.entries.map(programme => <a class="text-link" href={`#${programme.id}`}>{programme.data.title} <span aria-hidden="true">↓</span></a>)}</nav>
+  </div>
+  <section class="section" aria-label="Our event series">
+    <div class="container series-list">
+      {result.entries.map(programme => {
+        const detail = details[programme.id];
+        return <article class="series" id={programme.id}>
+          <a class="series-art" href={programme.data.url} aria-label={`View a past ${programme.data.title} session on Luma`} {...programme.edit.cover}>{programme.data.cover && <Image image={programme.data.cover} />}</a>
+          <div class="series-copy">
+            <h2 {...programme.edit.title}>{programme.data.title}</h2>
+            <p class="series-label" {...programme.edit.label}>{programme.data.label?.replace(/^\d+\s*\/\s*/, "")}</p>
+            <p {...programme.edit.description}>{programme.data.description}</p>
+            {detail && <dl>
+              <div><dt>Objective</dt><dd>{detail.objective}</dd></div>
+              <div><dt>Format</dt><dd>{detail.format}</dd></div>
+              <div><dt>Who it’s for</dt><dd>{detail.audience}</dd></div>
+            </dl>}
+            {detail?.context && <p class="partner-note">{detail.context}</p>}
+            <div class="series-actions"><a class="text-link" href={programme.data.url}>View a past session <span aria-hidden="true">↗</span></a>{programme.id === "roast" && <a class="text-link" href="/tag/roast-my-techstack">Read the recaps <span aria-hidden="true">→</span></a>}</div>
+          </div>
+        </article>;
+      })}
+      <aside class="workshop-note"><h2>Prod is Brewing</h2><p>Our workshop umbrella: hands-on sessions to compare product choices and engineering trade-offs before writing code. Starting Right above is a published partner workshop, with its own Tinker Time identity.</p></aside>
+    </div>
+  </section>
+  <section class="section upcoming-section" id="upcoming">
+    <div class="container"><div class="section-heading"><h2>Get in the room.</h2><p>The live calendar updates when a session is published. Bring your questions. Stay for supper.</p></div><UpcomingEvents /><p class="calendar-note">Registration and any approval requirements are shown on each event’s Luma page.</p><a class="text-link" href="https://luma.com/APACtechies">Open the full Luma calendar <span aria-hidden="true">↗</span></a></div>
+  </section>
+</Base>
+
+<style>
+  .page-heading .button { margin-top: 28px; }
+  .series-nav { display: flex; flex-wrap: wrap; gap: 16px 32px; padding-bottom: 40px; }
+  .series-nav a { padding-block: 8px; }
+  .series-list { display: grid; gap: 72px; }
+  .series { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); align-items: start; gap: 64px; scroll-margin-top: 32px; }
+  .series + .series { border-top: 1px solid var(--border); padding-top: 72px; }
+  .series-art { display: block; aspect-ratio: 1; border-radius: 12px; overflow: hidden; }
+  .series-art :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .series-copy h2 { font-size: clamp(28px, 3vw, 36px); }
+  .series-label { color: var(--orange); margin-block: 16px 20px; }
+  dl { margin-block: 28px; }
+  dl > div { padding-block: 16px; border-top: 1px solid var(--border); }
+  dt { font-weight: 600; margin-bottom: 6px; }
+  dd { margin: 0; color: var(--secondary); }
+  .partner-note, .calendar-note { font-size: 14px; margin-bottom: 24px; }
+  .series-actions { display: flex; flex-wrap: wrap; gap: 20px 32px; }
+  .workshop-note { border-top: 1px solid var(--border); padding-top: 40px; display: grid; grid-template-columns: .85fr 1.15fr; gap: 64px; }
+  .workshop-note h2 { font-size: 28px; }
+  .upcoming-section { background: var(--surface); }
+  .calendar-note { margin-top: 20px; }
+  @media (max-width: 900px) { .series, .workshop-note { gap: 32px; } }
+  @media (max-width: 700px) { .series, .workshop-note { grid-template-columns: 1fr; } .series-art { max-width: 460px; width: 100%; } .series-list { gap: 48px; } .series + .series { padding-top: 48px; } }
+</style>

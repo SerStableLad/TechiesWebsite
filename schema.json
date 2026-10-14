@@ -1,0 +1,443 @@
+{
+  "collections": [
+    {
+      "slug": "announcements",
+      "label": "Announcements",
+      "labelSingular": "Announcement",
+      "description": "Scheduled site-wide text strips",
+      "supports": [
+        "drafts",
+        "revisions"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Announcement text",
+          "type": "text",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "starts_at",
+          "label": "Show from (optional)",
+          "type": "datetime",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "ends_at",
+          "label": "Hide at (optional)",
+          "type": "datetime",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "cta_label",
+          "label": "CTA text (optional)",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "cta_url",
+          "label": "CTA link (https://… or /path)",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "cta_new_tab",
+          "label": "Open CTA in new tab",
+          "type": "boolean",
+          "required": false,
+          "unique": false
+        }
+      ]
+    },
+    {
+      "slug": "members",
+      "label": "Members",
+      "labelSingular": "Member",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Name",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "role",
+          "label": "Role / introduction",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "bio",
+          "label": "Biography",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "photo",
+          "label": "Portrait",
+          "type": "image",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "linkedin",
+          "label": "LinkedIn",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "github",
+          "label": "GitHub",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "website",
+          "label": "Website",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "sort_order",
+          "label": "Display order",
+          "type": "integer",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "building",
+          "label": "What they are building",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "interests",
+          "label": "Technical interests",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "project_url",
+          "label": "Project link",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "recaps",
+          "label": "Event recaps",
+          "type": "portableText",
+          "required": false,
+          "unique": false
+        }
+      ]
+    },
+    {
+      "slug": "pages",
+      "label": "Pages",
+      "labelSingular": "Page",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "content",
+          "label": "Content",
+          "type": "portableText",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "intro",
+          "label": "Hero introduction",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "about_intro",
+          "label": "About introduction",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "supper_copy",
+          "label": "Supper copy",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "supper_photo",
+          "label": "Supper photo",
+          "type": "image",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "supper_photo_two",
+          "label": "Second supper photo",
+          "type": "image",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "podcast_copy",
+          "label": "Podcast copy",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "podcast_url",
+          "label": "Podcast link",
+          "type": "url",
+          "required": false,
+          "unique": false
+        }
+      ]
+    },
+    {
+      "slug": "posts",
+      "label": "Posts",
+      "labelSingular": "Post",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "featured_image",
+          "label": "Featured image",
+          "type": "image",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "content",
+          "label": "Content",
+          "type": "portableText",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "event_date",
+          "label": "Event date",
+          "type": "datetime",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "source_url",
+          "label": "Original source",
+          "type": "url",
+          "required": false,
+          "unique": false
+        }
+      ]
+    },
+    {
+      "slug": "programmes",
+      "label": "Programmes",
+      "labelSingular": "Programme",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "label",
+          "label": "Label",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "description",
+          "label": "Description",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "cover",
+          "label": "Cover artwork",
+          "type": "image",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "url",
+          "label": "Registration link",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "accent",
+          "label": "Accent",
+          "type": "select",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "options": [
+              "amber",
+              "red",
+              "teal"
+            ]
+          },
+          "options": {
+            "options": [
+              "amber",
+              "red",
+              "teal"
+            ]
+          }
+        },
+        {
+          "slug": "sort_order",
+          "label": "Display order",
+          "type": "integer",
+          "required": false,
+          "unique": false
+        }
+      ]
+    },
+    {
+      "slug": "team",
+      "label": "Exco profiles",
+      "labelSingular": "Exco profile",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Name",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "role",
+          "label": "Role / introduction",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "bio",
+          "label": "Biography",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "photo",
+          "label": "Portrait",
+          "type": "image",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "linkedin",
+          "label": "LinkedIn",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "github",
+          "label": "GitHub",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "website",
+          "label": "Website",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "sort_order",
+          "label": "Display order",
+          "type": "integer",
+          "required": false,
+          "unique": false
+        }
+      ]
+    }
+  ],
+  "version": "616362768144c00f"
+}

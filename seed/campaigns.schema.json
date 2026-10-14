@@ -1,0 +1,23 @@
+{
+  "slug": "campaigns",
+  "label": "Campaigns",
+  "labelSingular": "Campaign",
+  "icon": "gift",
+  "sortOrder": 0,
+  "urlPattern": "/campaigns/{slug}",
+  "supports": ["drafts", "revisions"],
+  "hasSeo": false,
+  "fields": [
+    { "slug": "title", "label": "Campaign title", "type": "string", "required": true },
+    { "slug": "entry_window", "label": "Campaign dates", "type": "json", "widget": "techies-campaigns:entry-window" },
+    { "slug": "description", "label": "Campaign description", "type": "portableText" },
+    { "slug": "rules", "label": "Rules and eligibility", "type": "portableText" },
+    { "slug": "image", "label": "Prize image", "type": "image" },
+    { "slug": "prize", "label": "Prize name", "type": "string" },
+    { "slug": "winner_count", "label": "Number of winners", "type": "integer", "validation": { "min": 1, "max": 20 } },
+    { "slug": "visibility", "label": "Campaign access", "type": "select", "widget": "techies-campaigns:campaign-access", "validation": { "options": ["public", "private"] } },
+    { "slug": "actions", "label": "Entry actions", "type": "json", "widget": "techies-campaigns:entry-actions" },
+    { "slug": "publishing", "label": "Publishing", "type": "json", "widget": "techies-campaigns:campaign-publishing" },
+    { "slug": "campaign_key", "label": "Managed campaign reference", "type": "string", "unique": true, "indexed": true, "widget": "techies-campaigns:managed-reference" }
+  ]
+}

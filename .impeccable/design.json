@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-12T00:00:00Z",
+  "title": "Design System: Techies",
+  "extensions": {
+    "colorMeta": {
+      "orange": { "role": "primary", "displayName": "Techies orange" },
+      "orange-hover": { "role": "primary", "displayName": "Orange hover" },
+      "bg": { "role": "neutral", "displayName": "Near-black" },
+      "surface": { "role": "neutral", "displayName": "Deep charcoal" },
+      "card": { "role": "neutral", "displayName": "Card charcoal" },
+      "border": { "role": "neutral", "displayName": "Decorative border grey" },
+      "text": { "role": "neutral", "displayName": "Off-white" },
+      "secondary": { "role": "neutral", "displayName": "Supporting grey" },
+      "control-border": { "role": "neutral", "displayName": "Control boundary grey" },
+      "red": { "role": "event-specific", "displayName": "Incident red" },
+      "prose-text": { "role": "neutral", "displayName": "Long-form prose text (theme.css:93,95; paragraphs and list items only)" },
+      "campaign-error": { "role": "error", "displayName": "Campaign alert text (campaigns.css:27; CampaignEntry.tsx:82; local error, not incident branding)" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Public display", "purpose": "Global h1; campaigns use a smaller local clamp." },
+      "headline": { "displayName": "Public headline", "purpose": "Global h2." },
+      "body": { "displayName": "Body", "purpose": "Public reading and form text." },
+      "reading": { "displayName": "Long-form reading", "purpose": "Public prose column." },
+      "button": { "displayName": "Action text", "purpose": "Public buttons." },
+      "wordmark": { "displayName": "Terminal wordmark", "purpose": "Live-text navigation mark; mono also serves code." },
+      "caption": { "displayName": "Prose caption", "purpose": "theme.css:101; existing 13px figure captions, not approval for essential labels." },
+      "section-support": { "displayName": "Section supporting copy", "purpose": "theme.css:57; 15px section-heading paragraphs." },
+      "hero-intro": { "displayName": "Homepage introduction", "purpose": "pages/index.astro:100,134; 17px, reduced to 16px at max-width 700px." },
+      "local-title": { "displayName": "Homepage local title", "purpose": "pages/index.astro:111,116; 20px pillar and audience h3." },
+      "event-title": { "displayName": "Upcoming-event title", "purpose": "UpcomingEvents.astro:53,59; 20px/1.35, reduced to 18px at max-width 600px." },
+      "post-title": { "displayName": "Post-card title", "purpose": "theme.css:69; 21px/1.3 h2 or h3 in post cards." },
+      "campaign-prize": { "displayName": "Campaign prize text", "purpose": "campaigns.css:6; 21px paragraph, not a heading. Admin h2 independently uses 21px/600 in admin.css:3 under the host theme." },
+      "title": { "displayName": "Public h3", "purpose": "theme.css:31,34; campaigns.css:38; 23px global h3 and campaign action titles." },
+      "wordmark-mobile": { "displayName": "Mobile terminal wordmark", "purpose": "theme.css:126; 24px at max-width 640px; distinct from prose h3." },
+      "profile-title": { "displayName": "Profile title", "purpose": "theme.css:77; 26px profile h2." },
+      "campaign-section": { "displayName": "Campaign overview section", "purpose": "campaigns.css:5; 26px overview h2." },
+      "prose-title": { "displayName": "Prose h3", "purpose": "theme.css:92; 24px prose h3, not mono wordmark styling." },
+      "prose-headline": { "displayName": "Prose h2", "purpose": "theme.css:91; 32px prose h2." },
+      "prose-display": { "displayName": "Prose h1", "purpose": "theme.css:90; 42px prose h1." },
+      "profile-placeholder": { "displayName": "Mono profile placeholder", "purpose": "theme.css:75; 44px placeholder, not body or display copy." },
+      "campaign-display": { "displayName": "Campaign h1", "purpose": "campaigns.css:3; clamp(36px, 4vw, 54px). 36px and 54px are endpoints, not standalone approved sizes." },
+      "event-series-headline": { "displayName": "Event-series h2", "purpose": "pages/events.astro:76; clamp(28px, 3vw, 36px). 36px is the maximum endpoint. All added local roles record scoped incumbent use, not newly approved drift; provenance and responsive overrides cannot be expressed as frontmatter typography properties." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "public-button", "value": "background .18s, transform .18s", "purpose": "theme.css:39; no hover translation is prescribed." },
+      { "name": "public-card", "value": "border-color .18s", "purpose": "theme.css:64; post-card boundary feedback." },
+      { "name": "reduced-motion", "value": "animation: none !important; transition: none !important; scroll-behavior: auto", "purpose": "theme.css:137–140; public prefers-reduced-motion override." }
+    ],
+    "breakpoints": [
+      { "name": "public-grid", "value": "900px" },
+      { "name": "campaign-stack", "value": "800px" },
+      { "name": "public-mobile-and-admin-stack", "value": "640px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Public primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "theme.css:27,39–40; campaigns.css:25–26. Public filled action, not an admin control.",
+      "html": "<button class=\"ds-primary\" type=\"button\">Verify email</button>",
+      "css": ".ds-primary { display:inline-flex; align-items:center; justify-content:center; gap:24px; padding:13px 20px; min-height:48px; border:1px solid var(--orange,#f97316); border-radius:8px; background:var(--orange,#f97316); color:var(--bg,#0a0a0f); font:600 14px/1.65 Inter,sans-serif; transition:background .18s,transform .18s; } .ds-primary:hover { background:var(--orange-hover,#ea580c); border-color:var(--orange-hover,#ea580c); } .ds-primary:focus-visible { outline:3px solid var(--orange,#f97316); outline-offset:5px; } .ds-primary:disabled { opacity:.65; cursor:not-allowed; } @media(prefers-reduced-motion:reduce) { .ds-primary { transition:none!important; } }"
+    },
+    {
+      "name": "Public secondary button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "theme.css:27,39–42; campaigns.css:25–26. Neutral outlined supporting action.",
+      "html": "<button class=\"ds-secondary\" type=\"button\">Submit proof</button>",
+      "css": ".ds-secondary { display:inline-flex; align-items:center; justify-content:center; gap:24px; padding:13px 20px; min-height:48px; border:1px solid var(--control-border,#686878); border-radius:8px; background:transparent; color:var(--text,#e8e8ed); font:600 14px/1.65 Inter,sans-serif; transition:background .18s,transform .18s; } .ds-secondary:hover { background:var(--card,#16161f); } .ds-secondary:focus-visible { outline:3px solid var(--orange,#f97316); outline-offset:5px; } .ds-secondary:disabled { opacity:.65; cursor:not-allowed; } @media(prefers-reduced-motion:reduce) { .ds-secondary { transition:none!important; } }"
+    },
+    {
+      "name": "Campaign text field",
+      "kind": "input",
+      "refersTo": "campaign-input",
+      "description": "campaigns.css:17–20. Visible label and stronger control boundary; input and textarea explicitly share a 3px orange focus outline offset 5px; no invented hover state.",
+      "html": "<label class=\"ds-label\">Email address<input class=\"ds-input\" type=\"email\" autocomplete=\"email\" required></label>",
+      "css": ".ds-label { display:block; color:var(--text,#e8e8ed); margin:18px 0 8px; font:16px/1.65 Inter,sans-serif; } .ds-input { display:block; width:100%; margin-top:8px; padding:12px; border:1px solid var(--control-border,#686878); border-radius:8px; background:var(--bg,#0a0a0f); color:var(--text,#e8e8ed); font:inherit; } .ds-input:focus-visible { outline:3px solid var(--orange,#f97316); outline-offset:5px; } .ds-input:disabled { cursor:not-allowed; }"
+    },
+    {
+      "name": "Public navigation",
+      "kind": "nav",
+      "refersTo": "public-navigation",
+      "description": "Base.astro:70–89; theme.css:47–54,123–128. Live-text wordmark and wrapping links; illustrative destinations only.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Primary navigation\"><a class=\"ds-wordmark\" href=\"/\" aria-label=\"Techies home\">&gt;Techies<span>_</span></a><div class=\"ds-links\"><a href=\"/events\">Events</a><a href=\"/campaigns\" aria-current=\"page\">Giveaways</a></div></nav>",
+      "css": ".ds-nav { min-height:86px; display:flex; align-items:center; justify-content:space-between; gap:28px; background:var(--bg,#0a0a0f); border-bottom:1px solid var(--border,#252530); font:16px/1.65 Inter,sans-serif; } .ds-nav a { text-decoration:none; } .ds-wordmark { color:var(--text,#e8e8ed); font:600 25px/1.65 'JetBrains Mono',monospace; letter-spacing:-.03em; white-space:nowrap; } .ds-wordmark span { color:var(--orange,#f97316); } .ds-links { display:flex; align-items:center; flex-wrap:wrap; gap:28px; } .ds-links a { font-size:14px; color:var(--secondary,#9898a8); padding:10px 0; } .ds-links a:hover,.ds-links a[aria-current=page] { color:var(--text,#e8e8ed); } .ds-nav a:focus-visible { outline:3px solid var(--orange,#f97316); outline-offset:5px; } @media(max-width:900px) { .ds-nav { gap:20px; } .ds-links { gap:17px; } } @media(max-width:640px) { .ds-nav { padding:18px 0; flex-wrap:wrap; gap:12px; } .ds-wordmark { font-size:24px; } .ds-links { width:100%; justify-content:space-between; gap:4px 14px; } }"
+    },
+    {
+      "name": "Campaign entry panel",
+      "kind": "card",
+      "refersTo": "campaign-panel",
+      "description": "campaigns.css:13–15,50; theme.css:31,33,35. Static entry surface. CampaignEntry.tsx:81–94 distinguishes registered-but-unqualified, qualified and closed states; closed guidance does not promise later submissions/approvals can qualify. Refresh retrieves latest recorded status; no broad production verification is claimed.",
+      "html": "<section class=\"ds-panel\" aria-labelledby=\"ds-entry-heading\"><h2 id=\"ds-entry-heading\">Verify your email</h2><p>We’ll send a six-digit code. No password or account signup needed.</p></section>",
+      "css": ".ds-panel { border:1px solid var(--control-border,#686878); border-radius:12px; padding:28px; background:var(--surface,#111118); color:var(--text,#e8e8ed); font:16px/1.65 Inter,sans-serif; } .ds-panel h2 { font-size:28px; font-weight:700; line-height:1.12; letter-spacing:-.03em; text-wrap:balance; margin:0 0 20px; } .ds-panel p { color:var(--secondary,#9898a8); margin:12px 0 20px; } @media(max-width:800px) { .ds-panel { padding:24px; } }"
+    },
+    {
+      "name": "Campaign action row",
+      "kind": "custom",
+      "refersTo": "campaign-action",
+      "description": "campaigns.css:36–42; CampaignEntry.tsx:103–111. Required actions show Required instead of bonus weight; approved required proof says requirement complete, pending proof does not qualify. Closed pending text describes the last refresh. Direct row paragraphs cap at 60ch; admin paragraphs cap at 75ch (admin.css:5). Deadline is the eligibility cutoff even when cron executes later (admin.tsx:92–94; surfaces/campaigns.md:5–7). Sample is not real participant data.",
+      "html": "<article class=\"ds-action\"><div class=\"ds-action-heading\"><h3>Submit proof</h3><p>1 bonus entry</p></div><p class=\"ds-action-status\">Submitted · awaiting organiser review</p></article>",
+      "css": ".ds-action { border-top:1px solid var(--border,#252530); padding:28px 0 32px; color:var(--text,#e8e8ed); font:16px/1.65 Inter,sans-serif; } .ds-action-heading { display:flex; align-items:baseline; justify-content:space-between; gap:16px; } .ds-action-heading h3 { margin:0; font-size:23px; font-weight:700; line-height:1.12; letter-spacing:-.025em; text-wrap:balance; } .ds-action p { margin:12px 0 20px; } .ds-action > p { max-width:60ch; } .ds-action-heading p { color:var(--orange,#f97316); flex-shrink:0; margin-top:0; } .ds-action-status { color:var(--text,#e8e8ed); } @media(max-width:800px) { .ds-action-heading { flex-direction:column; align-items:start; gap:0; } }"
+    },
+    {
+      "name": "Campaign formatted content",
+      "kind": "custom",
+      "description": "campaigns.css:43–48; CampaignEntry.tsx:72,77. HTML description/rules have normal whitespace, wrapping, underlined links, indented lists and italic blockquotes; legacy plain text keeps pre-wrap. Ordered content lists are not decorative numbered sections.",
+      "html": "<div class=\"ds-rich\"><p>Read the rules and eligibility.</p><ul><li>Complete required actions before closing.</li></ul></div>",
+      "css": ".ds-rich { white-space:normal; overflow-wrap:anywhere; color:var(--secondary,#9898a8); font:16px/1.65 Inter,sans-serif; } .ds-rich p { margin:0; } .ds-rich p + p { margin-top:16px; } .ds-rich a { color:var(--orange,#f97316); text-decoration:underline; text-underline-offset:4px; } .ds-rich a:focus-visible { outline:3px solid var(--orange,#f97316); outline-offset:5px; } .ds-rich ul,.ds-rich ol { padding-inline-start:24px; margin-block:16px; } .ds-rich li + li { margin-top:8px; } .ds-rich blockquote { margin-inline:0; padding-inline:24px; font-style:italic; }"
+    },
+    {
+      "name": "Native campaign entry dates",
+      "kind": "custom",
+      "description": "fields.tsx:9–38; admin.css:14,25–26. Specialized JSON entry-window field uses Kumo Input with second-resolution dates, browser timezone, close-after-open validation, aria-invalid/describedby, inline alert and custom validity. Fieldset locks after first entrant/draw. Static guidance excerpt avoids imitating Kumo Input or native editor geometry. Native Content → Campaigns uses stock Portable Text editors/media picker (seed/campaigns.schema.json:15–18), replacing deleted HtmlEditor and custom upload form. Scoped contrast correction is html[data-theme=classic]:has(.campaign-native-window) .tiptap and listed text descendants { color:var(--text-color-kumo-default); } (admin.css:28–30), not a global recolour; stock dark surfaces remain authoritative.",
+      "html": "<fieldset class=\"ds-window\" aria-labelledby=\"ds-window-label\"><legend id=\"ds-window-label\">Entry dates</legend><p>The closing date must be after opening.</p><p>Entry dates are locked after the first entrant or draw.</p></fieldset>",
+      "css": ".ds-window { min-width:0; border:0; padding:0; margin:0 0 24px; color:var(--text-color-kumo-default,currentColor); } .ds-window > legend { font-weight:500; margin-bottom:12px; } .ds-window p { margin:8px 0 16px; max-width:75ch; }"
+    },
+    {
+      "name": "Create announcement checkbox",
+      "kind": "custom",
+      "description": "seed/campaigns.schema.json:22; fields.tsx:67–71; native.ts:134–148,201–223. Literal checkbox opt-in creates one managed linked Announcement. Activation publishes matching campaign dates/CTA; private wording is generic. Controls link to it; unpublish/archive withdraws it. Static preview has no API or checkbox persistence. No new shipping raster; captures are development-only per supplied record.",
+      "html": "<div class=\"ds-announcement\"><label><input type=\"checkbox\">Create announcement</label><p>Creates one linked Announcement. It goes live when the campaign is activated and follows the same dates; invite-only campaigns use generic wording.</p></div>",
+      "css": ".ds-announcement { color:var(--text-color-kumo-default,currentColor); } .ds-announcement label { display:flex; align-items:center; gap:12px; font-weight:500; margin-block:12px; } .ds-announcement p { margin:8px 0 16px; max-width:75ch; } .ds-announcement input:focus-visible { outline:2px solid var(--color-kumo-brand); outline-offset:3px; }"
+    },
+    {
+      "name": "LinkedIn requirement mark",
+      "kind": "custom",
+      "description": "LinkedInLogo.tsx:1–5; campaigns.css:49; admin.css:33; fields.tsx:40–65; native.ts:16–28; CampaignEntry.tsx:107–110. Decorative 24px SVG inherits currentColor in public titles/admin legends, with 10px trailing space and adjacent text. No new accent. Specialized JSON action widget defaults Add to LinkedIn follow; type change prefills title/instructions and sets LinkedIn required/zero bonus or optional one point. Bonus input hides for LinkedIn; correct answers belong in private controls. Actions lock after first entrant/draw; Add disables at twenty. No runtime action implied by the mark.",
+      "html": "<span><svg class=\"ds-linkedin-logo\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\" fill=\"currentColor\"><path d=\"M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.049c.476-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0z\" /></svg>Follow the LinkedIn page</span>",
+      "css": ".ds-linkedin-logo { display:inline-block; vertical-align:middle; margin-inline-end:10px; flex-shrink:0; }"
+    },
+    {
+      "name": "Saved Campaign controls and operational identity",
+      "kind": "custom",
+      "description": "admin.tsx:23–40,68–97; admin.css:27,31; native.ts:159–175; index.ts:31; seed/campaigns.schema.json:5; surfaces/campaigns.md:7. Saved-entry panel shows engine status, operations link, linked announcement, private saved-draft activation, locked guidance, loading/error/Retry campaign controls and refresh states. Private drafts remain non-public; revision changes require refresh. Entries & draws is grouped with native Campaigns under Content. Operational views show wrapping selected title and access/status above Private settings / Entries and review / Winner draw. Settings disable busy/closed/drawn; review disables busy/closed/not published. Draw retry is deadline/status gated; saved draw cannot reroll. Supplied reviewer scored contrast, identity and retry resolved; source contains corresponding paths, not a broad verification claim. Static text excerpt is not Kumo controls, activation or scheduling runtime.",
+      "html": "<section class=\"ds-controls\"><p>Engine status: draft</p><p>Private campaigns stay non-public in CMS content. Save your draft, configure invitations, then activate the saved version here.</p><p>Private settings · Entries and review · Winner draw</p></section>",
+      "css": ".ds-controls { color:var(--text-color-kumo-default,currentColor); } .ds-controls p { margin:8px 0 16px; max-width:75ch; } .ds-controls strong { color:inherit; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "A technical room with human warmth",
+    "overview": "An extension of the established Techies visual world, not a redesign. Near-black surfaces, clear Inter typography, terminal-style JetBrains Mono details and restrained orange carry the public interface. `BRAND_GUIDE.md` remains the separate visual and voice authority; its proposed standards are not newly approved by this document.\n\nCampaign administration belongs to EmDash/Kumo's native light/dark surfaces and controls. Public tokens below are not an admin theme. This is a source-grounded snapshot: rendered appearance, contrast in every state and stakeholder approval were not verified in this pass. The North Star is existing brand-guide language, not an invented approval.",
+    "keyCharacteristics": [
+      "Dark public surfaces with orange actions and off-white text.",
+      "Inter for reading and controls; JetBrains Mono for the wordmark and code.",
+      "Tonal layering, restrained borders and gently rounded controls.",
+      "Native Kumo administration; explicit textual interaction and review states."
+    ],
+    "rules": [
+      { "name": "The Native Admin Rule", "body": "Keep campaign admin on EmDash/Kumo semantic light/dark surfaces; do not apply the public dark/orange palette to the whole admin.", "section": "colors" }
+    ],
+    "dos": [
+      "Do preserve the public near-black/orange/off-white world and required Inter/JetBrains Mono fonts.",
+      "Do use near-black text on orange-filled actions and visible focus/control boundaries.",
+      "Do retain native EmDash/Kumo light/dark surfaces and semantic controls in campaign admin.",
+      "Do preserve supplied marks, established event artwork and natural-colour photography.",
+      "Do show meaningful statuses in text and respect reduced-motion preferences."
+    ],
+    "donts": [
+      "Don't treat legacy indigo or teal as parent-brand interface accents.",
+      "Don't introduce decorative numbered sections, tiny labels, fake status indicators or hard offset shadows.",
+      "Don't document development screenshots as campaign imagery or imply unverified design approval.",
+      "Don't turn the campaign-specific layout into a mandatory template for every public page."
+    ]
+  }
+}

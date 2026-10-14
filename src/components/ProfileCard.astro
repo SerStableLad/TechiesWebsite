@@ -1,20 +1,37 @@
 ---
-import { Image } from "emdash/ui";
+import { Image, PortableText } from "emdash/ui";
 import type { Member, Team } from "../../emdash-env";
-interface Props { profile: { data: Member | Team; edit: Record<string, Record<string, string>> }; showcase?: boolean; }
+interface Props { profile: { id: string; data: Member | Team; edit: Record<string, Record<string, string>> }; showcase?: boolean; }
 const { profile, showcase = false } = Astro.props;
 const person = profile.data;
 const member = person as Member;
 const initials = person.title.split(" ").slice(0, 2).map(part => part[0]).join("");
+const crop = member.portrait_crop as { x?: number; y?: number; size?: number } | undefined;
+const hasCrop = showcase && crop && Number.isFinite(crop.x) && Number.isFinite(crop.y) && Number.isFinite(crop.size) && crop.size! > 0 && crop.size! <= 1 && crop.x! >= 0 && crop.y! >= 0;
 ---
-<article class="profile-card">
-  <div class="profile-image" {...profile.edit.photo}>{person.photo ? <Image image={person.photo} /> : <div class="profile-placeholder" aria-hidden="true">{initials}</div>}</div>
+<article class:list={["profile-card", { "member-card": showcase }]} id={showcase ? profile.id : undefined}>
+  <div class:list={["profile-image", { "portrait-crop": hasCrop }]} style={hasCrop ? `--crop-x:${crop!.x};--crop-y:${crop!.y};--crop-size:${crop!.size}` : undefined} {...profile.edit.photo}>{person.photo ? <Image image={person.photo} /> : <div class="profile-placeholder" aria-hidden="true">{initials}</div>}</div>
   <div class="profile-copy">
     <h2 {...profile.edit.title}>{person.title}</h2>
-    {person.role && <p class="role" {...profile.edit.role}>{person.role}</p>}
+    {showcase ? member.recaps?.length && <div class="speaker-tags" {...profile.edit.recaps}><PortableText value={member.recaps} /></div> : person.role && <p class="role" {...profile.edit.role}>{person.role}</p>}
     {person.bio && <p {...profile.edit.bio}>{person.bio}</p>}
-    {showcase && member.building && <div class="profile-detail"><p class="metadata">Currently building</p><p {...profile.edit.building}>{member.building}</p>{member.project_url && <a class="text-link" href={member.project_url}>View the project ↗</a>}</div>}
-    {showcase && member.interests && <div class="profile-detail"><p class="metadata">Ask me about</p><p {...profile.edit.interests}>{member.interests}</p></div>}
-    <div class="profile-links">{person.linkedin && <a href={person.linkedin}>LinkedIn ↗</a>}{person.github && <a href={person.github}>GitHub ↗</a>}{person.website && <a href={person.website}>Website ↗</a>}</div>
+    <div class="profile-links">{person.linkedin && <a href={person.linkedin}>LinkedIn ↗</a>}{!showcase && person.github && <a href={person.github}>GitHub ↗</a>}{!showcase && person.website && <a href={person.website}>Website ↗</a>}</div>
+    {showcase && member.projects?.length && <section class="member-projects" aria-label={`${person.title}’s projects`} {...profile.edit.projects}><h3>Projects</h3><PortableText value={member.projects} /></section>}
   </div>
 </article>
+<style>
+  .profile-card { scroll-margin-top: 24px; }
+  .profile-card:target { outline: 2px solid var(--orange); outline-offset: 4px; }
+  .member-card .profile-image { position: relative; width: 160px; aspect-ratio: 1; margin: 26px 26px 0; border-radius: 12px; }
+  .portrait-crop :global(img) { position: absolute; width: calc(100% / var(--crop-size)); max-width: none; height: auto; left: calc(-100% * var(--crop-x) / var(--crop-size)); top: calc(-100% * var(--crop-y) / var(--crop-size)); }
+  .speaker-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .speaker-tags :global(p) { font-size: 14px; }
+  .speaker-tags :global(a) { display: inline-block; color: var(--orange); border: 1px solid var(--control-border); border-radius: 4px; padding: 3px 8px; }
+  .speaker-tags :global(a:hover) { color: var(--text); border-color: var(--orange); }
+  .member-projects { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .member-projects > h3 { font-size: 20px; margin-bottom: 16px; }
+  .member-projects :global(h4) { font-size: 16px; line-height: 1.5; margin: 20px 0 6px; }
+  .member-projects :global(p) { margin-top: 6px; }
+  .member-projects :global(a), .member-card .profile-links a { color: var(--text); text-decoration: underline; text-underline-offset: 4px; }
+  .member-projects :global(a:hover), .member-card .profile-links a:hover { color: var(--orange); }
+</style>

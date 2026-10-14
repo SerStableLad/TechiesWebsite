@@ -1,0 +1,60 @@
+---
+import { Image } from "emdash/ui";
+
+type CalendarEvent = {
+  name: string;
+  url: string;
+  start_at: string;
+  end_at: string;
+  cover_url?: string;
+  location_type?: string;
+  geo_address_visibility?: string;
+  geo_address_info?: { address?: string };
+};
+let events: CalendarEvent[] = [];
+let unavailable = false;
+try {
+  // ponytail: Luma's public embed feed; fall back to the calendar if its API changes.
+  const response = await fetch("https://api.luma.com/calendar/get-items?calendar_api_id=cal-i9QxU3ZODPclPpp&period=future", { signal: AbortSignal.timeout(4000) });
+  if (!response.ok) throw new Error(`Luma returned ${response.status}`);
+  const data = await response.json() as { entries?: unknown };
+  if (!data || !Array.isArray(data.entries)) throw new Error("Invalid Luma calendar response");
+  events = data.entries.map((entry: { event: CalendarEvent }) => entry.event).filter((event: CalendarEvent) =>
+    event && typeof event.name === "string" && typeof event.url === "string" && /^[a-zA-Z0-9_-]+$/.test(event.url) &&
+    Number.isFinite(Date.parse(event.start_at)) && Date.parse(event.end_at) > Date.now()
+  );
+} catch (error) {
+  console.warn("Upcoming events unavailable:", error);
+  unavailable = true;
+}
+const dateFormat = new Intl.DateTimeFormat("en-SG", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Singapore" });
+const timeFormat = new Intl.DateTimeFormat("en-SG", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Asia/Singapore" });
+---
+
+<div class="upcoming-events">
+  {events.length ? events.map(event => (
+    <a class="upcoming-event" href={`https://luma.com/${event.url}`}>
+      <time datetime={event.start_at}><strong>{dateFormat.format(new Date(event.start_at))}</strong><span>{timeFormat.format(new Date(event.start_at))} SGT</span></time>
+      <div class="event-artwork">{typeof event.cover_url === "string" && event.cover_url.startsWith("https://images.lumacdn.com/") && <Image image={{ id: "", src: event.cover_url, alt: "" }} width={112} height={112} loading="lazy" />}</div>
+      <div class="event-details"><h3>{event.name}</h3><p>{event.location_type === "online" ? "Online" : event.geo_address_visibility === "public" ? event.geo_address_info?.address || "Venue details on Luma" : "Venue details on Luma"}</p></div>
+      <span class="event-action">View event <span aria-hidden="true">↗</span></span>
+    </a>
+  )) : <p class="calendar-empty">{unavailable ? "The live calendar couldn’t load. Open the Luma calendar above for upcoming sessions." : "No upcoming sessions yet. Check the Luma calendar for updates."}</p>}
+</div>
+
+<style>
+  .upcoming-event { display: grid; grid-template-columns: 144px 112px minmax(0, 1fr) auto; align-items: center; gap: 24px; padding-block: 24px; border-top: 1px solid var(--border); color: var(--text); text-decoration: none; }
+  .upcoming-event:last-child { border-bottom: 1px solid var(--border); }
+  time { display: grid; gap: 8px; font-size: 14px; }
+  time strong { font-size: 16px; }
+  time span, .event-details p { color: var(--secondary); }
+  .event-artwork { aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--surface); }
+  .event-artwork :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .event-details h3 { font-size: 20px; line-height: 1.35; margin-bottom: 8px; }
+  .event-details p { font-size: 16px; }
+  .event-action { color: var(--orange); font-size: 14px; font-weight: 600; white-space: nowrap; }
+  .upcoming-event:hover h3 { color: var(--orange); }
+  .calendar-empty { padding-block: 24px; border-block: 1px solid var(--border); }
+  @media (max-width: 900px) { .upcoming-event { grid-template-columns: 128px 96px minmax(0, 1fr); gap: 20px; } .event-action { grid-column: 3; margin-top: -8px; } }
+  @media (max-width: 600px) { .upcoming-event { grid-template-columns: 80px minmax(0, 1fr); gap: 16px; padding-block: 20px; } time { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; } .event-details h3 { font-size: 18px; } .event-action { grid-column: 2; } }
+</style>

@@ -1,0 +1,24 @@
+---
+import Base from "../../layouts/Base.astro";
+import { campaignQuery } from "../../plugins/campaigns/public-query";
+import type { CampaignSummary } from "../../plugins/campaigns/model";
+if (Astro.cache?.enabled) Astro.cache.set(false);
+let result: { items: CampaignSummary[]; cursor?: string };
+try { result = await campaignQuery(Astro.locals, Astro.url, "catalog", { cursor: Astro.url.searchParams.get("cursor") ?? "" }); }
+catch { return new Response("Could not load campaigns. Please try again shortly.", { status: 503 }); }
+const formatDate = (value: string) => new Intl.DateTimeFormat("en-SG", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Singapore" }).format(new Date(value));
+---
+<Base title="Community giveaways" description="Explore Techies community giveaways and enter active campaigns.">
+	<div class="container page-content">
+		<header class="page-heading"><h1>Community giveaways</h1><p>Discover the prize, read the rules, and complete entry actions. One place for Techies community campaigns.</p></header>
+		{result.items.length ? <div class="campaign-list">{result.items.map(c => <article><div><h2><a href={`/campaigns/${c.slug}`}>{c.title}</a></h2><p>{c.prize}</p><p>{Date.now() >= Date.parse(c.endsAt!) ? "Entries closed" : Date.now() < Date.parse(c.startsAt!) ? "Opens" : "Closes"} · {formatDate(Date.now() < Date.parse(c.startsAt!) ? c.startsAt! : c.endsAt!)} SGT</p></div><a class="button secondary" href={`/campaigns/${c.slug}`}>View campaign</a></article>)}</div> : <section class="empty-state"><h2>No public giveaways right now.</h2><p>Check back for the next campaign. Have an invitation? Open the campaign link shared by your organiser.</p><a class="button" href="/events">See upcoming events</a></section>}
+		{result.cursor && <a class="text-link pagination" href={`/campaigns?cursor=${encodeURIComponent(result.cursor)}`}>More campaigns</a>}
+	</div>
+</Base>
+<style>
+	.campaign-list article { display: flex; justify-content: space-between; align-items: center; gap: 32px; padding-block: 32px; border-top: 1px solid var(--border); }
+	.campaign-list h2 { font-size: 28px; margin-bottom: 16px; }
+	.campaign-list p + p { margin-top: 8px; }
+	.campaign-list h2 a:hover { color: var(--orange); }
+	@media (max-width: 640px) { .campaign-list article { align-items: start; flex-direction: column; gap: 20px; } }
+</style>

@@ -5,6 +5,49 @@
 
 import type { BylineSummary, ContentBylineCredit, TaxonomyTerm, PortableTextBlock } from "emdash";
 
+export interface Campaign {
+  id: string;
+  slug: string | null;
+  status: string;
+  campaign_key?: string;
+  title: string;
+  prize?: string;
+  image?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  description?: PortableTextBlock[];
+  rules?: PortableTextBlock[];
+  entry_window?: unknown;
+  visibility?: "public" | "private";
+  winner_count?: number;
+  actions?: unknown;
+  announce?: boolean;
+  publishing?: unknown;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Announcement {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  starts_at?: string;
+  ends_at?: string;
+  cta_label?: string;
+  cta_url?: string;
+  cta_new_tab?: boolean;
+  campaign_ref?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
 export interface Member {
   id: string;
   slug: string | null;
@@ -20,6 +63,9 @@ export interface Member {
   building?: string;
   interests?: string;
   project_url?: string;
+  recaps?: PortableTextBlock[];
+  projects?: PortableTextBlock[];
+  portrait_crop?: unknown;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -108,6 +154,8 @@ export interface Team {
 
 declare module "emdash" {
   interface EmDashCollections {
+    campaigns: Campaign;
+    announcements: Announcement;
     members: Member;
     pages: Page;
     posts: Post;

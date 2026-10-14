@@ -3,8 +3,10 @@
 import assert from 'node:assert/strict';
 
 const origin = process.env.CHECK_SITE_URL || 'http://127.0.0.1:4321';
-const paths = ['/', '/posts', '/members', '/exco', '/category/event-summaries', '/tag/roast-my-techstack', ...[2, 3, 4, 5, 6, 7].map(n => `/posts/roast-${n}`)];
+const partnershipSlugs = ['community-partner-ai-coding-summit-2027', 'community-partner-sincon-2026'];
+const paths = ['/', '/posts', '/members', '/exco', '/category/event-summaries', '/category/partnership-announcement', '/tag/roast-my-techstack', ...partnershipSlugs.map(slug => `/posts/${slug}`), ...[2, 3, 4, 5, 6, 7].map(n => `/posts/roast-${n}`)];
 const images = new Set();
+paths.push('/events');
 for (const path of paths) {
   const response = await fetch(origin + path);
   assert.equal(response.status, 200, path);
@@ -12,7 +14,41 @@ for (const path of paths) {
   assert.ok(html.endsWith('</html>'), `${path}: complete server-rendered response`);
   assert.equal((html.match(/<h1(?:\s|>)/g) || []).length, 1, `${path}: one page heading`);
   assert.match(html, /name="description"/, `${path}: description`);
+  const primaryNav = html.match(/<nav\b[^>]*aria-label="Primary navigation"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
+  assert.ok(primaryNav?.includes('/category/event-summaries'), 'Event Summaries menu item');
+  assert.ok(primaryNav?.includes('/category/partnership-announcement'), 'Partnership menu item');
+  assert.ok(!primaryNav?.includes('href="/posts"'), 'Posts menu replaced by separate pages');
+  assert.ok(primaryNav?.includes('href="/events"'), 'Events links to its own page');
+  if (path === '/events') {
+    assert.match(primaryNav, /aria-current="page"[^>]*>\s*Events/);
+    for (const text of ['Roast My TechStack', 'Prod is DOWN!!!', 'Starting Right', 'Prod is Brewing', 'Objective', 'Format', 'Who it’s for']) assert.ok(html.includes(text), text);
+    assert.ok(html.includes('/tag/roast-my-techstack'), 'Past recaps linked');
+    assert.match(html, /class="upcoming-events"/);
+  }
+  if (path === '/category/partnership-announcement') {
+    assert.ok(/aria-current="page"[^>]*>\s*Partnership/.test(primaryNav), 'Partnership menu selected');
+    for (const slug of partnershipSlugs) assert.ok(html.includes(`/posts/${slug}`), slug);
+    assert.ok(!html.includes('/posts/roast-2'), 'Event summaries excluded from partnerships');
+  }
+  if (path === '/category/event-summaries') {
+    assert.match(html, /<h1>Event Summaries<\/h1>/);
+    assert.ok(/aria-current="page"[^>]*>\s*Event Summaries/.test(primaryNav), 'Event Summaries menu selected');
+    for (const slug of partnershipSlugs) assert.ok(!html.includes(`/posts/${slug}`), 'Partnerships excluded from event summaries');
+  }
+  if (path === '/tag/roast-my-techstack') {
+    assert.match(html, /<h1>Roast My TechStack<\/h1>/);
+    assert.ok(html.includes('Posts tagged &quot;Roast My TechStack&quot;') || html.includes('Posts tagged "Roast My TechStack"'), 'Tag page keeps its SEO title');
+    assert.ok(html.includes('Follow the decisions and discussions behind this topic.'), 'Tag page keeps its distinct copy');
+  }
+  if (path === '/posts/community-partner-ai-coding-summit-2027') {
+    assert.ok(html.includes('10% off'));
+    assert.ok(html.includes('https://ti.to/gitnation/ai-coding-summit-asia-2027/discount/TECHIES'));
+  }
   if (path === '/') {
+    assert.ok(html.includes('id="audience"'), 'Homepage audience section');
+    assert.match(html, /class="upcoming-events"/);
+    assert.ok(!html.includes('luma.com/embed/calendar/'), 'Calendar has no fixed-width iframe');
+    assert.ok(html.includes('class="upcoming-event"') || html.includes('class="calendar-empty"'), 'Calendar renders events or a useful fallback');
     assert.match(html, /community\.ts/);
     assert.match(html, /Starting Right/);
     assert.match(html, /Season 1 complete/);
@@ -43,6 +79,9 @@ for (const [from, to] of [['/index.html', '/'], ['/exco.html', '/exco'], ...[2, 
 }
 assert.equal((await fetch(origin + '/404')).status, 404);
 assert.equal((await fetch(origin + '/does-not-exist')).status, 404);
+for (const path of ['/unknown/event-summaries', '/category/missing-term', '/tag/missing-term']) {
+  assert.equal((await fetch(origin + path)).status, 404, `${path}: taxonomy route rejects unknown taxonomies and terms`);
+}
 console.log(`Site check passed: ${paths.length} routes, ${images.size} stored images, 8 redirects, metadata and 404s.`);
 
 if (process.argv.includes('--cms-check')) {

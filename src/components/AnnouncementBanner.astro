@@ -1,0 +1,74 @@
+---
+import { getEmDashCollection } from "emdash";
+import { announcementLink, isAnnouncementActive } from "../utils/announcement";
+
+// A time window can change without a CMS write to invalidate cached HTML.
+if (Astro.cache?.enabled) Astro.cache.set(false);
+let announcement;
+let cursor: string | undefined;
+const now = Date.now();
+do {
+	const result = await getEmDashCollection("announcements", {
+		status: "published", orderBy: { published_at: "desc" }, limit: 100, cursor,
+	});
+	if (result.error) {
+		console.error("Unable to load announcements:", result.error);
+		break;
+	}
+	announcement = result.entries.find(entry => isAnnouncementActive(entry.data, now));
+	cursor = result.nextCursor;
+} while (!announcement && cursor);
+const ctaHref = announcementLink(announcement?.data.cta_url);
+const ctaLabel = announcement?.data.cta_label?.trim();
+---
+
+{announcement && (
+	<aside class="announcement" aria-label="Announcement" data-announcement={announcement.data.id} data-ends-at={announcement.data.ends_at}>
+		<div class="container announcement-inner">
+			<div class="announcement-content">
+				<p>{announcement.data.title}</p>
+				{ctaHref && ctaLabel && <a class="announcement-cta" href={ctaHref} target={announcement.data.cta_new_tab ? "_blank" : undefined} rel={announcement.data.cta_new_tab ? "noopener noreferrer" : undefined} aria-label={announcement.data.cta_new_tab ? `${ctaLabel} (opens in new tab)` : undefined}>{ctaLabel}</a>}
+			</div>
+			<button type="button" aria-label="Dismiss announcement" hidden>
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg>
+			</button>
+		</div>
+		<script is:inline>
+			(() => {
+				const banner = document.currentScript.closest('[data-announcement]');
+				const button = banner.querySelector('button');
+				const key = 'techies:announcement:' + banner.dataset.announcement;
+				try { banner.hidden = sessionStorage.getItem(key) === 'dismissed'; } catch {}
+				button.hidden = false;
+				button.addEventListener('click', () => {
+					if (document.activeElement === button) document.querySelector('.site-nav a')?.focus({ preventScroll: true });
+					banner.hidden = true;
+					try { sessionStorage.setItem(key, 'dismissed'); } catch {}
+				});
+				if (banner.dataset.endsAt) {
+					const end = Date.parse(banner.dataset.endsAt);
+					const timer = setInterval(() => {
+						if (Date.now() >= end || banner.hidden) {
+							banner.hidden = true;
+							clearInterval(timer);
+						}
+					}, 1000);
+				}
+			})();
+		</script>
+	</aside>
+)}
+
+<style>
+	.announcement { background: var(--orange); color: var(--bg); }
+	.announcement-inner { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 12px; padding-block: 8px; }
+	.announcement-content { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 20px; text-align: center; }
+	p { min-width: 0; color: inherit; font-weight: 500; overflow-wrap: anywhere; }
+	.announcement-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; max-width: 100%; padding: 8px 16px; border-radius: 8px; background: var(--bg); color: var(--text); font-weight: 600; overflow-wrap: anywhere; }
+	.announcement-cta:hover { background: var(--surface); text-decoration: underline; text-underline-offset: 3px; }
+	.announcement-cta:focus-visible { outline-color: var(--bg); outline-offset: 3px; }
+	button { grid-column: 3; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid currentColor; border-radius: 8px; color: inherit; background: transparent; cursor: pointer; }
+	button:hover { background: var(--orange-hover); }
+	button:focus-visible { outline-color: var(--bg); outline-offset: 3px; }
+	[hidden] { display: none; }
+</style>

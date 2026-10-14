@@ -29,6 +29,83 @@ Posts support categories, tags, rich text, images, event date, source link and S
 
 Manage primary navigation in **Menus** and the site identity in **Settings**. Upcoming events stay live via the original Luma calendar. Podcast status remains **On pause · Season 1 complete**.
 
+### Announcement strip
+
+In **Announcements**, create an entry with **Announcement text**, optional **Show from** and **Hide at** dates, then publish it. The strip appears above navigation across the site. No start date means immediately; no end date means until unpublished. Start is inclusive and end is exclusive. If published announcements overlap, the most recently published active entry wins. Keep the message short; text wraps on phones.
+
+The text and CTA are centred together. To add a button, fill in both **CTA text** (e.g. “See events”) and **CTA link** (an HTTP/HTTPS URL or a site path such as `/events`). Check **Open CTA in new tab** to open a new tab; unchecked opens in the current tab. Leave either field empty to show text only; invalid or unsafe links are not rendered.
+
+Dismissal is remembered across navigation and reloads in the current tab using session storage; a fresh browser session shows the announcement again. If browser storage is unavailable, the dismiss button still hides it on the current page. Open pages hide the strip when its end date arrives; newly starting announcements appear on the next page load.
+
+The local development CMS already has this collection. Fresh sites get it from the seed. For an existing deployment, add it before deploying the template:
+
+```sh
+pnpm exec emdash schema create announcements --label Announcements --label-singular Announcement --url https://your-site.example
+pnpm exec emdash schema add-field announcements title --type text --label "Announcement text" --required --url https://your-site.example
+pnpm exec emdash schema add-field announcements starts_at --type datetime --label "Show from (optional)" --url https://your-site.example
+pnpm exec emdash schema add-field announcements ends_at --type datetime --label "Hide at (optional)" --url https://your-site.example
+pnpm exec emdash schema add-field announcements cta_label --type string --label "CTA text (optional)" --url https://your-site.example
+pnpm exec emdash schema add-field announcements cta_url --type string --label "CTA link (https://… or /path)" --url https://your-site.example
+pnpm exec emdash schema add-field announcements cta_new_tab --type boolean --label "Open CTA in new tab" --url https://your-site.example
+node scripts/check-announcement.mjs
+# Against a running local dev server (temporary entries are cleaned up):
+node scripts/check-announcement.mjs --cms-check
+```
+
+## Giveaway campaigns
+
+Campaigns are native EmDash content entries under **Content → Campaigns**. Open a saved campaign to edit its details and manage private settings, participants, proof review and winners in **Campaign controls**, in the central editor column on desktop and mobile. The site-local **Techies Campaigns** plugin supplies the operational engine, editor fields and saved-entry controls; it has no Gleam account or subscription.
+
+The native collection is the only campaign navigation entry. A saved campaign's **Campaign controls** panel contains its operational controls and links to its announcement. Old operational-page URLs redirect to the matching campaign editor.
+
+Entry actions start with **Add action**. Each added action nests its type, title, link, instructions and weight inside a collapsible row. A new action opens immediately; saved actions start collapsed. Controls refresh saved content every five seconds so newly saved questions become available in Private settings.
+
+### Create and run a campaign
+
+1. Open **Content → Campaigns → Add New**. Use the native title/slug, Media Library image picker and Portable Text editors for description/rules. The date field validates closing-after-opening immediately; public pages show Singapore time and a live countdown. Incomplete drafts can be saved; full campaign validation runs before activation.
+2. Set access to **public** or **private**. Configure invited addresses and optional correct answers in the saved entry's **Campaign controls → Private settings** view. Save those settings before activating. These secrets stay out of content fields, revisions and public queries. Private links alone do not grant access; visitors must verify an invited address.
+3. Add **Answer a question**, **Submit proof**, **LinkedIn follow**, or **Like a LinkedIn post** actions. Choosing LinkedIn fills an editable mandatory title and self-explanatory instructions and displays its logo. LinkedIn actions are required to qualify and award **zero bonus entries**; proof must be manually approved before closing. Questions/proof can award 1–100 optional bonus entries. Questions support a case-insensitive correct answer; leave it empty to accept any non-empty response. LinkedIn verification is explicitly manual proof review, not API verification.
+4. For public campaigns, use native **Publish now / Publish changes**. For invite-only campaigns, save the draft and use **Activate saved private draft** in Campaign controls. Private entries deliberately remain non-public CMS drafts so ordinary published-content queries cannot expose their prize/rules. Autosaves never replace an active campaign snapshot; publish/activate the saved version to apply changes. Draft/paused and archived campaigns are not publicly accessible, and activation never overrides the date window.
+5. Participants verify their address with a six-digit emailed code, read the rules, and consent to register one base entry. Registration alone does not qualify a participant whose required actions are incomplete. Approval of every required action before closing qualifies the entry; LinkedIn approval adds no points. Optional approved actions add their configured weights once. Pending/rejected proof earns nothing. Rejected submissions can be retried while entries are open, up to six attempts per action.
+6. In **Entries and review**, approve or reject proofs, leave a note, refresh statuses or download a CSV. Email/name/proof data and winner identities stay in the private admin. CSV values are escaped against spreadsheet formula injection.
+7. Review proof **before** entries close. Publishing registers a one-shot draw at the deadline plus a minute-by-minute recovery sweep. Node executes through its native scheduler; Cloudflare executes on the first configured cron tick at or after the deadline. Eligibility is always evaluated at the closing instant: pending/rejected/late required proof is excluded, and late approvals are blocked. The **Winner draw** tab refreshes automatically and offers a recovery retry after closing. Crypto-random weighted selection picks distinct qualified people; if too few qualify, the record explicitly reports unfilled prizes. A persisted draw cannot be rerolled. Its audit records the deadline, actor, eligible weights, algorithm and eligibility SHA-256. Winners are not automatically emailed or publicly announced.
+8. Archive a finished campaign to hide it publicly while retaining entries and draw history. Its saved content entry remains accessible through **Content → Campaigns**, with the archived engine status in Campaign controls.
+
+### Linked announcement
+
+Check **Create announcement** in the content editor to create one managed entry under **Announcements**. Repeated saves update the same entry rather than duplicating it. It stays a draft until the campaign is published/activated, then follows the campaign's opening/closing dates and links to `/campaigns/<slug>`. Unchecking and publishing/activating withdraws it; pausing, archiving or trashing the campaign also withdraws it. Invite-only campaigns generate generic invitation-only text, not their private title/prize. Unrelated announcements are never changed.
+
+### Existing-site migration
+
+Fresh installations get the Campaigns schema from the seed. For an existing site, run the idempotent migration after deploying the plugin code:
+
+```sh
+node scripts/migrate-campaign-content.mjs
+# A remote target requires a suitably scoped EMDASH_TOKEN:
+node scripts/migrate-campaign-content.mjs --url https://your-site.example
+```
+
+This adds native fields and links existing engine records through a managed campaign reference. Existing engine IDs, public slugs, invitations, participants, sessions, proofs and saved draws remain intact. Legacy HTML is converted to Portable Text. The script creates no duplicate content on rerun and does not delete engine data.
+
+Actions, URL, dates and winner count lock after the first person enters. Removing an invited address revokes access and excludes it from the draw. An automatic campaign's eligibility settings also lock at closing. A saved draw is immutable even after archiving. Do not change already-agreed rules materially; create a new campaign instead. Stored consent times, rules hashes and immutable rules snapshots record the accepted terms. Existing drafts receive the new defaults when saved; historical entry terms and saved draws are not rewritten.
+
+### Email and operation
+
+Production needs an active email provider under **Settings → Email**. The plugin fails closed if delivery is unavailable; it never accepts an unverified address. Development uses EmDash's console provider; codes are logged and available to authenticated admins at `/_emdash/api/dev/emails`. See [EmDash Email Setup](https://docs.emdashcms.com/guides/email/) for Cloudflare Email Sending or SMTP options.
+
+Codes expire after ten minutes, allow six attempts and are single-use. Campaign sessions expire after seven days and are kept in the current tab's session storage. Sign out revokes that session. Request-code throttles are five per address/campaign/hour, thirty per known client IP/hour (one hundred for the shared unknown-IP bucket), and three hundred per campaign/hour. Expired codes, sessions and throttle buckets are cleaned hourly by EmDash's scheduler. Campaign and participant data persist with the database; archiving does not erase them.
+
+This version supports twenty actions, twenty winners and approximately ten thousand verified participants per campaign. Draw/export loads that bounded pool into memory, with a 16 MiB participant-data ceiling and EmDash's 8 MiB CSV response ceiling; larger campaigns need streaming/batched processing. A durable in-flight write gate prevents a draw racing with submissions or reviews. If a process crashes while holding the gate, the admin exposes **Interrupted request recovery** after closing; wait fifteen minutes after the latest write and confirm no requests are still running before recovering.
+
+```sh
+node scripts/check-campaigns.mjs
+node scripts/check-campaign-scheduler.mjs
+node scripts/check-native-campaigns.mjs
+# Development-only: exercises email/invite/entry/review/draw boundaries.
+# Creates labelled verification campaigns, then archives them with audit history.
+node scripts/check-campaigns.mjs --cms-check
+```
+
 ## Legacy URLs
 
 Permanent redirects preserve `/index.html`, `/exco.html`, and `/roast-2.html` through `/roast-7.html`. Summaries redirect to `/posts/roast-N`.
