@@ -20,7 +20,6 @@ const dialogId = `member-details-${profile.id}`;
   {profile.aliases.map(alias => <span id={alias} aria-hidden="true"></span>)}
   <header class="card-heading">
     <h2 {...profile.edit.title}>{person.title}</h2>
-    {profile.excoRoles.length > 0 && <div class="exco-details"><span class="exco-tag">Exco</span><p>{profile.excoRoles.join(" · ")}</p></div>}
   </header>
   <div class:list={["profile-image", { "portrait-crop": hasCrop, "full-photo": fullPhoto }]} style={hasCrop ? `--crop-x:${crop!.x};--crop-y:${crop!.y};--crop-size:${crop!.size}` : undefined} {...profile.edit.photo}>
     {person.photo ? <Image image={person.photo} /> : <div class="profile-placeholder" aria-hidden="true">{initials}</div>}
@@ -37,7 +36,6 @@ const dialogId = `member-details-${profile.id}`;
   <form method="dialog" class="dialog-close"><button class="button secondary" autofocus>Close <span class="sr-only">{person.title}’s profile</span><span aria-hidden="true">×</span></button></form>
   {person.photo && <div class:list={["dialog-photo", { "portrait-crop": hasCrop, "full-photo": fullPhoto }]} style={hasCrop ? `--crop-x:${crop!.x};--crop-y:${crop!.y};--crop-size:${crop!.size}` : undefined}><Image image={person.photo} /></div>}
   <h2 id={`${dialogId}-title`}>{person.title}</h2>
-  {profile.excoRoles.length > 0 && <div class="exco-details"><span class="exco-tag">Exco</span><p>{profile.excoRoles.join(" · ")}</p></div>}
   {person.bio && <p class="member-bio" {...profile.edit.bio}>{person.bio}</p>}
   {links.length > 0 && <ProfileLinks name={person.title} links={links} />}
   {person.interests && <section class="member-detail"><h3>Interests</h3><p {...profile.edit.interests}>{person.interests}</p></section>}
@@ -69,9 +67,6 @@ const dialogId = `member-details-${profile.id}`;
   .portrait-crop :global(img) { position: absolute; width: calc(100% / var(--crop-size)); max-width: none; height: auto; left: calc(-100% * var(--crop-x) / var(--crop-size)); top: calc(-100% * var(--crop-y) / var(--crop-size)); }
   .card-details { padding: 16px 16px 12px; display: flex; flex-direction: column; gap: 12px; }
   .card-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
-  .exco-details { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
-  .exco-details p { font-size: 14px; }
-  .exco-tag { color: var(--orange); font-size: 14px; font-weight: 700; }
   .speaker-tags { display: flex; flex-wrap: wrap; gap: 4px 16px; }
   .speaker-tags :global(p) { font-size: 14px; }
   .speaker-tags :global(a) { display: inline-block; color: var(--secondary); text-decoration: underline; text-underline-offset: 4px; padding-block: 4px; }
@@ -86,7 +81,6 @@ const dialogId = `member-details-${profile.id}`;
   .dialog-photo.portrait-crop :global(img) { width: calc(100% / var(--crop-size)); height: auto; }
   .full-photo :global(img) { object-fit: contain; }
   .member-dialog h2 { font-size: 32px; margin-bottom: 20px; }
-  .member-dialog .exco-details { margin-bottom: 20px; }
   .member-bio { margin-bottom: 24px; }
   .member-detail { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
   .member-detail h3 { margin-bottom: 16px; }

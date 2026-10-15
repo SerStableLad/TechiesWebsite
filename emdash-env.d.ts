@@ -66,6 +66,8 @@ export interface Member {
   recaps?: PortableTextBlock[];
   projects?: PortableTextBlock[];
   portrait_crop?: unknown;
+  exco?: boolean;
+  legacy_aliases?: unknown;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -74,11 +76,121 @@ export interface Member {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
+export interface PageLayoutPageHeroV1Block {
+  _type: "page_hero";
+  _version: 1;
+  _key: string;
+  "heading": string;
+  "intro"?: string | null;
+  "image"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null;
+  "code_title"?: string | null;
+  "code"?: string | null;
+  "note"?: string | null;
+  "link_label"?: string | null;
+  "link_url"?: string | null;
+  "secondary_label"?: string | null;
+  "secondary_url"?: string | null;
+  "anchor"?: string | null;
+}
+
+export type PageLayoutPageHeroBlock = PageLayoutPageHeroV1Block;
+
+export interface PageLayoutPageTextV1Block {
+  _type: "page_text";
+  _version: 1;
+  _key: string;
+  "heading"?: string | null;
+  "body"?: PortableTextBlock[] | null;
+  "anchor"?: string | null;
+}
+
+export type PageLayoutPageTextBlock = PageLayoutPageTextV1Block;
+
+export interface PageLayoutPageImagesV1Block {
+  _type: "page_images";
+  _version: 1;
+  _key: string;
+  "heading"?: string | null;
+  "intro"?: string | null;
+  "layout"?: "collage" | "left" | "right" | null;
+  "images"?: { "image": { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } }[] | null;
+  "link_label"?: string | null;
+  "link_url"?: string | null;
+  "surface"?: boolean | null;
+  "anchor"?: string | null;
+}
+
+export type PageLayoutPageImagesBlock = PageLayoutPageImagesV1Block;
+
+export interface PageLayoutPageItemsV1Block {
+  _type: "page_items";
+  _version: 1;
+  _key: string;
+  "heading"?: string | null;
+  "intro"?: string | null;
+  "layout"?: "rows" | "columns" | null;
+  "items"?: { "title": string; "description"?: string | null }[] | null;
+  "link_label"?: string | null;
+  "link_url"?: string | null;
+  "anchor"?: string | null;
+}
+
+export type PageLayoutPageItemsBlock = PageLayoutPageItemsV1Block;
+
+export interface PageLayoutPageCtaV1Block {
+  _type: "page_cta";
+  _version: 1;
+  _key: string;
+  "heading"?: string | null;
+  "intro"?: string | null;
+  "note"?: string | null;
+  "link_label"?: string | null;
+  "link_url"?: string | null;
+  "layout"?: "stacked" | "split" | null;
+  "surface"?: boolean | null;
+  "anchor"?: string | null;
+}
+
+export type PageLayoutPageCtaBlock = PageLayoutPageCtaV1Block;
+
+export interface PageLayoutPagePostsV1Block {
+  _type: "page_posts";
+  _version: 1;
+  _key: string;
+  "heading"?: string | null;
+  "category"?: string | null;
+  "count"?: number | null;
+  "link_label"?: string | null;
+  "link_url"?: string | null;
+  "anchor"?: string | null;
+}
+
+export type PageLayoutPagePostsBlock = PageLayoutPagePostsV1Block;
+
+export interface PageLayoutPageEventsV1Block {
+  _type: "page_events";
+  _version: 1;
+  _key: string;
+  "heading"?: string | null;
+  "intro"?: string | null;
+  "note"?: string | null;
+  "link_label"?: string | null;
+  "link_url"?: string | null;
+  "anchor"?: string | null;
+}
+
+export type PageLayoutPageEventsBlock = PageLayoutPageEventsV1Block;
+
+export type PageLayoutBlock = PageLayoutPageHeroBlock | PageLayoutPageTextBlock | PageLayoutPageImagesBlock | PageLayoutPageItemsBlock | PageLayoutPageCtaBlock | PageLayoutPagePostsBlock | PageLayoutPageEventsBlock;
+
 export interface Page {
   id: string;
   slug: string | null;
   status: string;
   title: string;
+  page_format?: "sections" | "rich_text";
+  layout?: PageLayoutBlock[];
+  use_sections?: boolean;
   content?: PortableTextBlock[];
   intro?: string;
   about_intro?: string;

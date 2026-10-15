@@ -1,0 +1,136 @@
+---
+import { getEmDashCollection, sanitizeHref } from "emdash";
+import { Image, PortableText, type BlockComponentProps } from "emdash/ui";
+import type { PageLayoutBlock } from "../../emdash-env";
+import PostCard from "./PostCard.astro";
+import UpcomingEvents from "./UpcomingEvents.astro";
+import HangoutCollage from "./HangoutCollage.astro";
+
+type Props = BlockComponentProps<PageLayoutBlock>;
+const { value, index } = Astro.props;
+const Heading = value._type === "page_hero" && index === 0 ? "h1" : "h2";
+const headingId = `section-${value._key}`;
+const link = "link_url" in value && value.link_url ? sanitizeHref(value.link_url) : undefined;
+const label = "link_label" in value ? value.link_label : undefined;
+const surface = "surface" in value && value.surface;
+const posts = value._type === "page_posts" ? await getEmDashCollection("posts", {
+  orderBy: { event_date: "desc" },
+  ...(value.category ? { where: { category: value.category } } : {}),
+  limit: Math.max(1, Math.min(12, value.count ?? 3)),
+}) : undefined;
+if (posts && Astro.cache?.enabled) Astro.cache.set(posts.cacheHint);
+---
+
+<section id={value.anchor || undefined} class:list={["page-section", value._type, { section: value._type !== "page_hero", surface }]} aria-labelledby={value.heading ? headingId : undefined}>
+  <div class="container">
+    {value._type === "page_hero" ? (
+      <div class:list={["hero", { "hero-with-visual": value.image || value.code }]}>
+        <div class="hero-copy">
+          <Heading id={headingId}>{value.heading}</Heading>
+          {value.intro && <p class="hero-intro">{value.intro}</p>}
+          <div class="hero-actions">
+            {link && label && <a class="button" href={link}>{label} <span aria-hidden="true">↗</span></a>}
+            {value.secondary_url && value.secondary_label && <a class="text-link" href={sanitizeHref(value.secondary_url)}>{value.secondary_label} <span aria-hidden="true">↓</span></a>}
+          </div>
+          {value.note && <p class="hero-note"><span aria-hidden="true">&gt;</span> {value.note}</p>}
+        </div>
+        {value.image ? <div class="hero-visual"><Image image={value.image} loading="eager" /></div> : value.code && (
+          <div class="hero-visual"><div class="terminal">
+            {value.code_title && <div class="terminal-bar">{value.code_title}</div>}
+            <pre><code>{value.code}</code></pre>
+          </div></div>
+        )}
+      </div>
+    ) : value._type === "page_text" ? (
+      <div class="prose">
+        {value.heading && <h2 id={headingId}>{value.heading}</h2>}
+        <PortableText value={value.body} />
+      </div>
+    ) : value._type === "page_items" ? (
+      <>
+        <div class="section-heading">{value.heading && <h2 id={headingId}>{value.heading}</h2>}{value.intro && <p>{value.intro}</p>}</div>
+        <div class:list={["items", value.layout === "columns" ? "columns" : "rows"]}>
+          {value.items?.map(item => <article><h3>{item.title}</h3>{item.description && <p>{item.description}</p>}</article>)}
+        </div>
+        {link && label && <a class="text-link section-link" href={link}>{label} <span aria-hidden="true">↗</span></a>}
+      </>
+    ) : value._type === "page_images" ? (
+      <div class:list={["image-section", { split: value.layout === "left" || value.layout === "right", "image-left": value.layout === "left" }]}>
+        <div class="image-copy">
+          {value.heading && <h2 id={headingId}>{value.heading}</h2>}
+          {value.intro && <p>{value.intro}</p>}
+          {link && label && <a class="text-link" href={link}>{label} <span aria-hidden="true">↗</span></a>}
+        </div>
+        {(value.images?.length ?? 0) > 0 && (value.layout === "collage" ? <HangoutCollage images={(value.images ?? []).map(item => item.image).filter(Boolean)} /> : (
+          <div class="images">{value.images?.map(item => item.image && <Image image={item.image} loading="lazy" />)}</div>
+        ))}
+      </div>
+    ) : value._type === "page_cta" ? (
+      <div class:list={["cta", { split: value.layout === "split" }]}>
+        <div>{value.heading && <h2 id={headingId}>{value.heading}</h2>}{value.note && <p class="cta-note">{value.note}</p>}</div>
+        <div class="cta-copy">{value.intro && <p>{value.intro}</p>}{link && label && <a class:list={["button", { secondary: value.layout === "split" }]} href={link}>{label} <span aria-hidden="true">↗</span></a>}</div>
+      </div>
+    ) : value._type === "page_posts" ? (
+      <>
+        <div class="section-heading">{value.heading && <h2 id={headingId}>{value.heading}</h2>}{link && label && <a class="text-link" href={link}>{label} <span aria-hidden="true">↗</span></a>}</div>
+        <div class="card-grid">{posts?.entries.map(post => <PostCard post={post} heading="h3" />)}</div>
+        {posts?.entries.length === 0 && <p>No posts published yet.</p>}
+      </>
+    ) : value._type === "page_events" && (
+      <>
+        <div class="section-heading">{value.heading && <h2 id={headingId}>{value.heading}</h2>}<div>{value.intro && <p>{value.intro}</p>}{link && label && <a class="text-link section-link" href={link}>{label} <span aria-hidden="true">↗</span></a>}</div></div>
+        <UpcomingEvents />
+        {value.note && <p class="calendar-note">{value.note}</p>}
+      </>
+    )}
+  </div>
+</section>
+
+<style>
+  .page-section h1, .page-section h2 { white-space: pre-line; overflow-wrap: anywhere; }
+  .surface { background: var(--surface); }
+  .hero { padding-block: 90px 76px; }
+  .hero-with-visual { display: grid; grid-template-columns: 1.15fr 1fr; gap: 70px; align-items: center; }
+  .hero h1, .hero h2 { margin: 26px 0; max-width: 570px; }
+  .hero-intro { font-size: 17px; max-width: 490px; }
+  .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 28px; margin-top: 32px; }
+  .hero-actions:empty { display: none; }
+  .hero-note { font-size: 14px; margin-top: 32px; max-width: 440px; }
+  .hero-note span { color: var(--orange); margin-right: 8px; }
+  .hero-visual { min-width: 0; padding: 16px 0; }
+  .hero-visual :global(img), .images :global(img) { width: 100%; height: auto; border-radius: 12px; }
+  .terminal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .terminal-bar { padding: 15px 24px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 14px; color: var(--secondary); }
+  pre { padding: 30px 24px; margin: 0; font-family: var(--mono); font-size: 14px; line-height: 1.9; overflow-x: auto; }
+  .items h3 { font-size: 20px; }
+  .items p { font-size: 16px; max-width: 680px; }
+  .rows article { display: grid; grid-template-columns: 230px 1fr; gap: 36px; padding-block: 26px; border-top: 1px solid var(--border); }
+  .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 64px; }
+  .columns article { border-top: 1px solid var(--border); padding-top: 24px; }
+  .columns h3 { margin-bottom: 12px; }
+  .section-link { margin-top: 32px; }
+  .split { display: grid; grid-template-columns: 1fr 1.2fr; gap: 64px; align-items: start; }
+  .split > * { min-width: 0; }
+  .image-left .image-copy { order: 2; }
+  .image-copy { max-width: 650px; }
+  .image-copy h2 { margin: 22px 0; }
+  .image-copy > p { margin-bottom: 26px; }
+  .images { display: grid; gap: 24px; }
+  .cta:not(.split) .cta-copy { margin-top: 24px; }
+  .cta-copy p { max-width: 60ch; margin-bottom: 28px; }
+  .cta-note { margin-top: 18px; font-size: 14px; color: var(--secondary); }
+  .page_events .section-heading { margin-bottom: 24px; }
+  .page_events .section-link { margin-top: 12px; }
+  .calendar-note { margin-top: 16px; font-size: 14px; }
+  @media (max-width: 900px) { .hero-with-visual { gap: 32px; } .split { gap: 40px; } }
+  @media (max-width: 700px) {
+    .hero { grid-template-columns: 1fr; padding-block: 50px; gap: 40px; }
+    .hero h1, .hero h2 { max-width: 500px; }
+    .hero-intro { font-size: 16px; }
+    .hero-visual { max-width: 480px; width: 100%; }
+    .rows article, .columns, .split { grid-template-columns: 1fr; }
+    .rows article { gap: 14px; }
+    .image-copy { margin-bottom: 12px; }
+    .image-left .image-copy { order: initial; }
+  }
+</style>

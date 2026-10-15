@@ -6,7 +6,7 @@ const cursor = Astro.url.searchParams.get("cursor") || undefined;
 const { entries: posts, cacheHint, nextCursor } = await getEmDashCollection("posts", { orderBy: { published_at: "desc" }, limit: 12, cursor });
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 ---
-<Base title="Posts" description="Event summaries and partnership announcements from the Techies community.">
+<Base title="Event Recaps & Community Updates" description="Read Techies event recaps, real-world engineering trade-offs, and partnership updates from the APAC developer community." canonical={`/posts${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ""}`}>
   <div class="container page-content">
     <header class="page-heading"><h1>Posts</h1><p>Event summaries, engineering trade-offs, and partnership announcements from the Techies community.</p>
     </header>

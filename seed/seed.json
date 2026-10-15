@@ -11,6 +11,97 @@
     "tagline": "A 3rd space for devs to geek out.",
     "timezone": "Asia/Singapore"
   },
+  "blockTypes": [
+    {
+      "slug": "page_hero", "label": "Hero", "description": "Introduce any page with a heading, optional image or code, and links.", "category": "Page sections", "currentVersion": 1,
+      "versions": [{ "version": 1, "fields": [
+        { "slug": "heading", "label": "Heading", "type": "text", "required": true },
+        { "slug": "intro", "label": "Introduction", "type": "text" },
+        { "slug": "image", "label": "Image", "type": "image" },
+        { "slug": "code_title", "label": "Code panel title (optional)", "type": "string" },
+        { "slug": "code", "label": "Code panel (used when no image is selected)", "type": "text" },
+        { "slug": "note", "label": "Supporting note", "type": "text" },
+        { "slug": "link_label", "label": "Button label", "type": "string" },
+        { "slug": "link_url", "label": "Button URL", "type": "url" },
+        { "slug": "secondary_label", "label": "Secondary link label", "type": "string" },
+        { "slug": "secondary_url", "label": "Secondary link URL", "type": "url" },
+        { "slug": "anchor", "label": "Anchor ID (optional, unique on this page)", "type": "string" }
+      ] }]
+    },
+    {
+      "slug": "page_text", "label": "Rich text", "description": "A readable section for formatted text, links and lists.", "category": "Page sections", "currentVersion": 1,
+      "versions": [{ "version": 1, "fields": [
+        { "slug": "heading", "label": "Heading", "type": "text" },
+        { "slug": "body", "label": "Content", "type": "portableText" },
+        { "slug": "anchor", "label": "Anchor ID (optional, unique on this page)", "type": "string" }
+      ] }]
+    },
+    {
+      "slug": "page_items", "label": "Item list", "description": "Describe services, benefits or people in rows or two columns.", "category": "Page sections", "currentVersion": 1,
+      "versions": [{ "version": 1, "fields": [
+        { "slug": "heading", "label": "Heading", "type": "text" },
+        { "slug": "intro", "label": "Introduction", "type": "text" },
+        { "slug": "layout", "label": "Layout", "type": "select", "defaultValue": "rows", "validation": { "options": ["rows", "columns"] } },
+        { "slug": "items", "label": "Items", "type": "repeater", "validation": { "subFields": [
+          { "slug": "title", "label": "Title", "type": "string", "required": true },
+          { "slug": "description", "label": "Description", "type": "text" }
+        ] } },
+        { "slug": "link_label", "label": "Link label", "type": "string" },
+        { "slug": "link_url", "label": "Link URL", "type": "url" },
+        { "slug": "anchor", "label": "Anchor ID (optional, unique on this page)", "type": "string" }
+      ] }]
+    },
+    {
+      "slug": "page_images", "label": "Text + images", "description": "Pair text with images on the left, right, or in a photo collage.", "category": "Page sections", "currentVersion": 1,
+      "versions": [{ "version": 1, "fields": [
+        { "slug": "heading", "label": "Heading", "type": "text" },
+        { "slug": "intro", "label": "Text", "type": "text" },
+        { "slug": "layout", "label": "Image layout", "type": "select", "defaultValue": "right", "validation": { "options": ["collage", "left", "right"] } },
+        { "slug": "images", "label": "Images", "type": "repeater", "validation": { "maxItems": 4, "subFields": [
+          { "slug": "image", "label": "Image", "type": "image", "required": true }
+        ] } },
+        { "slug": "link_label", "label": "Link label", "type": "string" },
+        { "slug": "link_url", "label": "Link URL", "type": "url" },
+        { "slug": "surface", "label": "Use contrasting background", "type": "boolean" },
+        { "slug": "anchor", "label": "Anchor ID (optional, unique on this page)", "type": "string" }
+      ] }]
+    },
+    {
+      "slug": "page_cta", "label": "Call to action", "description": "Invite visitors to take the next step, with an optional contrasting background.", "category": "Page sections", "currentVersion": 1,
+      "versions": [{ "version": 1, "fields": [
+        { "slug": "heading", "label": "Heading", "type": "text" },
+        { "slug": "intro", "label": "Description", "type": "text" },
+        { "slug": "note", "label": "Status or supporting note", "type": "string" },
+        { "slug": "link_label", "label": "Button label", "type": "string" },
+        { "slug": "link_url", "label": "Button URL", "type": "url" },
+        { "slug": "layout", "label": "Layout", "type": "select", "defaultValue": "stacked", "validation": { "options": ["stacked", "split"] } },
+        { "slug": "surface", "label": "Use contrasting background", "type": "boolean" },
+        { "slug": "anchor", "label": "Anchor ID (optional, unique on this page)", "type": "string" }
+      ] }]
+    },
+    {
+      "slug": "page_posts", "label": "Latest posts", "description": "Show published posts, optionally filtered by category, newest event date first.", "category": "Live content", "currentVersion": 1,
+      "versions": [{ "version": 1, "fields": [
+        { "slug": "heading", "label": "Heading", "type": "text" },
+        { "slug": "category", "label": "Category slug (blank for all posts)", "type": "string" },
+        { "slug": "count", "label": "Number of posts", "type": "integer", "defaultValue": 3, "validation": { "min": 1, "max": 12 } },
+        { "slug": "link_label", "label": "Archive link label", "type": "string" },
+        { "slug": "link_url", "label": "Archive URL", "type": "url" },
+        { "slug": "anchor", "label": "Anchor ID (optional, unique on this page)", "type": "string" }
+      ] }]
+    },
+    {
+      "slug": "page_events", "label": "Upcoming events", "description": "Embed the shared Techies Luma calendar. Events stay up to date automatically.", "category": "Live content", "currentVersion": 1,
+      "versions": [{ "version": 1, "fields": [
+        { "slug": "heading", "label": "Heading", "type": "text" },
+        { "slug": "intro", "label": "Introduction", "type": "text" },
+        { "slug": "note", "label": "Supporting note", "type": "text" },
+        { "slug": "link_label", "label": "Calendar link label", "type": "string" },
+        { "slug": "link_url", "label": "Calendar URL", "type": "url" },
+        { "slug": "anchor", "label": "Anchor ID (optional, unique on this page)", "type": "string" }
+      ] }]
+    }
+  ],
   "collections": [
     {
       "slug": "campaigns",
@@ -202,6 +293,7 @@
       "slug": "pages",
       "label": "Pages",
       "labelSingular": "Page",
+      "description": "Choose Page builder for reusable sections or Rich-text page for a simple body. Home appears at /. Other pages appear at /slug; events, people, members, exco, posts, campaigns and 404 are reserved routes.",
       "urlPattern": "/{slug}",
       "supports": [
         "drafts",
@@ -219,45 +311,75 @@
           "searchable": true
         },
         {
+          "slug": "page_format",
+          "label": "Page format",
+          "type": "select",
+          "defaultValue": "sections",
+          "validation": { "options": ["sections", "rich_text"] },
+          "widget": "techies-pages:format"
+        },
+        {
+          "slug": "layout",
+          "label": "Page sections",
+          "type": "blocks",
+          "validation": {
+            "allowedTypes": ["page_hero", "page_text", "page_images", "page_items", "page_cta", "page_posts", "page_events"],
+            "maxItems": 30
+          }
+        },
+        {
+          "slug": "use_sections",
+          "label": "Use sections even when empty (ignore legacy content)",
+          "type": "boolean",
+          "widget": "techies-pages:retained"
+        },
+        {
           "slug": "content",
-          "label": "Content",
+          "label": "Page content",
           "type": "portableText",
           "searchable": true
         },
         {
           "slug": "intro",
-          "label": "Hero introduction",
-          "type": "text"
+          "label": "Legacy: Hero introduction",
+          "type": "text",
+          "widget": "techies-pages:retained"
         },
         {
           "slug": "about_intro",
-          "label": "About introduction",
-          "type": "text"
+          "label": "Legacy: About introduction",
+          "type": "text",
+          "widget": "techies-pages:retained"
         },
         {
           "slug": "supper_copy",
-          "label": "Supper copy",
-          "type": "text"
+          "label": "Legacy: Supper copy",
+          "type": "text",
+          "widget": "techies-pages:retained"
         },
         {
           "slug": "supper_photo",
-          "label": "Supper photo",
-          "type": "image"
+          "label": "Legacy: Supper photo",
+          "type": "image",
+          "widget": "techies-pages:retained"
         },
         {
           "slug": "supper_photo_two",
-          "label": "Second supper photo",
-          "type": "image"
+          "label": "Legacy: Second supper photo",
+          "type": "image",
+          "widget": "techies-pages:retained"
         },
         {
           "slug": "podcast_copy",
-          "label": "Podcast copy",
-          "type": "text"
+          "label": "Legacy: Podcast copy",
+          "type": "text",
+          "widget": "techies-pages:retained"
         },
         {
           "slug": "podcast_url",
-          "label": "Podcast link",
-          "type": "url"
+          "label": "Legacy: Podcast link",
+          "type": "url",
+          "widget": "techies-pages:retained"
         }
       ]
     },
@@ -382,13 +504,14 @@
           "label": "Display order",
           "type": "integer"
         }
-      ]
+      ],
+      "hidden": true
     },
     {
       "slug": "members",
       "label": "Members",
       "labelSingular": "Member",
-      "urlPattern": "/members",
+      "urlPattern": "/people",
       "supports": [
         "drafts",
         "revisions",
@@ -552,6 +675,18 @@
           "label": "Portrait crop (x, y, size)",
           "type": "json",
           "widget": "techies-members:hidden"
+        },
+        {
+          "slug": "exco",
+          "label": "Exco",
+          "type": "boolean",
+          "widget": "techies-members:exco"
+        },
+        {
+          "slug": "legacy_aliases",
+          "label": "Legacy profile anchors",
+          "type": "json",
+          "widget": "techies-members:hidden"
         }
       ]
     }
@@ -594,8 +729,8 @@
   ],
   "menus": [
     {
-      "name": "primary",
-      "label": "Primary navigation",
+      "name": "site_navigation",
+      "label": "Site navigation",
       "items": [
         {
           "type": "custom",
@@ -616,6 +751,12 @@
           "label": "People",
           "type": "custom",
           "url": "/people"
+        },
+        {
+          "type": "custom",
+          "label": "Join us",
+          "url": "https://luma.com/APACtechies",
+          "cssClasses": "nav-join"
         }
       ]
     }
@@ -644,7 +785,75 @@
             }
           },
           "podcast_copy": "Tech and AI developments through a builder\u2019s lens. What matters, what\u2019s overhyped, and what changes how you build. Season 1 is complete; the podcast is currently on pause.",
-          "podcast_url": "https://open.spotify.com/show/3JhNpERWFXWIjGcmXDvu3f"
+          "podcast_url": "https://open.spotify.com/show/3JhNpERWFXWIjGcmXDvu3f",
+          "use_sections": true,
+          "layout": [
+            {
+              "_type": "page_hero", "_version": 1, "_key": "hero",
+              "heading": "A 3rd space for devs to geek out.",
+              "intro": "Real stacks. Real constraints. Real conversations. We get into how things are actually built—and why. Bring your questions. Stay for supper.",
+              "link_label": "See upcoming events", "link_url": "#upcoming",
+              "secondary_label": "Get to know us", "secondary_url": "#about",
+              "note": "Depth is the conversation. Not a credential at the door.",
+              "code_title": "community.ts",
+              "code": "const techies = {\n  people: \"curious builders\",\n  bring: [\n    \"your stack\",\n    \"your constraints\",\n    \"better questions\"\n  ],\n  salesPitch: false,\n  supperAfter: true\n};"
+            },
+            {
+              "_type": "page_items", "_version": 1, "_key": "about", "anchor": "about",
+              "heading": "Go deep.\nFeel at home.", "layout": "rows",
+              "intro": "Serious about the craft. Relaxed with the people. A room for developers, dev-adjacents, and technically curious people, whatever your title or experience.",
+              "items": [
+                { "title": "Real conversations", "description": "The working reality, not the polished pitch. Share what you tried, the awkward parts, and the decisions still keeping you up." },
+                { "title": "Deep technical", "description": "Architecture, bottlenecks, costs, and trade-offs. We get beyond what a product does and into how—and why—it works." },
+                { "title": "High intensity", "description": "Probing questions, engaged discussion, and cheeky energy. Challenge the decision. Be kind to the person who made it." }
+              ]
+            },
+            {
+              "_type": "page_items", "_version": 1, "_key": "audience", "anchor": "audience",
+              "heading": "Who’s in the room?", "layout": "columns",
+              "intro": "Different roles. Shared curiosity about how things are built. You don’t need a particular title to join the conversation.",
+              "items": [
+                { "title": "Developers & technical leads", "description": "Architecture, bottlenecks, production complexity, and engineering trade-offs." },
+                { "title": "Solo builders & founders", "description": "Product and stack decisions under real constraints, including AI-assisted building." },
+                { "title": "Dev-adjacents", "description": "Product managers, designers, and others whose work intersects with engineering." },
+                { "title": "Technically curious people", "description": "Anyone willing to get into the details, whatever their title or experience." }
+              ],
+              "link_label": "Meet the community", "link_url": "/people"
+            },
+            {
+              "_type": "page_cta", "_version": 1, "_key": "programmes", "anchor": "events",
+              "heading": "Find your conversation.", "surface": true,
+              "intro": "Explore Roast My TechStack, Prod is DOWN!!!, and product workshops like Starting Right. Each format gets into a different part of building.",
+              "link_label": "Explore our event series", "link_url": "/events"
+            },
+            {
+              "_type": "page_posts", "_version": 1, "_key": "summaries", "anchor": "summaries",
+              "heading": "From the room", "category": "event-summaries", "count": 3,
+              "link_label": "All posts & event summaries", "link_url": "/posts"
+            },
+            {
+              "_type": "page_images", "_version": 1, "_key": "supper",
+              "heading": "Come for the event.\nStay for the company.", "layout": "collage", "surface": true,
+              "intro": "The agenda ends. The conversation doesn’t. Join us for supper, compare notes, and meet people to keep building with.",
+              "link_label": "Meet the community", "link_url": "/people",
+              "images": [
+                { "image": { "$media": { "url": "https://apactechies.vercel.app/photos/2026-08-08%2012.01.58.jpg", "alt": "Techies community members sharing a meal after an event" } } },
+                { "image": { "$media": { "url": "https://apactechies.vercel.app/photos/2026-08-08%2012.02.36.jpg", "alt": "Techies members continuing the conversation over supper" } } }
+              ]
+            },
+            {
+              "_type": "page_events", "_version": 1, "_key": "upcoming", "anchor": "upcoming",
+              "heading": "What’s next?", "intro": "The live calendar updates when a session is published.",
+              "link_label": "Open the Luma calendar", "link_url": "https://luma.com/APACtechies",
+              "note": "Registration and any approval requirements are shown on each event’s Luma page."
+            },
+            {
+              "_type": "page_cta", "_version": 1, "_key": "podcast", "anchor": "podcast",
+              "heading": "Do You Even Build", "note": "On pause · Season 1 complete", "layout": "split",
+              "intro": "Tech and AI developments through a builder’s lens. What matters, what’s overhyped, and what changes how you build. Season 1 is complete; the podcast is currently on pause.",
+              "link_label": "Listen to Season 1", "link_url": "https://open.spotify.com/show/3JhNpERWFXWIjGcmXDvu3f"
+            }
+          ]
         }
       }
     ],
@@ -10621,7 +10830,7 @@
         }
       },
       {
-        "id": "jesse-sng",
+        "id": "member-jesse-sng",
         "slug": "jesse-sng",
         "status": "published",
         "data": {
@@ -11175,7 +11384,10 @@
             "x": 0.12,
             "y": 0.06,
             "size": 0.42
-          }
+          },
+          "legacy_aliases": [
+            "yingzhao-ouyang"
+          ]
         }
       },
       {
@@ -11912,6 +12124,60 @@
               "_key": "project-2"
             }
           ]
+        }
+      },
+      {
+        "id": "member-leong-han-wai",
+        "slug": "leong-han-wai",
+        "status": "published",
+        "data": {
+          "title": "Leong Han Wai",
+          "role": "Lead Organizer",
+          "bio": "Keeps Techies feeling like a true community: a place to connect, geek out, and go deeper into the craft together.",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/exco/han-wai.jpg",
+              "alt": "Leong Han Wai, Lead Organizer of Techies"
+            }
+          },
+          "linkedin": "https://sg.linkedin.com/in/hanwai",
+          "sort_order": 0
+        }
+      },
+      {
+        "id": "member-kai-ming-n",
+        "slug": "kai-ming-n",
+        "status": "published",
+        "data": {
+          "title": "Kai Ming N.",
+          "role": "Ecosystem Partnerships Lead",
+          "bio": "Cultivates relationships with sponsors, venues, speakers, and ecosystem partners to create more opportunities for the community.",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/exco/kai-ming.jpg",
+              "alt": "Kai Ming N., Ecosystem Partnerships Lead of Techies"
+            }
+          },
+          "linkedin": "https://sg.linkedin.com/in/kaimingng",
+          "sort_order": 3
+        }
+      },
+      {
+        "id": "member-esther-tan",
+        "slug": "esther-tan",
+        "status": "published",
+        "data": {
+          "title": "Esther Tan",
+          "role": "Marketing Lead",
+          "bio": "Brings Techies to life through event highlights, social recaps, marketing assets, and the photos that capture the room.",
+          "photo": {
+            "$media": {
+              "url": "https://apactechies.vercel.app/assets/exco/esther-tan.jpg",
+              "alt": "Esther Tan, Marketing Lead of Techies"
+            }
+          },
+          "linkedin": "https://sg.linkedin.com/in/esthertanshuzhen",
+          "sort_order": 4
         }
       }
     ]

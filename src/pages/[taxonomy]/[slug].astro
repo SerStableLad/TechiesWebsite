@@ -17,10 +17,17 @@ const termsResult = await getTaxonomyTermsWithCacheHint(taxonomy, {
 const term = slug ? termsResult.data.find((item) => item.slug === slug) : null;
 
 if (!term) {
-	return Astro.redirect("/404");
+	return Astro.rewrite("/404");
 }
 const pageTitle = isTag ? term.label : slug === "event-summaries" ? "Event Summaries" : slug === "partnership-announcement" ? "Partnership" : term.label;
 const path = `/${taxonomy}/${term.slug}`;
+const description = isTag
+	? `Explore ${term.label} recaps and technical discussions from Techies. Real stacks, engineering decisions, and lessons shared by the APAC developer community.`
+	: slug === "event-summaries"
+		? "Catch up on Techies developer events: real stacks, architecture decisions, and practical lessons from community demos and technical discussions."
+		: slug === "partnership-announcement"
+			? "Discover Techies community partnerships, developer conferences, and member offers connecting builders across APAC."
+			: `Read ${term.label} updates, practical lessons, and community news from Techies, a developer community across APAC.`;
 
 const cursor = Astro.url.searchParams.get("cursor") || undefined;
 const {
@@ -39,7 +46,7 @@ if (Astro.cache?.enabled) {
 }
 ---
 
-<Base title={isTag ? `Posts tagged "${term.label}"` : pageTitle} description={isTag ? `Posts tagged ${term.label}` : `Posts in ${term.label}`}>
+<Base title={isTag ? `${term.label} Recaps & Discussions` : pageTitle} description={description} canonical={`${path}${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ""}`}>
 	<div class="container page-content">
 	<header class="page-heading">{isTag && <nav aria-label="Back to posts"><a class="back-link" href="/posts">← All posts</a></nav>}<h1>{pageTitle}</h1><p>{isTag ? "Follow the decisions and discussions behind this topic." : term.slug === "partnership-announcement" ? "Community partnerships and offers for Techies." : "Real conversations, written down. Decisions, constraints, and lessons from the room."}</p></header>
 	{posts.length ? <div class="card-grid">{posts.map(post => <PostCard post={post} />)}</div> : <p>{isTag ? "No posts with this tag yet." : "No posts in this category yet."}</p>}

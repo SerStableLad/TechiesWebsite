@@ -8,6 +8,8 @@ After UI changes, run `pnpm design:check` and, with the dev server running, `pnp
 
 Preserve the required Inter and JetBrains Mono fonts. `.impeccable/config.json` exempts only Inter from the overused-font heuristic. Fix genuine readability, accessibility and layout issues rather than hiding entire detector rules. Avoid decorative numbered sections, tiny labels, fake status indicators, hard offset shadows, and interchangeable icon-card scaffolding.
 
+Hard UI rule: do not nest panels or hide sections in accordions/disclosures unless the user explicitly requests it. Keep content and controls directly visible.
+
 The refreshed parent palette is orange (`#F97316`), near-black and off-white. Use near-black text on orange-filled actions. Indigo and teal in the brand guide are legacy website references, not parent-brand accents. Preserve supplied logos, event artwork and natural-colour photography; event-specific incident red is allowed.
 
 ## Commands

@@ -1,0 +1,15 @@
+.page-format { border: 0; padding: 0; min-width: 0; color: var(--color-kumo-default); }
+.page-format legend { font-weight: 600; margin-bottom: 12px; }
+.page-format-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.page-format-options label { display: flex; align-items: start; gap: 12px; padding: 16px; border: 1px solid var(--color-kumo-line); border-radius: 8px; cursor: pointer; }
+.page-format-options label:has(:checked) { border-color: var(--color-kumo-brand); background: var(--color-kumo-control); }
+.page-format-options input { margin-top: 5px; accent-color: var(--color-kumo-brand); }
+.page-format-options span span { display: block; margin-top: 4px; }
+.page-format strong { color: inherit; }
+.page-format p { margin-top: 12px; color: inherit; }
+.page-format-options label:focus-within { outline: 2px solid var(--color-kumo-brand); outline-offset: 3px; }
+/* Keep the native editors mounted so switching formats never discards unsaved content. */
+form:has(.page-format[data-mode="sections"]) #field-content,
+form:has(.page-format[data-mode="rich_text"]) #field-layout { display: none; }
+form:has(.page-format) :is(input, textarea)::placeholder { color: var(--color-kumo-default); opacity: .75; }
+@media (max-width: 640px) { .page-format-options { grid-template-columns: 1fr; } }

@@ -9,7 +9,7 @@ import re
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -352,6 +352,28 @@ def link_member_profiles(posts, members):
 
 def configure_member_editor(seed):
     schema = next(c for c in seed["collections"] if c["slug"] == "members")
+    legacy = next((c for c in seed["collections"] if c["slug"] == "team"), None)
+    if legacy:
+        legacy["hidden"] = True
+    schema["urlPattern"] = "/people"
+    for new_field in (field("exco", "Exco", "boolean", widget="techies-members:exco"), field("legacy_aliases", "Legacy profile anchors", "json", widget="techies-members:hidden")):
+        if not any(f["slug"] == new_field["slug"] for f in schema["fields"]):
+            schema["fields"].append(new_field)
+    for organiser in seed["content"].get("team", []):
+        identity = lambda person: urlparse(person["data"].get("linkedin", "")).path.rstrip("/").lower()
+        member = next((m for m in seed["content"]["members"] if m["slug"] == organiser["slug"] or identity(m) and identity(m) == identity(organiser)), None)
+        if member is None:
+            member = json.loads(json.dumps(organiser))
+            member["id"] = f"member-{member['slug']}"
+            seed["content"]["members"].append(member)
+        else:
+            for key, value in organiser["data"].items():
+                if not member["data"].get(key):
+                    member["data"][key] = value
+            if member["slug"] != organiser["slug"]:
+                member["data"]["legacy_aliases"] = list(dict.fromkeys([*member["data"].get("legacy_aliases", []), organiser["slug"]]))
+        if member.get("id") == organiser.get("id"):
+            member["id"] = f"member-{member['slug']}"
     suggestions = sorted({tag.strip() for member in seed["content"]["members"] for tag in member["data"].get("interests", "").split(" · ") if tag.strip()}, key=str.casefold)
     widgets = {"sort_order": "hidden", "portrait_crop": "hidden", "interests": "interests", "recaps": "recaps"}
     for i, definition in enumerate(schema["fields"]):
@@ -464,7 +486,16 @@ def main():
     }
     link_member_profiles(seed["content"]["posts"], seed["content"]["members"])
     configure_member_editor(seed)
-    (ROOT / "seed" / "seed.json").write_text(json.dumps(seed, ensure_ascii=False, indent=2) + "\n")
+    seed_path = ROOT / "seed" / "seed.json"
+    if seed_path.exists():
+        previous = json.loads(seed_path.read_text())
+        if previous.get("blockTypes"):
+            # Page compositions are curated in the CMS, not rebuilt from archived HTML.
+            seed["blockTypes"] = previous["blockTypes"]
+            seed["collections"] = [next(c for c in previous["collections"] if c["slug"] == "pages") if c["slug"] == "pages" else c for c in seed["collections"]]
+            seed["content"]["pages"] = previous["content"]["pages"]
+            seed["menus"] = previous["menus"]
+    seed_path.write_text(json.dumps(seed, ensure_ascii=False, indent=2) + "\n")
     print("Seed ready: homepage, 3 programmes, 6 posts, 5 Exco profiles, 14 member profiles.")
 
 

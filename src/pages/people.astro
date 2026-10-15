@@ -2,32 +2,20 @@
 import { getEmDashCollection } from "emdash";
 import Base from "../layouts/Base.astro";
 import ProfileCard from "../components/ProfileCard.astro";
-import { linkedinVariants, mergePeople } from "../utils/people";
 
 const cursor = Astro.url.searchParams.get("cursor") || undefined;
-const [teamResult, membersResult] = await Promise.all([
-	getEmDashCollection("team", { orderBy: { sort_order: "asc" }, limit: 100 }),
-	getEmDashCollection("members", { orderBy: { sort_order: "asc" }, limit: 24, cursor }),
-]);
+const membersResult = await getEmDashCollection("members", { orderBy: { sort_order: "asc" }, limit: 24, cursor });
 if (Astro.cache?.enabled) {
-	Astro.cache.set(teamResult.cacheHint);
 	Astro.cache.set(membersResult.cacheHint);
 }
-const { entries: team } = teamResult;
 const { entries: members, nextCursor } = membersResult;
-const linkedinUrls = linkedinVariants(team);
-// Resolve Exco membership outside the current page, so pagination cannot duplicate people.
-const matches = team.length ? await Promise.all([
-  getEmDashCollection("members", { where: { slug: team.map(person => person.id) }, limit: 100 }),
-  ...(linkedinUrls.length ? [getEmDashCollection("members", { where: { linkedin: linkedinUrls }, limit: 100 })] : []),
-]) : [];
-if (teamResult.error || membersResult.error || matches.some(result => result.error)) {
+if (membersResult.error) {
   return new Response("Unable to load people. Please try again.", { status: 503 });
 }
-if (Astro.cache?.enabled) for (const result of matches) Astro.cache.set(result.cacheHint);
-const people = mergePeople(team, matches.flatMap(result => result.entries), members, !cursor);
+// Keep the pre-merge anchor working while existing draft changes await editorial publication.
+const people = members.map(member => ({ ...member, excoRoles: [], aliases: Array.isArray(member.data.legacy_aliases) ? member.data.legacy_aliases as string[] : member.id === "ying-zhao" ? ["yingzhao-ouyang"] : [] }));
 ---
-<Base title="People" description="Meet the organisers and members of the Techies community.">
+<Base title="Community Members & Organisers" description="Meet the developers, builders, speakers, and volunteer organisers behind Techies, a community for candid technical conversations across APAC." canonical={`/people${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ""}`}>
   <div class="container page-content">
     <header class="page-heading"><h1>People in <span class="accent">the room.</span></h1><p>Meet the members of Techies. See what they’ve shared, find familiar interests, and get to know the people behind the builds.</p></header>
     <section id="members" aria-label="Techies members">

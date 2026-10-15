@@ -51,7 +51,7 @@ export function createPlugin(options: { adminEntry: string }) {
 		},
 		routes: {
 			catalog: route(service.catalog, true, "GET"), detail: route(service.detail, true, "GET"),
-			"request-code": route(service.requestCode, true), verify: route(service.verify, true), participant: route(service.participant, true), enter: route(service.enter, true), submit: route(service.submit, true), "sign-out": route(service.signOut, true),
+			register: route(service.register, true), "request-code": route(service.requestCode, true), verify: route(service.verify, true), participant: route(service.participant, true), enter: route(service.enter, true), submit: route(service.submit, true), "sign-out": route(service.signOut, true),
 			"admin/list": route(service.adminList, false, "GET"), "admin/detail": route(service.adminDetail, false, "GET"), "admin/draw": route(service.draw), "admin/recover": route(service.recover), "admin/archive": route(service.archive),
 			"admin/content-status": route(native.contentStatus, false, "GET"), "admin/activate-private": route(native.activatePrivate), "admin/launch": route(native.launch), "admin/cancel-launch": route(native.cancelLaunch), "admin/settings": route(native.saveSettings),
 			"admin/export": {

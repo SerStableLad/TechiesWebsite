@@ -17,17 +17,45 @@ Complete EmDash setup with the bundled content enabled. In local development, yo
 
 | Admin collection | Public destination | What to edit |
 | --- | --- | --- |
-| Pages → `home` | `/` | Hero, introduction, supper copy/photos, podcast copy/link |
+| Pages → `home` | `/` | Add, edit, remove and reorder Page sections |
+| Pages → new page | `/<slug>` | Choose Page builder or Rich-text page |
 | Programmes | Homepage events | Titles, descriptions, cover images, Luma links, accent, display order |
 | Posts | `/posts` and `/posts/:slug` | Event summaries and other community posts |
-| Exco profiles | `/exco` | The original five profiles, roles, portraits, biographies and links |
-| Members | `/members` | Organiser-curated member profiles, current builds, interests and links |
+| Members | `/people` | One member profile per person; `/members` and `/exco` redirect here |
+
+Member and Exco profiles share **Content → Members**. Only administrators see the Exco switch; it saves immediately to private plugin storage, never to public content or search. Save new profiles before setting the tag.
+
+For existing databases (and to initialize bundled Exco tags after first setup), run `node scripts/migrate-member-profiles.mjs`. Remote sites require `EMDASH_TOKEN` and `--url https://your-site`. The migration merges by slug/LinkedIn, preserves member details and legacy anchors, and hides—but does not delete—the old `team` collection. Reruns preserve tags that an administrator has turned off. Back up the database before production migration; deploy the member plugin first.
+
+Updates to existing members remain drafts so migration cannot accidentally publish pending editorial changes. Review and publish those profiles afterward. New profiles inherit the legacy profile's published/draft status.
 
 Create member profiles as drafts, add real details, then publish. Published profiles appear in the showcase automatically; lower display-order numbers appear first. No member profiles are invented or seeded. The page shows a welcoming empty state until the first profile is published.
 
 Posts support categories, tags, rich text, images, event date, source link and SEO. All six original Roast summaries (#2–#7) are imported as editable posts under the **Event summaries** category. The homepage lists the three most recent event dates. The Posts archive uses publication order.
 
-Manage primary navigation in **Menus** and the site identity in **Settings**. Upcoming events stay live via the original Luma calendar. Podcast status remains **On pause · Season 1 complete**.
+Manage primary navigation in **Menus → Site navigation** and the site identity in **Settings**. Upcoming events stay live via the original Luma calendar. Podcast status and links are editable in its Call to action section.
+
+### Flexible pages
+
+In **Pages**, choose **Page builder** under **Page format**, then use **Page sections** to add a Hero, Rich text, Text + images, Item list, Call to action, Latest posts, or Upcoming events. New pages start in Page builder mode. Each section holds its own copy, media and links; duplicate, reorder or remove sections with the native block editor. The homepage uses the same renderer as every new page. The block picker describes each section and groups live content separately.
+
+The first section may be a Hero (its heading becomes the page H1). Without a leading Hero, the page title is the H1. Keep rich-text headings at H2 or below. Images use the media library and its alt text; Text + images supports a collage or left/right placement. Latest posts takes a category slug and a count from 1–12. Upcoming events always uses the existing live Luma calendar; its heading, supporting copy and calendar link are editable.
+
+Choose **Rich-text page** for a simple body instead. Switching formats hides the inactive editor but retains its content, including unsaved edits. A builder with no blocks intentionally renders only the page title. Existing pages keep their previous format until you select another one; old homepage fields remain stored for compatibility and the Events page's existing photos, but are hidden from normal authoring.
+
+`home` is reserved for `/` (`/home` redirects there). Do not use `events`, `people`, `members`, `exco`, `posts`, `campaigns`, or `404` for new CMS pages: these have dedicated routes. Add new page links through **Menus → Site navigation**. Header/footer branding and the footer remain shared site layout, not page sections.
+
+For an existing database, deploy the new renderer and run:
+
+```sh
+node scripts/migrate-page-sections.mjs           # read-only preview
+node scripts/migrate-page-sections.mjs --apply   # local migration
+# Remote: set EMDASH_TOKEN and append --url https://your-site
+```
+
+The migration backs up the original entry, schema and menu under `.emdash/backups/`, adds the section schema and page-format controls, and updates block descriptions/defaults without changing existing layouts. Deploy the `techies-pages` plugin with the renderer before migrating. If the homepage has no sections yet, it stages them as a **draft** without publishing pending changes. It creates **Site navigation** from the previously displayed links, retaining the old primary menu as a backup. Reruns leave saved layouts and the new menu alone. Review **Pages → home → Preview**, then **Publish** when ready. Fresh installations already seed the section layout.
+
+Verification: `node scripts/check-page-sections.mjs`; add `--cms-check` against the local server to test temporary pages, draft previews, publishing and reordering.
 
 ### Announcement strip
 
@@ -129,6 +157,18 @@ node scripts/check-site.mjs --cms-check
 The CMS check creates a temporary member, verifies draft privacy, editing and publishing, then deletes only that temporary profile. On macOS, use `/usr/bin/python3` if your separately installed Python lacks system CA certificates.
 
 Seed changes do not overwrite an existing database. Apply subsequent content changes through the admin UI or the EmDash CLI. Regenerate types with `pnpm exec emdash types` after changing schema.
+
+## SEO
+
+Page metadata targets the APAC developer community. CMS SEO titles, descriptions, images, canonical URLs, and noindex settings override template defaults. Set the final Site URL in EmDash when the public domain is ready; until then, URLs use the request origin.
+
+Saving a page, post, or member profile automatically fills its saved SEO title, description, social image, and canonical URL. Page summaries come from the selected page format, post summaries from the excerpt/body, and member summaries from the bio. Images come from page blocks, the post image, or the member photo, with the site social image as fallback. Members share `/people`, so their canonical points there rather than to a nonexistent individual page.
+
+Generated values refresh with content edits; distinct manual overrides and **Hide from search engines** are preserved. Clear a field and save to regenerate it. Titles omit the site suffix because the rendered page adds it. Existing entries are filled on their next save, not bulk-published or rewritten. Set the production Site URL before generating production canonicals. Test with `node scripts/check-auto-seo.mjs`; add `--cms-check` to verify temporary drafts against the local server.
+
+The share-image fallback is `public/brand/techies-social.png`, composed from the supplied wordmark. A default social image set in EmDash takes precedence. `/sitemap.xml` lists public canonical pages without duplicate member profiles, legacy redirects, private campaigns, or noindex CMS entries.
+
+With the dev server running, run `node scripts/check-seo.mjs` to check metadata, share images, sitemap URLs, and 404 responses. Set `CHECK_SITE_URL` to test another local deployment. Restart the dev server after adding the custom sitemap route so it replaces EmDash's built-in route.
 
 ## Design quality
 

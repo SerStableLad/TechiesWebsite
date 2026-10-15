@@ -1,9 +1,10 @@
 ---
-import { getMenuWithCacheHint, getSiteSettingsWithCacheHint } from "emdash";
+import { getMenuWithCacheHint, getSiteSettingsWithCacheHint, sanitizeHref } from "emdash";
 import { EmDashHead, EmDashBodyStart, EmDashBodyEnd } from "emdash/ui";
 import { createPublicPageContext } from "emdash/page";
 import { resolveStarterSiteIdentity } from "../utils/site-identity";
 import AnnouncementBanner from "../components/AnnouncementBanner.astro";
+import { defaultDescription } from "../utils/seo";
 import "../styles/theme.css";
 
 interface Props {
@@ -12,22 +13,26 @@ interface Props {
 	description?: string | null;
 	image?: string | null;
 	canonical?: string | null;
+	robots?: string | null;
+	articleMeta?: { publishedTime?: string | null; modifiedTime?: string | null; author?: string | null };
 	/** Pass content reference for plugin page contributions on content pages */
 	content?: { collection: string; id: string; slug?: string | null };
 }
 
-const { title, pageTitle, description, image, canonical, content } =
+const { title, pageTitle, description, image, canonical, content, robots, articleMeta } =
 	Astro.props;
 const [settingsResult, menuResult] = await Promise.all([
 	getSiteSettingsWithCacheHint(),
-	getMenuWithCacheHint("primary"),
+	getMenuWithCacheHint("site_navigation"),
 ]);
+const legacyMenu = menuResult.data ? null : await getMenuWithCacheHint("primary");
 if (Astro.cache?.enabled) {
 	Astro.cache.set(settingsResult.cacheHint);
 	Astro.cache.set(menuResult.cacheHint);
+	if (legacyMenu) Astro.cache.set(legacyMenu.cacheHint);
 }
 
-const { siteTitle, siteTagline, siteLogo } = resolveStarterSiteIdentity(
+const { siteTitle, siteLogo } = resolveStarterSiteIdentity(
 	settingsResult.data,
 );
 const titleIncludesSiteName =
@@ -35,25 +40,24 @@ const titleIncludesSiteName =
 	title.endsWith(` | ${siteTitle}`) ||
 	title.endsWith(` — ${siteTitle}`);
 const fullTitle = titleIncludesSiteName ? title : `${title} — ${siteTitle}`;
-const pageDescription = description ?? siteTagline;
-const menu = menuResult.data;
-// Keep existing CMS menus aligned without requiring a destructive reseed.
-const menuItems = (menu?.items ?? [])
-	.filter(item => !["/category/event-summaries", "/members", "/exco"].includes(item.url))
-	.map(item => ({ ...item, url: item.url === "/#events" ? "/events" : item.url }));
-if (!menuItems.some(item => item.url === "/people")) {
-	menuItems.push({ id: "people", label: "People", url: "/people", children: [] });
-}
+const pageDescription = description?.trim() || defaultDescription;
+const siteUrl = settingsResult.data.url || Astro.url.origin;
+const pageImage = image || settingsResult.data.seo?.defaultOgImage?.url || "/brand/techies-social.png";
+const menu = menuResult.data ?? legacyMenu?.data;
+const menuItems = menu?.items ?? [];
 
 const pageCtx = createPublicPageContext({
 	Astro,
 	kind: content ? "content" : "custom",
-	pageType: "website",
+	pageType: content?.collection === "posts" ? "article" : "website",
 	title: fullTitle,
 	pageTitle: pageTitle ?? title,
 	description: pageDescription,
-	canonical: canonical ?? new URL(Astro.url.pathname, Astro.url.origin).href,
-	image,
+	canonical: new URL(canonical ?? (Astro.url.pathname.replace(/\/$/, "") || "/"), siteUrl).href,
+	image: new URL(pageImage, siteUrl).href,
+	seo: { robots },
+	articleMeta,
+	siteUrl,
 	content,
 	siteName: siteTitle,
 });
@@ -79,7 +83,8 @@ const pageCtx = createPublicPageContext({
 				{
 					menuItems?.map((item) => (
 						<a
-							href={item.url}
+							href={sanitizeHref(item.url)}
+							class={item.cssClasses || undefined}
 							target={item.target}
 							rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
 							aria-current={Astro.url.pathname === item.url ? "page" : undefined}
@@ -88,7 +93,6 @@ const pageCtx = createPublicPageContext({
 						</a>
 					))
 				}
-				<a class="nav-join" href="https://luma.com/APACtechies">Join us <span aria-hidden="true">↗</span></a>
 				</div>
 			</nav>
 		</header>

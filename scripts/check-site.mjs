@@ -47,7 +47,7 @@ for (const path of paths) {
   }
   if (path === '/tag/roast-my-techstack') {
     assert.match(html, /<h1>Roast My TechStack<\/h1>/);
-    assert.ok(html.includes('Posts tagged &quot;Roast My TechStack&quot;') || html.includes('Posts tagged "Roast My TechStack"'), 'Tag page keeps its SEO title');
+    assert.ok(html.includes('Roast My TechStack Recaps &amp; Discussions'), 'Tag page has a descriptive SEO title');
     assert.ok(html.includes('Follow the decisions and discussions behind this topic.'), 'Tag page keeps its distinct copy');
   }
   if (path === '/posts/community-partner-ai-coding-summit-2027') {
@@ -72,6 +72,7 @@ for (const path of paths) {
   if (path === '/people' || path === '/members') {
     assert.match(html, /id="exco"/, 'Legacy Exco anchor retained');
     assert.match(html, /id="members"/);
+    assert.ok(!html.includes('class="exco-tag"'), 'Private Exco tags are never rendered publicly');
     for (const name of ['Leong Han Wai', 'Jesse Sng', 'Ying Zhao', 'Kai Ming N.', 'Esther Tan']) assert.ok(html.includes(name), name);
     assert.equal((html.match(/<article\b[^>]*id="jesse-sng"/g) || []).length, 1, 'Exco speaker appears once');
     assert.match(html, /id="yingzhao-ouyang"/, 'Alternate organiser anchor retained');

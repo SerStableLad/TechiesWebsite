@@ -1,130 +1,27 @@
 ---
-import { getEmDashCollection, getEmDashEntry } from "emdash";
+import { getEmDashEntry, getSeoMeta, getSiteSettingsWithCacheHint } from "emdash";
 import Base from "../layouts/Base.astro";
-import PostCard from "../components/PostCard.astro";
-import UpcomingEvents from "../components/UpcomingEvents.astro";
-import HangoutCollage from "../components/HangoutCollage.astro";
+import PageSections from "../components/PageSections.astro";
+import { pageSections } from "../utils/page-sections";
+import { resolveStarterSiteIdentity } from "../utils/site-identity";
+import { defaultDescription } from "../utils/seo";
+import { PortableText } from "emdash/ui";
 
-const [homeResult, postResult] = await Promise.all([
-  getEmDashEntry("pages", "home"),
-  getEmDashCollection("posts", { orderBy: { event_date: "desc" }, where: { category: "event-summaries" }, limit: 3 }),
-]);
-if (Astro.cache?.enabled) for (const result of [homeResult, postResult]) Astro.cache.set(result.cacheHint);
-const home = homeResult.entry;
+const [result, settings] = await Promise.all([getEmDashEntry("pages", "home"), getSiteSettingsWithCacheHint()]);
+if (!result.entry) return Astro.rewrite("/404");
+if (Astro.cache?.enabled) for (const item of [result, settings]) Astro.cache.set(item.cacheHint);
+const home = result.entry;
+const { siteTitle } = resolveStarterSiteIdentity(settings.data);
+const seo = getSeoMeta(home, { siteTitle, siteUrl: settings.data.url || Astro.url.origin, path: "/", defaultTitle: "Developer Community Across APAC", defaultDescription });
+const sections = pageSections(home.data, true);
 ---
 
-<Base title="A 3rd space for devs to geek out." description={home?.data.intro}>
-  <div class="container">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <h1 id="hero-title" {...home?.edit.title}>{home?.data.title || "A 3rd space for devs to geek out."}</h1>
-        <p class="hero-intro" {...home?.edit.intro}>{home?.data.intro}</p>
-        <div class="hero-actions"><a class="button" href="#upcoming">See upcoming events <span aria-hidden="true">↗</span></a><a class="text-link" href="#about">Get to know us <span aria-hidden="true">↓</span></a></div>
-        <p class="hero-note"><span aria-hidden="true">&gt;</span> Depth is the conversation. Not a credential at the door.</p>
-      </div>
-      <div class="hero-visual">
-        <div class="terminal">
-          <div class="terminal-bar">community.ts</div>
-          <pre is:raw><code><span class="code-keyword">const</span> techies = {
-  people: <span class="code-string">"curious builders"</span>,
-  bring: [
-    <span class="code-string">"your stack"</span>,
-    <span class="code-string">"your constraints"</span>,
-    <span class="code-string">"better questions"</span>
-  ],
-  salesPitch: <span class="code-keyword">false</span>,
-  supperAfter: <span class="code-keyword">true</span>
-};</code></pre>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <section class="section" id="about">
-    <div class="container">
-      <div class="section-heading"><h2>Go deep.<br />Feel at home.</h2><p {...home?.edit.about_intro}>{home?.data.about_intro}</p></div>
-      <div class="pillars">
-        <article><h3>Real conversations</h3><p>The working reality, not the polished pitch. Share what you tried, the awkward parts, and the decisions still keeping you up.</p></article>
-        <article><h3>Deep technical</h3><p>Architecture, bottlenecks, costs, and trade-offs. We get beyond what a product does and into how—and why—it works.</p></article>
-        <article><h3>High intensity</h3><p>Probing questions, engaged discussion, and cheeky energy. Challenge the decision. Be kind to the person who made it.</p></article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="audience">
-    <div class="container">
-      <div class="section-heading"><h2>Who’s in the room?</h2><p>Different roles. Shared curiosity about how things are built. You don’t need a particular title to join the conversation.</p></div>
-      <div class="audience-list">
-        <article><h3>Developers & technical leads</h3><p>Architecture, bottlenecks, production complexity, and engineering trade-offs.</p></article>
-        <article><h3>Solo builders & founders</h3><p>Product and stack decisions under real constraints, including AI-assisted building.</p></article>
-        <article><h3>Dev-adjacents</h3><p>Product managers, designers, and others whose work intersects with engineering.</p></article>
-        <article><h3>Technically curious people</h3><p>Anyone willing to get into the details, whatever their title or experience.</p></article>
-      </div>
-      <a class="text-link audience-link" href="/members">Meet the community <span aria-hidden="true">↗</span></a>
-    </div>
-  </section>
-
-  <section class="section programmes-section" id="events">
-    <div class="container">
-      <div class="section-heading"><h2>Find your conversation.</h2><p>Explore Roast My TechStack, Prod is DOWN!!!, and product workshops like Starting Right. Each format gets into a different part of building.</p></div>
-      <a class="button" href="/events">Explore our event series <span aria-hidden="true">→</span></a>
-    </div>
-  </section>
-
-  <section class="section" id="summaries">
-    <div class="container">
-      <div class="section-heading"><h2>From the room</h2><a class="text-link" href="/posts">All posts & event summaries <span aria-hidden="true">↗</span></a></div>
-      <div class="card-grid">{postResult.entries.map(post => <PostCard post={post} heading="h3" />)}</div>
-    </div>
-  </section>
-
-  <section class="section supper-section">
-    <div class="container">
-      <div class="supper-copy"><h2>Come for the event.<br /><span class="accent">Stay for the company.</span></h2><p {...home?.edit.supper_copy}>{home?.data.supper_copy}</p><a class="text-link" href="/members">Meet the community <span aria-hidden="true">↗</span></a></div>
-      <HangoutCollage home={home} />
-    </div>
-  </section>
-
-  <section class="section" id="upcoming">
-    <div class="container"><div class="section-heading"><h2>What’s next?</h2><div><p>The live calendar updates when a session is published.</p><a class="text-link calendar-link" href="https://luma.com/APACtechies">Open the Luma calendar <span aria-hidden="true">↗</span></a></div></div><UpcomingEvents /><p class="calendar-note">Registration and any approval requirements are shown on each event’s Luma page.</p></div>
-  </section>
-
-  <section class="section" id="podcast">
-    <div class="container podcast-panel"><div><h2>Do You Even Build</h2><p class="podcast-status">On pause · Season 1 complete</p></div><div class="podcast-copy"><p {...home?.edit.podcast_copy}>{home?.data.podcast_copy}</p><a class="button secondary" href={home?.data.podcast_url || "https://open.spotify.com/show/3JhNpERWFXWIjGcmXDvu3f"}>Listen to Season 1 <span aria-hidden="true">↗</span></a></div></div>
-  </section>
+<Base title={seo.title} pageTitle={seo.ogTitle} description={seo.description} image={seo.ogImage} canonical={seo.canonical} content={{ collection: "pages", id: home.data.id, slug: "home" }}>
+  {sections ? <>
+    {sections[0]?._type !== "page_hero" && <header class="container page-heading"><h1 {...home.edit.title}>{home.data.title}</h1></header>}
+    <PageSections value={sections} />
+  </> : <article class="container page-content">
+    <header class="page-heading"><h1 {...home.edit.title}>{home.data.title}</h1></header>
+    <div class="prose"><PortableText value={home.data.content} /></div>
+  </article>}
 </Base>
-
-<style>
-  .hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 70px; padding-block: 90px 76px; align-items: center; }
-  .hero h1 { margin: 26px 0; max-width: 570px; }
-  .hero-intro { font-size: 17px; max-width: 490px; }
-  .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 28px; margin-top: 32px; }
-  .hero-note { font-size: 14px; margin-top: 32px; max-width: 440px; }
-  .hero-note span { color: var(--orange); margin-right: 8px; }
-  .hero-visual { position: relative; padding: 16px 0; }
-  .terminal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-  .terminal-bar { padding: 15px 24px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 14px; color: var(--secondary); }
-  pre { padding: 30px 24px; margin: 0; font-family: var(--mono); font-size: 14px; line-height: 1.9; overflow-x: auto; }
-  .terminal :global(.code-keyword) { color: var(--orange); }
-  .terminal :global(.code-string) { color: var(--text); }
-  .pillars article { display: grid; grid-template-columns: 230px 1fr; gap: 36px; padding-block: 26px; border-top: 1px solid var(--border); }
-  .pillars h3 { font-size: 20px; }
-  .pillars p { font-size: 16px; max-width: 680px; }
-  .programmes-section { background: var(--surface); }
-  .audience-list { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 64px; }
-  .audience-list article { border-top: 1px solid var(--border); padding-top: 24px; }
-  .audience-list h3 { font-size: 20px; margin-bottom: 12px; }
-  .audience-link { margin-top: 32px; }
-  .supper-section { background: var(--surface); }
-  .supper-copy { max-width: 650px; }
-  .supper-copy h2 { margin: 22px 0; }
-  .supper-copy > p:not(.eyebrow) { margin-bottom: 26px; }
-  #upcoming .section-heading { margin-bottom: 24px; }
-  .calendar-link { margin-top: 12px; }
-  .calendar-note { margin-top: 16px; font-size: 14px; }
-  .podcast-panel { display: grid; grid-template-columns: 1fr 1.2fr; gap: 64px; align-items: start; }
-  .podcast-status { margin-top: 18px; font-size: 14px; color: var(--secondary); }
-  .podcast-copy > p { margin-bottom: 28px; max-width: 560px; }
-  @media (max-width: 900px) { .hero { gap: 32px; } .podcast-panel { gap: 40px; } }
-  @media (max-width: 700px) { .hero { grid-template-columns: 1fr; padding-block: 50px; gap: 40px; } .hero h1 { max-width: 500px; } .hero-intro { font-size: 16px; } .hero-visual { max-width: 480px; width: 100%; } .pillars article, .audience-list, .podcast-panel { grid-template-columns: 1fr; } .pillars article { gap: 14px; } .supper-copy { margin-bottom: 12px; } }
-</style>

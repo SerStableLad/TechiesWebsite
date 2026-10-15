@@ -1,0 +1,730 @@
+{
+  "collections": [
+    {
+      "slug": "campaigns",
+      "label": "Campaigns",
+      "labelSingular": "Campaign",
+      "icon": "gift",
+      "supports": [
+        "drafts",
+        "revisions"
+      ],
+      "hidden": false,
+      "sortOrder": 0,
+      "fields": [
+        {
+          "slug": "campaign_key",
+          "label": "Managed campaign reference",
+          "type": "string",
+          "required": false,
+          "unique": true,
+          "widget": "techies-campaigns:managed-reference"
+        },
+        {
+          "slug": "title",
+          "label": "Campaign title",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "prize",
+          "label": "Prize name",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "image",
+          "label": "Prize image",
+          "type": "image",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "description",
+          "label": "Campaign description",
+          "type": "portableText",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "rules",
+          "label": "Rules and eligibility",
+          "type": "portableText",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "entry_window",
+          "label": "Campaign dates",
+          "type": "json",
+          "required": false,
+          "unique": false,
+          "widget": "techies-campaigns:entry-window"
+        },
+        {
+          "slug": "visibility",
+          "label": "Campaign access",
+          "type": "select",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "options": [
+              "public",
+              "private"
+            ]
+          },
+          "widget": "techies-campaigns:campaign-access"
+        },
+        {
+          "slug": "winner_count",
+          "label": "Number of winners",
+          "type": "integer",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "min": 1,
+            "max": 20
+          }
+        },
+        {
+          "slug": "actions",
+          "label": "Entry actions",
+          "type": "json",
+          "required": false,
+          "unique": false,
+          "widget": "techies-campaigns:entry-actions"
+        },
+        {
+          "slug": "announce",
+          "label": "Create announcement",
+          "type": "boolean",
+          "required": false,
+          "unique": false,
+          "widget": "techies-campaigns:announcement-checkbox"
+        },
+        {
+          "slug": "publishing",
+          "label": "Publishing",
+          "type": "json",
+          "required": false,
+          "unique": false,
+          "widget": "techies-campaigns:campaign-publishing"
+        }
+      ]
+    },
+    {
+      "slug": "announcements",
+      "label": "Announcements",
+      "labelSingular": "Announcement",
+      "description": "Scheduled site-wide text strips",
+      "supports": [
+        "drafts",
+        "revisions"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Announcement text",
+          "type": "text",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "starts_at",
+          "label": "Show from (optional)",
+          "type": "datetime",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "ends_at",
+          "label": "Hide at (optional)",
+          "type": "datetime",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "cta_label",
+          "label": "CTA text (optional)",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "cta_url",
+          "label": "CTA link (https://… or /path)",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "cta_new_tab",
+          "label": "Open CTA in new tab",
+          "type": "boolean",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "campaign_ref",
+          "label": "Managed campaign reference",
+          "type": "string",
+          "required": false,
+          "unique": true,
+          "widget": "techies-campaigns:managed-reference"
+        }
+      ]
+    },
+    {
+      "slug": "members",
+      "label": "Members",
+      "labelSingular": "Member",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Name",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "role",
+          "label": "Role / introduction",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "bio",
+          "label": "Biography",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "photo",
+          "label": "Portrait",
+          "type": "image",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "linkedin",
+          "label": "LinkedIn",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "github",
+          "label": "GitHub",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "website",
+          "label": "Website",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "sort_order",
+          "label": "Display order",
+          "type": "integer",
+          "required": false,
+          "unique": false,
+          "widget": "techies-members:hidden"
+        },
+        {
+          "slug": "building",
+          "label": "What they are building",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "interests",
+          "label": "Technical interests",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "widget": "techies-members:interests",
+          "options": {
+            "suggestions": [
+              "Agent guardrails",
+              "Agents-ready",
+              "AI documentation",
+              "API",
+              "ASR",
+              "Blast radius",
+              "Chatbot intake",
+              "Claude / GPT / DeepSeek",
+              "Claude CLI",
+              "Claude Code",
+              "Clerk",
+              "ComfyUI",
+              "Containerised auth",
+              "Data schema",
+              "Databricks",
+              "Deterministic checks",
+              "deterministic code",
+              "Docling",
+              "Drag-and-drop flow",
+              "DuckDB",
+              "Dynamic model selector",
+              "Fail-continue",
+              "FastAPI",
+              "FFmpeg",
+              "Frontend API calls",
+              "Functional programming",
+              "Gemma",
+              "Git diff",
+              "GitHub issues",
+              "GPT Image",
+              "Graph DB",
+              "Grounding",
+              "Guardrails",
+              "Heartmula",
+              "Human validation",
+              "Hydration",
+              "Imagen",
+              "Immutable storage",
+              "LiveView",
+              "LLM evals",
+              "LRCLib",
+              "MarkItDown",
+              "Medallion ETL",
+              "Model escalation",
+              "Multi-agent",
+              "n8n",
+              "One Big Table",
+              "Open-source streaming",
+              "OpenClaw",
+              "Oracle Cloud free tier",
+              "Orchestration",
+              "Parallel generation",
+              "PDF parsing",
+              "persona.md",
+              "Phoenix",
+              "Playwright",
+              "Postgres",
+              "Postgres upsert",
+              "PostgreSQL",
+              "RAG",
+              "RAG vs Graph",
+              "Remotion",
+              "Retries & backoff",
+              "shadcn",
+              "Stitch + Google MCP",
+              "Stripe",
+              "Supabase / Postgres",
+              "Supabase auth",
+              "UX research",
+              "Vanilla JS",
+              "Vercel",
+              "Voicebox",
+              "Web search",
+              "WebSockets",
+              "Whisper TTS"
+            ]
+          }
+        },
+        {
+          "slug": "project_url",
+          "label": "Project link",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "recaps",
+          "label": "Event recaps",
+          "type": "portableText",
+          "required": false,
+          "unique": false,
+          "widget": "techies-members:recaps"
+        },
+        {
+          "slug": "projects",
+          "label": "Projects",
+          "type": "portableText",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "portrait_crop",
+          "label": "Portrait crop (x, y, size)",
+          "type": "json",
+          "required": false,
+          "unique": false,
+          "widget": "techies-members:hidden"
+        },
+        {
+          "slug": "exco",
+          "label": "Exco",
+          "type": "boolean",
+          "required": false,
+          "unique": false,
+          "widget": "techies-members:exco"
+        },
+        {
+          "slug": "legacy_aliases",
+          "label": "Legacy profile anchors",
+          "type": "json",
+          "required": false,
+          "unique": false,
+          "widget": "techies-members:hidden"
+        }
+      ]
+    },
+    {
+      "slug": "pages",
+      "label": "Pages",
+      "labelSingular": "Page",
+      "description": "Choose Page builder for reusable sections or Rich-text page for a simple body. Home appears at /. Other pages appear at /slug; events, people, members, exco, posts, campaigns and 404 are reserved routes.",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "page_format",
+          "label": "Page format",
+          "type": "select",
+          "required": false,
+          "unique": false,
+          "defaultValue": "sections",
+          "validation": {
+            "options": [
+              "sections",
+              "rich_text"
+            ]
+          },
+          "widget": "techies-pages:format"
+        },
+        {
+          "slug": "layout",
+          "label": "Page sections",
+          "type": "blocks",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "allowedTypes": [
+              "page_hero",
+              "page_text",
+              "page_images",
+              "page_items",
+              "page_cta",
+              "page_posts",
+              "page_events"
+            ],
+            "retiredTypes": [],
+            "minItems": 0,
+            "maxItems": 30
+          }
+        },
+        {
+          "slug": "use_sections",
+          "label": "Use sections even when empty (ignore legacy content)",
+          "type": "boolean",
+          "required": false,
+          "unique": false,
+          "widget": "techies-pages:retained"
+        },
+        {
+          "slug": "content",
+          "label": "Page content",
+          "type": "portableText",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "intro",
+          "label": "Legacy: Hero introduction",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "widget": "techies-pages:retained"
+        },
+        {
+          "slug": "about_intro",
+          "label": "Legacy: About introduction",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "widget": "techies-pages:retained"
+        },
+        {
+          "slug": "supper_copy",
+          "label": "Legacy: Supper copy",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "widget": "techies-pages:retained"
+        },
+        {
+          "slug": "supper_photo",
+          "label": "Legacy: Supper photo",
+          "type": "image",
+          "required": false,
+          "unique": false,
+          "widget": "techies-pages:retained"
+        },
+        {
+          "slug": "supper_photo_two",
+          "label": "Legacy: Second supper photo",
+          "type": "image",
+          "required": false,
+          "unique": false,
+          "widget": "techies-pages:retained"
+        },
+        {
+          "slug": "podcast_copy",
+          "label": "Legacy: Podcast copy",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "widget": "techies-pages:retained"
+        },
+        {
+          "slug": "podcast_url",
+          "label": "Legacy: Podcast link",
+          "type": "url",
+          "required": false,
+          "unique": false,
+          "widget": "techies-pages:retained"
+        }
+      ]
+    },
+    {
+      "slug": "posts",
+      "label": "Posts",
+      "labelSingular": "Post",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "featured_image",
+          "label": "Featured image",
+          "type": "image",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "content",
+          "label": "Content",
+          "type": "portableText",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "event_date",
+          "label": "Event date",
+          "type": "datetime",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "source_url",
+          "label": "Original source",
+          "type": "url",
+          "required": false,
+          "unique": false
+        }
+      ]
+    },
+    {
+      "slug": "programmes",
+      "label": "Programmes",
+      "labelSingular": "Programme",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "label",
+          "label": "Label",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "description",
+          "label": "Description",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "cover",
+          "label": "Cover artwork",
+          "type": "image",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "url",
+          "label": "Registration link",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "accent",
+          "label": "Accent",
+          "type": "select",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "options": [
+              "amber",
+              "red",
+              "teal"
+            ]
+          },
+          "options": {
+            "options": [
+              "amber",
+              "red",
+              "teal"
+            ]
+          }
+        },
+        {
+          "slug": "sort_order",
+          "label": "Display order",
+          "type": "integer",
+          "required": false,
+          "unique": false
+        }
+      ]
+    },
+    {
+      "slug": "team",
+      "label": "Exco profiles",
+      "labelSingular": "Exco profile",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "hidden": true,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Name",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "role",
+          "label": "Role / introduction",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "bio",
+          "label": "Biography",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "photo",
+          "label": "Portrait",
+          "type": "image",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "linkedin",
+          "label": "LinkedIn",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "github",
+          "label": "GitHub",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "website",
+          "label": "Website",
+          "type": "url",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "sort_order",
+          "label": "Display order",
+          "type": "integer",
+          "required": false,
+          "unique": false
+        }
+      ]
+    }
+  ],
+  "version": "d3ab9128d6df9461"
+}

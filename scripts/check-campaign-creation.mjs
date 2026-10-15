@@ -132,11 +132,19 @@ try {
   assert.throws(() => parseCampaign({ ...c, invites: '', actions: [{ id: 'proof', type: 'proof' }] }, c.id));
   await page.goto(origin + `/_emdash/admin/content/campaigns/${privateDoc.item.id}`);
   const results = page.getByRole('region', { name: 'Post campaign details', exact: true });
+  const viewCampaign = publishing.getByRole('link', { name: 'View campaign (opens in a new tab)', exact: true });
+  assert.equal(await viewCampaign.getAttribute('href'), `/campaigns/${privateSlug}`);
+  assert.equal(await viewCampaign.getAttribute('target'), '_blank');
+  assert.equal(await viewCampaign.getAttribute('rel'), 'noopener noreferrer');
+  assert.equal(await results.getByRole('link', { name: 'View campaign (opens in a new tab)', exact: true }).count(), 0);
+  const publishButtonBox = await publishing.getByRole('button', { name: 'Publish immediately', exact: true }).boundingBox();
+  const viewCampaignBox = await viewCampaign.boundingBox();
+  assert.ok(viewCampaignBox.y >= publishButtonBox.y + publishButtonBox.height, 'View campaign sits below Publish in the sidebar');
   const participantsTable = results.getByRole('table', { name: 'Participants', exact: true });
   await participantsTable.getByText(email, { exact: true }).waitFor();
   assert.equal(await results.getByRole('table').count(), 1, 'Winners share the participants table');
   assert.equal(await results.getByText(/Engine status:/).count(), 0);
-  for (const removed of ['Open linked announcement', 'View campaign', 'Campaign controls', 'Campaign management', 'Archive campaign']) assert.equal(await results.getByText(removed, { exact: true }).count(), 0);
+  for (const removed of ['Open linked announcement', 'Campaign controls', 'Campaign management', 'Archive campaign']) assert.equal(await results.getByText(removed, { exact: true }).count(), 0);
   assert.match(await participantsTable.innerText(), /Qualified/);
   assert.match(await participantsTable.innerText(), /2 \/ 2/);
   assert.equal(await results.getByRole('button', { name: 'Export winners CSV', exact: true }).isDisabled(), true);
@@ -179,6 +187,17 @@ try {
   }
   await page.goto(origin + '/campaigns/' + privateSlug);
   assert.equal(await page.getByText('Submit proof', { exact: true }).count(), 0);
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(origin + '/_emdash/admin/content/campaigns');
+  const campaignRow = page.getByRole('row').filter({ has: page.locator(`a[href*="/campaigns/${privateDoc.item.id}"]`) });
+  const rowView = campaignRow.getByRole('link', { name: 'View campaign (opens in a new tab)', exact: true });
+  await rowView.waitFor();
+  assert.equal(await rowView.getAttribute('href'), `/campaigns/${privateSlug}`);
+  const popupPromise = page.waitForEvent('popup');
+  await rowView.click();
+  const popup = await popupPromise;
+  await popup.waitForURL(origin + '/campaigns/' + privateSlug);
+  await popup.close();
   assert.deepEqual(errors, []);
   console.log('Campaign creation passed: authoring, publishing, access, actions, equal chances, combined participant results table and authenticated CSV downloads on desktop/mobile.');
 } finally {

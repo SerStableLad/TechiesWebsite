@@ -1,8 +1,10 @@
 import { Button, Input } from "@cloudflare/kumo";
 import { useLingui } from "@lingui/react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { apiFetch } from "emdash/plugin-utils";
 import type { PluginAdminExports } from "emdash";
+import type { ContentListColumnExtension } from "@emdash-cms/admin";
 import { pluginId, type Campaign, type Draw, type ParticipantView } from "./model";
 import "./admin.css";
 import { fields as fieldWidgets } from "./fields";
@@ -17,6 +19,14 @@ async function api<T>(path: string, body?: unknown): Promise<T> {
 interface Detail { campaign: Campaign; revision: string; questions: Array<{ id: string; title: string; answer: string }>; participants: Array<ParticipantView & { id: string }>; count: number; cursor?: string; draw: Draw | null }
 interface Status { campaign: Campaign; contentRevision: string; locked: boolean }
 const editorUrl = (id?: string) => `/_emdash/admin/content/campaigns/${id ?? "new"}`;
+function ViewCampaignLink({ slug }: { slug: string }) {
+	const { i18n } = useLingui();
+	return <a className="ca-view-campaign" href={`/campaigns/${encodeURIComponent(slug)}`} target="_blank" rel="noopener noreferrer" aria-label={i18n._({ id: "campaigns.view-new-tab", message: "View campaign (opens in a new tab)" })}>{i18n._({ id: "campaigns.view", message: "View campaign" })} ↗</a>;
+}
+export const contentListColumns: readonly ContentListColumnExtension[] = [{
+	id: "view-campaign", label: "Public page", collections: ["campaigns"],
+	cell: ({ item }) => item.slug ? <ViewCampaignLink slug={item.slug} /> : null,
+}];
 
 function CampaignControlsField({ value }: { value: unknown }) {
 	const { i18n } = useLingui();
@@ -30,10 +40,13 @@ export const fields = { ...fieldWidgets, "managed-reference": CampaignControlsFi
 function CampaignPanel({ contentId }: { contentId: string }) {
 	const { i18n } = useLingui(); const t = (message: string) => i18n._({ id: `campaigns.${message}`, message });
 	const [status, setStatus] = useState<Status>(); const [error, setError] = useState(""); const [refreshKey, setRefreshKey] = useState(0);
+	const [publishingActions, setPublishingActions] = useState<Element | null>(null);
+	useEffect(() => { setPublishingActions(document.querySelector(".campaign-editor-publishing > div:last-child")); }, []);
 	async function refresh() { try { setStatus(await api<Status>(`content-status?contentId=${encodeURIComponent(contentId)}`)); setError(""); } catch (e) { setError(e instanceof Error ? e.message : String(e)); } }
 	useEffect(() => { void refresh(); const timer = setInterval(() => void refresh(), 5000); return () => clearInterval(timer); }, [contentId]);
 	return <section className="campaign-admin campaign-results-panel" aria-label={t("Post campaign details")}>
 		<div className="ca-results-heading"><h2>{t("Post campaign details")}</h2><Button type="button" onClick={() => { setRefreshKey(key => key + 1); void refresh(); }}>{t("Refresh data")}</Button></div>
+		{status?.campaign.slug && publishingActions && createPortal(<ViewCampaignLink slug={status.campaign.slug} />, publishingActions)}
 		{error && <p role="alert">{error}</p>}
 		{status ? <>
 			<CampaignOperations key={status.campaign.id} campaignId={status.campaign.id} updatedAt={`${status.contentRevision}:${status.campaign.updatedAt}:${status.campaign.status}:${refreshKey}`} onChanged={refresh} />
@@ -78,7 +91,7 @@ function CampaignOperations({ campaignId, updatedAt, onChanged }: { campaignId: 
 				{detail.draw ? <p>{t("Winners")}: {detail.draw.winners.length} · {t("Draw date")}: {new Date(detail.draw.at).toLocaleString()}</p> : <p>{t("Winners will be marked after the campaign closes and the draw completes.")}</p>}
 				<div className="ca-table-scroll" role="region" aria-label={t("Participants data table")} tabIndex={0}><table className="ca-data-table" aria-label={t("Participants")}><thead><tr>{["Name", "Email", "Entry status", "Actions completed", "Result"].map(label => <th scope="col" key={label}>{t(label)}</th>)}</tr></thead><tbody>
 					{!detail.participants.length && <tr><td colSpan={5}>{t("No participants yet.")}</td></tr>}
-					{detail.participants.map(p => <tr key={p.id}><th scope="row">{p.name}</th><td>{p.email}</td><td>{t(!p.entered ? "Verified, not entered" : p.qualified ? "Qualified" : "Actions incomplete")}</td><td>{c.actions.filter(a => p.submissions[a.id]?.status === "approved").length} / {c.actions.length}</td><td>{t(detail.draw ? detail.draw.winners.some(w => w.id === p.id) ? "Winner" : detail.draw.eligible.some(e => e.id === p.id) ? "Not selected" : "Not qualified" : "Awaiting draw")}</td></tr>)}
+					{detail.participants.map(p => <tr key={p.id}><th scope="row">{p.name}</th><td>{p.email}</td><td>{t(!p.entered ? "Registered, not entered" : p.qualified ? "Qualified" : "Actions incomplete")}</td><td>{c.actions.filter(a => p.submissions[a.id]?.status === "approved").length} / {c.actions.length}</td><td>{t(detail.draw ? detail.draw.winners.some(w => w.id === p.id) ? "Winner" : detail.draw.eligible.some(e => e.id === p.id) ? "Not selected" : "Not qualified" : "Awaiting draw")}</td></tr>)}
 				</tbody></table></div>
 				{detail.cursor && <Button type="button" disabled={busy} onClick={() => void run(async () => { const next = await api<Detail>(`detail?id=${encodeURIComponent(c.id)}&cursor=${encodeURIComponent(detail.cursor!)}`); setDetail({ ...next, participants: [...detail.participants, ...next.participants] }); })}>{t("Load more participants")}</Button>}
 				{detail.cursor && <p>{t("Showing")} {detail.participants.length} {t("of")} {detail.count}. {t("The export includes all participants.")}</p>}

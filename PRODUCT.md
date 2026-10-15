@@ -12,7 +12,7 @@ Techies is a community site for developers, dev-adjacents and technically curiou
 
 ## Campaign requirements
 
-Own the campaign system inside EmDash; do not use Gleam. Every entry action is required and each qualified participant gets one equal chance. Support questions, LinkedIn follows and LinkedIn likes. LinkedIn actions use participant confirmation, not evidence collection or automatic platform verification. Participants verify their email before entering.
+Own the campaign system inside EmDash; do not use Gleam. Every entry action is required and each qualified participant gets one equal chance. Support questions, LinkedIn follows and LinkedIn likes. LinkedIn actions use participant confirmation, not evidence collection or automatic platform verification. Participants register with name and email without a verification code. Email addresses are unverified; existing entries require their browser session and cannot be accessed by registering the same address again. Keep the public page flat, with a countdown instead of entry counters and no organiser attribution, action-section introduction or widget footer.
 
 Action creation asks only for type, title and URL; a question URL is optional. Prize images use the native media picker; descriptions and rules use rich-text editors. End dates must be after start dates, validated immediately. Winner draws are automatic at closing and require every action completed by the deadline; cron timing may delay execution without moving the cutoff. Existing saved draws remain immutable.
 

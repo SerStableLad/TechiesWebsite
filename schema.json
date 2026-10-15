@@ -378,7 +378,7 @@
         "search",
         "seo"
       ],
-      "hidden": false,
+      "hidden": true,
       "fields": [
         {
           "slug": "title",

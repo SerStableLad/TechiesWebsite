@@ -94,6 +94,31 @@ export async function detail(ctx: RouteContext) {
 	if (!c || !accessible(c)) return { campaign: null };
 	return { campaign: publicCampaign(c) };
 }
+export async function register(ctx: RouteContext) {
+	sameOrigin(ctx);
+	const v = record(ctx.input);
+	const c = await campaign(ctx, v.campaignId);
+	const email = emailAddress(v.email);
+	const name = text(v.name, "Name", 100, true);
+	if (v.consent !== true) fail("Agree to the use of your details to administer this campaign.");
+	if (!isOpen(c)) fail("This campaign is not open for entries.");
+	await limited(ctx, `register-email:${c.id}:${email}`, 5);
+	await limited(ctx, `register-ip:${ctx.requestMeta.ip ?? "unknown"}`, ctx.requestMeta.ip ? 30 : 100);
+	await limited(ctx, `register-campaign:${c.id}`, 300);
+	const id = await hash(`${c.id}:${email}`);
+	const p = await withWrite(ctx, c.id, async fresh => {
+		if (!isOpen(fresh)) fail("This campaign is not open for entries.");
+		if (await stores(ctx).participants.count({ campaignId: c.id }) >= 10000) fail("This campaign has reached its participant capacity. Contact the organiser.");
+		return mutate(stores(ctx).participants, id, current => {
+			// An unverified address must never grant access to somebody else's existing entry.
+			if (current) fail("Unable to register this address. If you already registered, use your original browser session or contact the organiser.");
+			return { campaignId: c.id, email, name, registeredAt: nowISO(), consentAt: "", entered: false, submissions: {}, attempts: {} };
+		});
+	});
+	const sessionToken = token();
+	await stores(ctx).sessions.put(await hash(sessionToken), { campaignId: c.id, participantId: id, expiresAt: Date.now() + 7 * 86400000 });
+	return { token: sessionToken, campaign: publicCampaign(c), participant: participantView(p, c) };
+}
 export async function requestCode(ctx: RouteContext) {
 	sameOrigin(ctx);
 	const v = record(ctx.input);
@@ -160,9 +185,9 @@ async function authenticated(ctx: RouteContext) {
 	sameOrigin(ctx);
 	const v = record(ctx.input);
 	const sessionToken = text(v.token, "Session", 64, true);
-	if (!/^[0-9a-f]{64}$/.test(sessionToken)) fail("Verify your email to continue.");
+	if (!/^[0-9a-f]{64}$/.test(sessionToken)) fail("Register for this campaign to continue.");
 	const session = await stores(ctx).sessions.get(await hash(sessionToken));
-	if (!session || session.expiresAt <= Date.now() || session.campaignId !== v.campaignId) fail("Your session expired. Verify your email again.");
+	if (!session || session.expiresAt <= Date.now() || session.campaignId !== v.campaignId) fail("Your session expired. Please contact the organiser if you already registered.");
 	const c = await campaign(ctx, session.campaignId);
 	const p = await stores(ctx).participants.get(session.participantId);
 	if (!p || !accessible(c) || !eligible(c, p.email)) fail("You do not have access to this campaign.");
@@ -349,7 +374,7 @@ export async function exportCsv(ctx: RouteContext) {
 	} else {
 		const participants = await allParticipants(ctx, c.id);
 		header = ["Name", "Email", "Entry status", "Actions completed", "Result"];
-		rows = participants.map(({ id, data: p }) => [p.name, p.email, !p.entered ? "Verified, not entered" : qualifiesForDraw(c, p) ? "Qualified" : "Actions incomplete", `${c.actions.filter(a => p.submissions[a.id]?.status === "approved").length} / ${c.actions.length}`, draw ? draw.winners.some(w => w.id === id) ? "Winner" : draw.eligible.some(e => e.id === id) ? "Not selected" : "Not qualified" : "Awaiting draw"]);
+		rows = participants.map(({ id, data: p }) => [p.name, p.email, !p.entered ? "Registered, not entered" : qualifiesForDraw(c, p) ? "Qualified" : "Actions incomplete", `${c.actions.filter(a => p.submissions[a.id]?.status === "approved").length} / ${c.actions.length}`, draw ? draw.winners.some(w => w.id === id) ? "Winner" : draw.eligible.some(e => e.id === id) ? "Not selected" : "Not qualified" : "Awaiting draw"]);
 	}
 	const csv = [header, ...rows].map(row => row.map(csvCell).join(",")).join("\r\n");
 	if (new TextEncoder().encode(csv).byteLength > 8 * 1024 * 1024) fail("The CSV exceeds EmDash's 8 MiB response limit. Contact the organiser for a batched export.");

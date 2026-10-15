@@ -58,8 +58,48 @@ function AutoRecaps({ value, label, id }: FieldProps) {
   </div>;
 }
 
+function ExcoTag({ id }: FieldProps) {
+  const [admin, setAdmin] = useState(false);
+  const [tag, setTag] = useState<{ enabled: boolean; revision: string | null }>();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const memberId = /^\/_emdash\/admin\/content\/members\/([^/]+)\/?$/.exec(window.location.pathname)?.[1];
+  const saved = memberId && memberId !== "new";
+  async function request(enabled?: boolean) {
+    const response = await apiFetch(`/_emdash/api/plugins/techies-members/${enabled === undefined ? `exco?memberId=${encodeURIComponent(memberId!)}` : "exco-update"}`, enabled === undefined ? undefined : {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ memberId, enabled, revision: tag?.revision }),
+    });
+    const result = await response.json() as { success?: boolean; data?: { enabled: boolean; revision: string | null }; error?: { message?: string } };
+    if (!response.ok || !result.success || !result.data) throw new Error(result.error?.message || "Could not load or save the Exco tag. Reload and try again.");
+    return result.data;
+  }
+  useEffect(() => {
+    let active = true;
+    void apiFetch("/_emdash/api/auth/me").then(response => response.json() as Promise<{ data?: { role?: number } }>).then(async result => {
+      if (result.data?.role !== 50 || !active) return;
+      setAdmin(true);
+      if (saved) { const value = await request(); if (active) setTag(value); }
+    }).catch(() => { if (active) setError("Could not load the Exco tag. Reload and try again."); });
+    return () => { active = false; };
+  }, [memberId]);
+  if (!admin) return null;
+  async function toggle() {
+    setBusy(true); setError("");
+    try { setTag(await request(!tag!.enabled)); }
+    catch (error) { setError(error instanceof Error ? error.message : "Could not save the Exco tag."); }
+    finally { setBusy(false); }
+  }
+  return <div id={id} className="grid gap-2">
+    <p className="text-sm font-medium">Exco</p>
+    {saved ? <Button type="button" variant="secondary" role="switch" aria-checked={tag?.enabled ?? false} disabled={!tag || busy} onClick={toggle}>{busy ? "Saving…" : tag?.enabled ? "Exco: on" : "Exco: off"}</Button> : <p>Save this member before setting their Exco tag.</p>}
+    <p className="text-sm text-kumo-subtle">Visible only to administrators. Changes save immediately.</p>
+    {error && <p role="alert" className="text-sm text-kumo-danger">{error}</p>}
+  </div>;
+}
+
 export const fields: PluginAdminExports["fields"] = {
   hidden: () => null,
   interests: InterestTags,
   recaps: AutoRecaps,
+  exco: ExcoTag,
 };

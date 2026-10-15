@@ -24,7 +24,8 @@ export interface Participant {
 	campaignId: string;
 	email: string;
 	name: string;
-	verifiedAt: string;
+	verifiedAt?: string;
+	registeredAt?: string;
 	consentAt: string;
 	entered: boolean;
 	rulesHash?: string;
@@ -161,7 +162,7 @@ export function parseCampaign(value: unknown, id: string): Campaign {
 		if (String(a.type).startsWith("linkedin_")) {
 			let host = "";
 			try { host = new URL(url).hostname; } catch {}
-			if (host !== "linkedin.com" && !host.endsWith(".linkedin.com")) fail("LinkedIn actions need a linkedin.com URL.");
+			if (host !== "linkedin.com" && !host.endsWith(".linkedin.com") && host !== "lnkd.in") fail("LinkedIn actions need a linkedin.com or lnkd.in URL.");
 		}
 		return { id: actionId, type: a.type as ActionType, title: text(a.title, "Action title", 160, true), instructions: actionPreset(a.type as ActionType).instructions, url, required: true, answer: a.type === "question" ? text(a.answer, "Correct answer", 500) : "" };
 	});
@@ -184,7 +185,7 @@ export function entryCount(p: Participant) {
 	return p.entered ? 1 : 0;
 }
 export function qualifiesForDraw(c: Campaign | PublicCampaign, p: Participant, deadline = Date.parse(c.endsAt)) {
-	return p.entered && Date.parse(p.verifiedAt) < deadline && Date.parse(p.consentAt) < deadline
+	return p.entered && Date.parse(p.registeredAt ?? p.verifiedAt ?? "") < deadline && Date.parse(p.consentAt) < deadline
 		&& c.actions.every(a => {
 			const s = p.submissions[a.id];
 			return s?.status === "approved" && Date.parse(s.submittedAt) < deadline && Date.parse(s.reviewedAt ?? s.submittedAt) < deadline;

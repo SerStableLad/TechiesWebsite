@@ -1,13 +1,12 @@
 import type { MiddlewareHandler } from "astro";
+import { seoDefaults } from "../../utils/auto-seo.ts";
 
 export function memberSeoDefaults(data: Record<string, unknown>) {
-  const name = typeof data.title === "string" ? data.title.trim() : "Member";
-  const bio = typeof data.bio === "string" ? data.bio.trim() : `Meet ${name} in the Techies community.`;
-  const photo = data.photo as { src?: string; meta?: { storageKey?: string } } | undefined;
+  const defaults = seoDefaults("members", data, "", { siteUrl: "http://localhost" });
   return {
-    title: `${name} | Techies`.slice(0, 200),
-    description: bio.slice(0, 160),
-    image: photo?.src || (photo?.meta?.storageKey ? `/_emdash/api/media/file/${photo.meta.storageKey}` : null),
+    title: defaults.title,
+    description: defaults.description,
+    image: defaults.image,
     noIndex: false,
   };
 }

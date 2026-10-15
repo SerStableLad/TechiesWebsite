@@ -1,5 +1,6 @@
 import { definePlugin } from "emdash";
 import type { ContentAccess } from "emdash";
+import { excoTag } from "./exco.ts";
 
 /** Published recaps identify speakers through their reciprocal member-profile links. */
 export async function memberRecaps(content: ContentAccess, memberId: string) {
@@ -31,15 +32,25 @@ export async function memberRecaps(content: ContentAccess, memberId: string) {
 
 export function createPlugin(options: { adminEntry: string }) {
   return definePlugin({
-    id: "techies-members", version: "0.1.0", capabilities: ["content:read", "content:write"],
+    id: "techies-members", version: "0.2.1", capabilities: ["content:read", "content:write"],
     admin: { entry: options.adminEntry },
     hooks: {
-      "content:beforeSave": async (event, ctx) => {
+      "content:beforeSave": { errorPolicy: "abort", handler: async (event, ctx) => {
         if (event.collection !== "members") return;
-        return { ...event.content, recaps: event.id ? await memberRecaps(ctx.content!, event.id) : [] };
-      },
+        const { exco, ...data } = event.content;
+        // The widget saves privately; native form defaults must never become public tag data.
+        return { ...data, recaps: event.id ? await memberRecaps(ctx.content!, event.id) : [] };
+      } },
     },
     routes: {
+      exco: {
+        permission: "settings:manage", methods: ["GET"], handler: excoTag,
+      },
+      "exco-update": {
+        permission: "settings:manage", methods: ["POST"],
+        request: { body: "json", maxBytes: 2048 },
+        handler: excoTag,
+      },
       recaps: {
         permission: "content:read", methods: ["GET"],
         handler: async ctx => {

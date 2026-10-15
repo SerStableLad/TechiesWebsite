@@ -4,6 +4,12 @@
 	"main": "./src/worker.ts",
 	"compatibility_date": "2026-02-24",
 	"compatibility_flags": ["nodejs_compat"],
+	"kv_namespaces": [
+		{
+			"binding": "SESSION",
+			"id": "be2fad0f21aa42d5bc86504bc99a1d1a",
+		},
+	],
 	"d1_databases": [
 		{
 			"binding": "DB",

@@ -3,38 +3,50 @@ import { getEmDashEntry, getSeoMeta, decodeSlug, getSiteSettings } from "emdash"
 import { PortableText } from "emdash/ui";
 import Base from "../layouts/Base.astro";
 import { resolveStarterSiteIdentity } from "../utils/site-identity";
+import PageSections from "../components/PageSections.astro";
+import { pageSections } from "../utils/page-sections";
+import { summarize } from "../utils/seo";
 
 const slug = decodeSlug(Astro.params.slug);
 
 if (!slug) {
-	return Astro.redirect("/404");
+	return Astro.rewrite("/404");
 }
+
+if (slug === "home") return Astro.redirect(`/${Astro.url.search}`, Astro.url.search ? 302 : 301);
 
 const { entry: page, cacheHint } = await getEmDashEntry("pages", slug);
 
 if (!page) {
-	return Astro.redirect("/404");
+	return Astro.rewrite("/404");
 }
 
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
-const { siteTitle } = resolveStarterSiteIdentity(await getSiteSettings());
+const settings = await getSiteSettings();
+const { siteTitle } = resolveStarterSiteIdentity(settings);
 
 const seo = getSeoMeta(page, {
 	siteTitle,
-	siteUrl: Astro.url.origin,
+	siteUrl: settings.url || Astro.url.origin,
 	path: Astro.url.pathname.replace(/\/$/, ""),
+	defaultDescription: summarize(page.data.intro),
 });
+const sections = pageSections(page.data);
 ---
 
 <Base
 	title={seo.title}
 	pageTitle={seo.ogTitle}
 	description={seo.description}
+	image={seo.ogImage}
 	canonical={seo.canonical}
 	content={{ collection: "pages", id: page.data.id, slug }}
 >
-	<article class="container page-content">
+  {sections ? <>
+    {sections[0]?._type !== "page_hero" && <header class="container page-heading"><h1 {...page.edit.title}>{page.data.title}</h1></header>}
+    <PageSections value={sections} />
+  </> : <article class="container page-content">
 		<header class="page-heading"><h1 {...page.edit.title}>{page.data.title}</h1></header>
 		<div class="prose"><PortableText value={page.data.content} /></div>
-	</article>
+  </article>}
 </Base>

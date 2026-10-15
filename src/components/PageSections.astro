@@ -1,0 +1,18 @@
+---
+import { Blocks, defineBlockComponents } from "emdash/ui";
+import type { PageLayoutBlock } from "../../emdash-env";
+import PageSection from "./PageSection.astro";
+
+interface Props { value: PageLayoutBlock[] }
+const components = defineBlockComponents<PageLayoutBlock>({
+  page_hero: PageSection,
+  page_text: PageSection,
+  page_items: PageSection,
+  page_images: PageSection,
+  page_cta: PageSection,
+  page_posts: PageSection,
+  page_events: PageSection,
+});
+---
+
+<Blocks value={Astro.props.value} components={components} />

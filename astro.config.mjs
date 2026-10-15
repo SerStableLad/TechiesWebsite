@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const campaignsAdmin = fileURLToPath(new URL("./src/plugins/campaigns/admin.tsx", import.meta.url));
 const membersAdmin = fileURLToPath(new URL("./src/plugins/members/admin.tsx", import.meta.url));
+const pagesAdmin = fileURLToPath(new URL("./src/plugins/pages/admin.tsx", import.meta.url));
 
 const nodeRuntime = process.env.EMDASH_RUNTIME === "node";
 const adapter = nodeRuntime
@@ -39,9 +40,13 @@ export default defineConfig({
 				entrypoint: fileURLToPath(new URL("./src/plugins/campaigns/index.ts", import.meta.url)),
 				adminEntry: campaignsAdmin, options: { adminEntry: campaignsAdmin },
 			}, {
-				id: "techies-members", version: "0.1.0", format: "native",
+				id: "techies-members", version: "0.2.1", format: "native",
 				entrypoint: fileURLToPath(new URL("./src/plugins/members/index.ts", import.meta.url)),
 				adminEntry: membersAdmin, options: { adminEntry: membersAdmin },
+			}, {
+				id: "techies-pages", version: "0.1.0", format: "native",
+				entrypoint: fileURLToPath(new URL("./src/plugins/pages/index.ts", import.meta.url)),
+				adminEntry: pagesAdmin, options: { adminEntry: pagesAdmin },
 			}],
 			database: nodeRuntime ? sqlite({ url: "file:/data/techies.db" }) : d1({ binding: "DB", session: "auto" }),
 			storage: nodeRuntime
