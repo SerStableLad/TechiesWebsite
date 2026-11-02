@@ -48,7 +48,7 @@ const dateFormat = new Intl.DateTimeFormat("en-SG", { day: "numeric", month: "sh
           <div class="flagship-heading"><h3 {...roast.edit.title}>{roast.data.title}</h3><span class="flagship-label">Flagship</span></div>
           <p {...roast.edit.description}>{roast.data.description}</p>
           <p class="format-detail">Community demos, open technical Q&A, and the decisions still keeping builders up. Challenge the architecture, not the person.</p>
-          <div class="series-actions"><a class="text-link" href={roast.data.url}>Explore a past session <span aria-hidden="true">↗</span></a><a class="text-link" href="/tag/roast-my-techstack">Read the recaps <span aria-hidden="true">→</span></a></div>
+          <div class="series-actions"><a class="button" href="/present">Present your stack <span aria-hidden="true">→</span></a><a class="text-link" href={roast.data.url}>Explore a past session <span aria-hidden="true">↗</span></a><a class="text-link" href="/tag/roast-my-techstack">Read the recaps <span aria-hidden="true">→</span></a></div>
         </article>}
         <div class="other-formats">
           {otherProgrammes.map(programme => <article class="other-format" id={programme.id}>

@@ -1,0 +1,24 @@
+{
+  "name": "Roast My TechStack — Presenter interest",
+  "slug": "roastmytechstack-presenter-interest",
+  "pages": [{
+    "title": "Presenter interest",
+    "fields": [
+      { "id": "name", "type": "text", "name": "name", "label": "Your name", "required": true, "width": "half", "validation": { "maxLength": 100 } },
+      { "id": "whatsapp", "type": "tel", "name": "whatsapp", "label": "WhatsApp number", "placeholder": "+65 8123 4567", "helpText": "Include your country code. We’ll use this to coordinate your presentation.", "required": true, "width": "half", "validation": { "maxLength": 40, "pattern": "\\+[1-9][0-9 ()-]{7,30}", "patternMessage": "Include your country code, e.g. +65 8123 4567." } },
+      { "id": "project", "type": "textarea", "name": "project", "label": "What are you building?", "helpText": "Tell us what your project does, your tech stack and architecture, and a challenge you’d like to discuss.", "required": true, "width": "full", "validation": { "maxLength": 3000 } },
+      { "id": "project_url", "type": "url", "name": "project_url", "label": "Project or repository link (optional)", "required": false, "width": "full", "validation": { "maxLength": 2000 } },
+      { "id": "theme", "type": "text", "name": "theme", "label": "Which theme fits your project best?", "helpText": "Name the theme or technical topic that suits your project. If you’re unsure, write ‘Help me choose’.", "required": true, "width": "full", "validation": { "maxLength": 500 } },
+      { "id": "consent", "type": "checkbox", "name": "consent", "label": "I agree to the presentation guidelines below and may be contacted about presenting.", "helpText": "• You have 15 minutes to present, followed by 15 minutes of technical Q&A on your tech stack and architecture.\n\n• There is no actual roasting. This is a constructive technical conversation among the community, with the host facilitating questions.\n\n• You don’t need every answer. You can say ‘I don’t know’, ask for technical help, and we’ll open it to the floor. This is a learning opportunity for you and the audience.\n\n• Focus on technical sharing, not sales. A small call to action is fine; it should not be the whole presentation.\n\n• Please arrive around 6:30 pm so we can connect your laptop to the screen.", "required": true, "width": "full" }
+    ]
+  }],
+  "settings": {
+    "confirmationMessage": "Thanks for putting yourself forward! We’ll contact you on WhatsApp to discuss your project, theme fit and a possible slot. This is an expression of interest, not a confirmed presentation slot.",
+    "submitLabel": "Express interest",
+    "spamProtection": "honeypot",
+    "notifyEmails": [],
+    "digestEnabled": false,
+    "digestHour": 9,
+    "retentionDays": 0
+  }
+}

@@ -4,11 +4,13 @@ import { d1, r2 } from "@emdash-cms/cloudflare";
 import { defineConfig, passthroughImageService, sessionDrivers } from "astro/config";
 import emdash, { local } from "emdash/astro";
 import { sqlite } from "emdash/db";
+import { formsPlugin } from "@emdash-cms/plugin-forms";
 import { fileURLToPath } from "node:url";
 
 const campaignsAdmin = fileURLToPath(new URL("./src/plugins/campaigns/admin.tsx", import.meta.url));
 const membersAdmin = fileURLToPath(new URL("./src/plugins/members/admin.tsx", import.meta.url));
 const pagesAdmin = fileURLToPath(new URL("./src/plugins/pages/admin.tsx", import.meta.url));
+const presentersAdmin = fileURLToPath(new URL("./src/plugins/presenters/admin.tsx", import.meta.url));
 
 const nodeRuntime = process.env.EMDASH_RUNTIME === "node";
 const adapter = nodeRuntime
@@ -17,6 +19,7 @@ const adapter = nodeRuntime
 
 export default defineConfig({
 	output: "server",
+	vite: { build: { rolldownOptions: { output: { minify: true } } } },
 	redirects: {
 		"/index.html": { destination: "/", status: 301 },
 		"/exco.html": { destination: "/exco", status: 301 },
@@ -35,7 +38,7 @@ export default defineConfig({
 	integrations: [
 		react(),
 		emdash({
-			plugins: [{
+			plugins: [formsPlugin(), {
 				id: "techies-campaigns", version: "0.3.2", format: "native",
 				entrypoint: fileURLToPath(new URL("./src/plugins/campaigns/index.ts", import.meta.url)),
 				adminEntry: campaignsAdmin, options: { adminEntry: campaignsAdmin },
@@ -47,6 +50,10 @@ export default defineConfig({
 				id: "techies-pages", version: "0.1.0", format: "native",
 				entrypoint: fileURLToPath(new URL("./src/plugins/pages/index.ts", import.meta.url)),
 				adminEntry: pagesAdmin, options: { adminEntry: pagesAdmin },
+			}, {
+				id: "techies-presenters", version: "0.1.0", format: "native",
+				entrypoint: fileURLToPath(new URL("./src/plugins/presenters/index.ts", import.meta.url)),
+				adminEntry: presentersAdmin, options: { adminEntry: presentersAdmin },
 			}],
 			database: nodeRuntime ? sqlite({ url: "file:/data/techies.db" }) : d1({ binding: "DB", session: "auto" }),
 			storage: nodeRuntime

@@ -1,0 +1,42 @@
+---
+import Base from "../layouts/Base.astro";
+import { Form } from "@emdash-cms/plugin-forms/ui";
+import "@emdash-cms/plugin-forms/styles";
+
+Astro.response.headers.set("Cache-Control", "no-store");
+---
+
+<Base title="Present at Roast My TechStack" description="Share your project and tech stack with the Techies community. Express interest in a friendly technical presentation and Q&A.">
+  <div class="container presenter-page">
+    <a class="back-link" href="/events#roast">Back to events</a>
+    <header>
+      <h1>Bring your stack. Bring your questions.</h1>
+      <p>Interested in presenting at Roast My TechStack? Tell us what you’re building. No polished pitch or perfect architecture needed.</p>
+    </header>
+    <Form id="roastmytechstack-presenter-interest" />
+    <p class="presenter-note">This is an expression of interest, not a confirmed presentation slot. Your contact details are for the organising team to coordinate your application.</p>
+  </div>
+</Base>
+
+<style>
+  .presenter-page { max-width: 850px; padding-block: 32px 88px; }
+  header { margin-block: 16px 40px; }
+  h1 { font-size: clamp(40px, 5.4vw, 64px); margin-bottom: 24px; }
+  header p { font-size: 18px; max-width: 650px; }
+  .presenter-note { margin-top: 24px; color: var(--secondary); }
+  .presenter-page :global(.ec-form) { --ec-form-gap: 20px; --ec-form-field-bg: var(--surface); --ec-form-field-border: 1px solid var(--control-border); --ec-form-error-color: #ffb7a0; --ec-form-required-color: var(--orange); }
+  .presenter-page :global(.ec-form-page) { gap: 28px 20px; }
+  .presenter-page :global(.ec-form-label) { color: var(--text); font-size: 18px; }
+  .presenter-page :global(.ec-form-input) { background: var(--surface); color: var(--text); border-color: var(--control-border); min-height: 48px; font: inherit; }
+  .presenter-page :global(.ec-form-input::placeholder) { color: var(--secondary); opacity: 1; }
+  .presenter-page :global(textarea.ec-form-input) { min-height: 160px; resize: vertical; }
+  .presenter-page :global(.ec-form-help) { color: var(--secondary); font-size: 16px; line-height: 1.65; white-space: pre-line; }
+  .presenter-page :global(.ec-form-checkbox-label) { color: var(--text); font-size: 18px; align-items: start; }
+  .presenter-page :global(input[type="checkbox"]) { min-width: 20px; min-height: 20px; margin-top: 5px; accent-color: var(--orange); }
+  .presenter-page :global(.ec-form-submit) { background: var(--orange); color: var(--bg); font: inherit; font-weight: 600; min-height: 48px; }
+  .presenter-page :global(.ec-form-submit:hover) { background: var(--orange-hover); }
+  .presenter-page :global(.ec-form-error) { font-size: 16px; }
+  .presenter-page :global(.ec-form-status--error) { background: var(--surface); color: #ffb7a0; border-color: #ffb7a0; }
+  .presenter-page :global(.ec-form-status--success) { background: var(--surface); color: var(--text); border-color: var(--orange); font-size: 16px; }
+  .presenter-page :global(.ec-form-input:focus-visible), .presenter-page :global(.ec-form-submit:focus-visible) { outline: 3px solid var(--orange); outline-offset: 4px; }
+</style>
