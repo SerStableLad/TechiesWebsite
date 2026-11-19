@@ -1,0 +1,57 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+	title="Present at Roast My TechStack"
+	description="Share your build, stack, and engineering trade-offs with the Techies community. Register your interest in presenting at Roast My TechStack."
+>
+	<Fragment slot="head">
+		<link rel="preconnect" href="https://airtable.com" />
+		<link
+			rel="preconnect"
+			href="https://static.airtable.com"
+			crossorigin="anonymous"
+		/>
+	</Fragment>
+	<section class="container presenter-page">
+		<header class="page-heading">
+			<h1>Present at Roast My TechStack</h1>
+			<p>
+				Built something worth talking through? Bring your stack, the
+				constraints, and the decisions you’re still figuring out. Register your
+				interest below.
+			</p>
+		</header>
+		<iframe
+			title="Roast My TechStack presenter registration"
+			src="https://airtable.com/embed/appHBgwONjOo1OWbJ/pagsVh4kFQ8DRzT7Y/form"
+			width="100%"
+			height="533"
+			loading="eager"
+			class="airtable-embed"></iframe>
+		<p class="form-fallback">
+			Having trouble with the embedded form? <a
+				class="text-link"
+				href="https://airtable.com/appHBgwONjOo1OWbJ/pagsVh4kFQ8DRzT7Y/form"
+				target="_blank"
+				rel="noopener noreferrer">Open the registration form in Airtable ↗</a
+			>
+		</p>
+	</section>
+</Base>
+
+<style>
+	.presenter-page {
+		padding-block-end: 5rem;
+	}
+	.airtable-embed {
+		display: block;
+		background: transparent;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+	}
+	.form-fallback {
+		margin-block-start: 1.5rem;
+	}
+</style>

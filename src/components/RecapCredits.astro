@@ -1,0 +1,149 @@
+---
+import { PTImage } from "emdash/ui";
+interface Props {
+	node: {
+		_key: string;
+		venueName: string;
+		venueImage: unknown;
+		coordinatorName?: string;
+		coordinatorHref?: string;
+		people: { role: string; name: string; href?: string }[];
+	};
+}
+interface ImageNode {
+	_type: "image";
+	_key: string;
+	asset: { _ref: string; url?: string };
+	alt?: string;
+}
+const { node } = Astro.props;
+const venueImage = node.venueImage as ImageNode;
+---
+
+<section class="credits">
+	<h2 id={node._key}>Community credits</h2>
+	<p class="credits-lede">The people and partners who made this meetup happen.</p>
+	<div class="credits-partner">
+		<div class="credits-logo">
+			<PTImage node={venueImage} placeholder={false} />
+		</div>
+		<div class="credits-partner-copy">
+			<p class="credits-kicker">Venue partner</p>
+			<p class="credits-venue">{node.venueName}</p>
+			{node.coordinatorName && (
+				<p class="credits-coordinator">
+					Coordinated by{" "}
+					{node.coordinatorHref ? (
+						<a href={node.coordinatorHref}>{node.coordinatorName} ↗</a>
+					) : (
+						node.coordinatorName
+					)}
+				</p>
+			)}
+		</div>
+	</div>
+	<p class="credits-kicker credits-crew-label">Volunteer crew</p>
+	<ul class="credits-people">
+		{node.people.map((person) => (
+			<li>
+				{person.href ? (
+					<a class="credits-name" href={person.href}>
+						{person.name} <span aria-hidden="true">↗</span>
+					</a>
+				) : (
+					<span class="credits-name">{person.name}</span>
+				)}
+				<span class="credits-role">{person.role}</span>
+			</li>
+		))}
+	</ul>
+</section>
+<style>
+	.credits-lede {
+		margin: -12px 0 28px;
+		color: var(--muted);
+	}
+	.credits-partner {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+		padding: 18px 22px;
+		margin-bottom: 28px;
+		background: var(--raised);
+		border-radius: 12px;
+	}
+	.credits-logo {
+		flex: 0 0 auto;
+		padding: 12px;
+		background: #fff;
+		border-radius: 8px;
+	}
+	.credits-partner-copy {
+		min-width: 0;
+	}
+	.credits-logo :global(.emdash-image) {
+		margin: 0;
+	}
+	.credits .credits-logo :global(.emdash-image img) {
+		display: block;
+		width: 150px;
+		height: auto;
+	}
+	.credits-kicker {
+		margin: 0 0 6px;
+		font-size: 11px;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+	.credits-venue {
+		margin: 0;
+		font-size: 20px;
+		font-weight: 600;
+		line-height: 1.3;
+		color: var(--text);
+	}
+	.credits-coordinator {
+		margin: 4px 0 0;
+		font-size: 15px;
+		color: var(--body);
+	}
+	.credits-crew-label {
+		margin-bottom: 12px;
+	}
+	.credits-people {
+		list-style: none;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 18px 32px;
+		margin: 0;
+		padding: 0;
+	}
+	.credits-people li {
+		margin: 0;
+		padding-top: 12px;
+		border-top: 1px solid var(--border);
+	}
+	.credits-name {
+		display: block;
+		font-weight: 600;
+		line-height: 1.4;
+	}
+	.credits-role {
+		display: block;
+		margin-top: 2px;
+		font-size: 14px;
+		line-height: 1.5;
+		color: var(--muted);
+	}
+	@media (max-width: 640px) {
+		.credits-partner {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 16px;
+		}
+		.credits-people {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

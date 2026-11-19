@@ -1,0 +1,8 @@
+---
+import { blockText, recapHeadingLabel } from "../utils/recap";
+const { node } = Astro.props;
+const text = blockText(node);
+const label = recapHeadingLabel(text);
+---
+
+<h2 id={node._key}>{text !== label ? label : <slot />}</h2>

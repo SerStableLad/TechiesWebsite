@@ -1,0 +1,136 @@
+---
+import { Image } from "emdash/ui";
+import type { Page } from "../../emdash-env";
+
+interface Props {
+	photos: { image: NonNullable<Page["supper_photo"]>; caption?: string }[];
+}
+const { photos } = Astro.props;
+---
+
+<div class:list={["community-stage", { "compact-stage": photos.length < 4 }]}>
+	<div class="community-copy"><slot /></div>
+	{
+		photos.map((photo) => (
+			<figure class="community-polaroid">
+				<Image image={photo.image} loading="lazy" />
+				{photo.caption && <figcaption>{photo.caption}</figcaption>}
+			</figure>
+		))
+	}
+</div>
+
+<style>
+	.community-stage {
+		position: relative;
+		min-height: 720px;
+		isolation: isolate;
+	}
+	.community-copy {
+		position: absolute;
+		top: 240px;
+		left: 25%;
+		width: 50%;
+		text-align: center;
+		z-index: 2;
+	}
+	.community-polaroid {
+		position: absolute;
+		width: 24%;
+		margin: 0;
+		padding: 10px 10px 30px;
+		background: #fcf8ee;
+		color: #030814;
+		box-shadow: 0 18px 38px #03081426;
+	}
+	.community-polaroid :global(img) {
+		width: 100%;
+		aspect-ratio: 1.18;
+		object-fit: cover;
+	}
+	figcaption {
+		margin-top: 14px;
+		color: #374151;
+		font-family: var(--mono);
+		font-size: 14px;
+		line-height: 1.5;
+	}
+	.community-polaroid:nth-of-type(1) {
+		left: 2%;
+		top: 52px;
+		transform: rotate(-7deg);
+	}
+	.community-polaroid:nth-of-type(2) {
+		right: 1%;
+		top: 92px;
+		transform: rotate(6deg);
+	}
+	.community-polaroid:nth-of-type(3) {
+		left: 0;
+		bottom: 60px;
+		transform: rotate(4deg);
+	}
+	.community-polaroid:nth-of-type(4) {
+		right: 1%;
+		bottom: 14px;
+		transform: rotate(-5deg);
+	}
+	@media (max-width: 1000px) {
+		.community-stage {
+			min-height: 650px;
+		}
+		.community-copy {
+			top: 230px;
+			left: 24%;
+			width: 52%;
+		}
+		.community-polaroid {
+			width: 26%;
+		}
+	}
+	.compact-stage {
+		min-height: 0;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 24px;
+	}
+	.compact-stage .community-copy {
+		position: static;
+		width: auto;
+		grid-column: 1 / -1;
+		margin-bottom: 12px;
+	}
+	.compact-stage .community-polaroid {
+		position: static;
+		width: 100%;
+		transform: none;
+	}
+	@media (max-width: 640px) {
+		.community-stage {
+			min-height: 0;
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 22px 14px;
+		}
+		.community-copy {
+			position: static;
+			width: auto;
+			text-align: left;
+			grid-column: 1 / -1;
+			margin-bottom: 8px;
+		}
+		.community-polaroid:nth-of-type(n) {
+			position: static;
+			width: 100%;
+			padding: 6px 6px 18px;
+			transform: none;
+			box-shadow: none;
+		}
+		.community-polaroid :global(img) {
+			aspect-ratio: 1;
+		}
+		figcaption {
+			margin-top: 10px;
+		}
+	}
+</style>

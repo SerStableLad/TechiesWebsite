@@ -1,0 +1,338 @@
+---
+import {
+	getMenuWithCacheHint,
+	getSiteSettingsWithCacheHint,
+	sanitizeHref,
+} from "emdash";
+import { EmDashHead, EmDashBodyStart, EmDashBodyEnd } from "emdash/ui";
+import { createPublicPageContext } from "emdash/page";
+import { resolveStarterSiteIdentity } from "../utils/site-identity";
+import { defaultDescription } from "../utils/seo";
+import AnnouncementBanner from "../components/AnnouncementBanner.astro";
+import "../styles/theme.css";
+import "../styles/reference.css";
+
+interface Props {
+	title: string;
+	pageTitle?: string | null;
+	description?: string | null;
+	image?: string | null;
+	canonical?: string | null;
+	robots?: string | null;
+	articleMeta?: {
+		publishedTime?: string | null;
+		modifiedTime?: string | null;
+		author?: string | null;
+	};
+	/** Pass content reference for plugin page contributions on content pages */
+	content?: { collection: string; id: string; slug?: string | null };
+}
+
+const {
+	title,
+	pageTitle,
+	description,
+	image,
+	canonical,
+	content,
+	robots,
+	articleMeta,
+} = Astro.props;
+const [settingsResult, menuResult, footerSocialResult, footerExploreResult] =
+	await Promise.all([
+		getSiteSettingsWithCacheHint(),
+		getMenuWithCacheHint("reference_navigation"),
+		getMenuWithCacheHint("footer_social"),
+		getMenuWithCacheHint("footer_explore"),
+	]);
+if (Astro.cache?.enabled) {
+	Astro.cache.set(settingsResult.cacheHint);
+	Astro.cache.set(menuResult.cacheHint);
+	Astro.cache.set(footerSocialResult.cacheHint);
+	Astro.cache.set(footerExploreResult.cacheHint);
+}
+
+const { siteTitle } = resolveStarterSiteIdentity(settingsResult.data);
+const titleIncludesSiteName =
+	title === siteTitle ||
+	title.endsWith(` | ${siteTitle}`) ||
+	title.endsWith(` — ${siteTitle}`);
+const fullTitle = titleIncludesSiteName ? title : `${title} — ${siteTitle}`;
+const pageDescription = description?.trim() || defaultDescription;
+const siteUrl = settingsResult.data.url || Astro.url.origin;
+const pageImage =
+	image ||
+	settingsResult.data.seo?.defaultOgImage?.url ||
+	"/brand/techies-social.png";
+const menuItems = menuResult.data?.items ?? [
+	{ url: "/#events", label: "Events" },
+	{ url: "/members", label: "Members" },
+	{ url: "/category/event-summaries", label: "Event Summaries" },
+	{ url: "/category/partnership-announcement", label: "Partnerships" },
+	{ url: "/#podcast", label: "Podcast" },
+	{ url: "/#about", label: "About" },
+];
+const footerSocialItems = footerSocialResult.data?.items ?? [
+	{ url: "https://luma.com/APACtechies", label: "Luma" },
+	{ url: "https://www.linkedin.com/company/apac-techies/", label: "LinkedIn" },
+	{ url: "https://linktr.ee/techiesapac", label: "Linktree" },
+];
+const footerExploreItems = footerExploreResult.data?.items ?? [
+	{ url: "/#events", label: "Our event formats" },
+	{ url: "/#podcast", label: "Podcast" },
+];
+
+const pageCtx = createPublicPageContext({
+	Astro,
+	kind: content ? "content" : "custom",
+	pageType: content?.collection === "posts" ? "article" : "website",
+	title: fullTitle,
+	pageTitle: pageTitle ?? title,
+	description: pageDescription,
+	canonical: new URL(
+		canonical ?? (Astro.url.pathname.replace(/\/$/, "") || "/"),
+		siteUrl,
+	).href,
+	image: new URL(pageImage, siteUrl).href,
+	seo: { robots },
+	articleMeta,
+	siteUrl,
+	content,
+	siteName: siteTitle,
+});
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<slot name="head" />
+		<title>{fullTitle}</title>
+		<link
+			rel="icon"
+			type="image/svg+xml"
+			href="/images/reference/techies.svg"
+		/>
+		<script is:inline>
+			try {
+				document.documentElement.dataset.theme =
+					localStorage.getItem("techies-theme") === "light" ? "light" : "dark";
+			} catch {}
+		</script>
+		<EmDashHead page={pageCtx} />
+	</head>
+	<body>
+		<a class="skip-link" href="#main">Skip to content</a>
+		<EmDashBodyStart page={pageCtx} />
+
+		<div class="site-chrome">
+			<header class="site-header">
+				<div class="reference-navigation site-nav container">
+					<a class="reference-brand" href="/" aria-label="Techies home"
+						><img
+							src="/images/reference/techies.svg"
+							width="80"
+							height="80"
+							alt="Techies"
+						/></a
+					>
+					<nav id="main-nav" aria-label="Primary navigation">
+						{
+							menuItems?.map((item) =>
+								"type" in item && item.type === "heading" ? (
+									<span>{item.label}</span>
+								) : (
+									<a
+										href={sanitizeHref(item.url)}
+										class={
+											"cssClasses" in item
+												? item.cssClasses || undefined
+												: undefined
+										}
+										target={"target" in item ? item.target : undefined}
+										rel={
+											"target" in item && item.target === "_blank"
+												? "noopener noreferrer"
+												: undefined
+										}
+										aria-current={
+											Astro.url.pathname === item.url ||
+											(item.url === "/members" &&
+												["/members", "/people"].includes(Astro.url.pathname))
+												? "page"
+												: undefined
+										}
+									>
+										{item.label}
+									</a>
+								),
+							)
+						}
+					</nav>
+					<div class="nav-actions">
+						<button
+							class="theme-toggle"
+							id="theme-toggle"
+							type="button"
+							aria-pressed="true"
+							aria-label="Switch to light mode"
+							title="Switch to light mode"
+							><svg
+								class="theme-sun"
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="1.7"
+								aria-hidden="true"
+								focusable="false"
+								><circle cx="12" cy="12" r="4"></circle><path
+									d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42m0-14.14-1.42 1.42m-11.3 11.3-1.42 1.42"
+								></path></svg
+							><svg
+								class="theme-moon"
+								width="22"
+								height="22"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="1.7"
+								aria-hidden="true"
+								focusable="false"
+								><path d="M20.9 13a9 9 0 0 1-9.9-9.9A9 9 0 1 0 20.9 13Z"
+								></path></svg
+							></button
+						><a class="button nav-event" href="/#next">Next event</a><button
+							class="menu-toggle"
+							id="menu-toggle"
+							type="button"
+							aria-controls="main-nav"
+							aria-expanded="false">Menu</button
+						>
+					</div>
+				</div>
+			</header>
+			<AnnouncementBanner />
+		</div>
+
+		<main id="main" tabindex="-1">
+			<slot />
+		</main>
+		<footer class="reference-footer">
+			<div class="container">
+				<div class="footer-top">
+					<a href="/" aria-label="Techies home"
+						><img
+							src="/images/reference/techies.svg"
+							width="132"
+							height="132"
+							alt="Techies"
+							loading="lazy"
+						/></a
+					>
+					<p>
+						A 3rd space for devs,<br />dev-adjacents and the<br />technically
+						curious.
+					</p>
+					<div>
+						{
+							footerSocialItems.map((item) =>
+								"type" in item && item.type === "heading" ? (
+									<h3 class="footer-heading">{item.label}</h3>
+								) : (
+									<a
+										href={sanitizeHref(item.url)}
+										target={"target" in item ? item.target : undefined}
+										rel={
+											"target" in item && item.target === "_blank"
+												? "noopener noreferrer"
+												: undefined
+										}
+									>
+										{item.label}
+									</a>
+								),
+							)
+						}
+					</div>
+					<div>
+						{
+							footerExploreItems.map((item) =>
+								"type" in item && item.type === "heading" ? (
+									<h3 class="footer-heading">{item.label}</h3>
+								) : (
+									<a
+										href={sanitizeHref(item.url)}
+										target={"target" in item ? item.target : undefined}
+										rel={
+											"target" in item && item.target === "_blank"
+												? "noopener noreferrer"
+												: undefined
+										}
+									>
+										{item.label}
+									</a>
+								),
+							)
+						}
+					</div>
+				</div>
+				<div class="footer-bottom">
+					<span>© {new Date().getFullYear()} Techies APAC</span>
+				</div>
+			</div>
+		</footer>
+
+		<script>
+			const siteChrome = document.querySelector<HTMLElement>(".site-chrome");
+			if (siteChrome) {
+				new ResizeObserver(() => {
+					document.documentElement.style.setProperty(
+						"--site-chrome-height",
+						`${siteChrome.getBoundingClientRect().height}px`,
+					);
+				}).observe(siteChrome);
+			}
+			const themeButton = document.getElementById("theme-toggle");
+			const syncTheme = () => {
+				const dark = document.documentElement.dataset.theme === "dark";
+				themeButton?.setAttribute("aria-pressed", String(dark));
+				const label = dark ? "Switch to light mode" : "Switch to dark mode";
+				themeButton?.setAttribute("aria-label", label);
+				themeButton?.setAttribute("title", label);
+			};
+			syncTheme();
+			themeButton?.addEventListener("click", () => {
+				const theme =
+					document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+				document.documentElement.dataset.theme = theme;
+				try {
+					localStorage.setItem("techies-theme", theme);
+				} catch {}
+				syncTheme();
+			});
+			const menuButton = document.getElementById("menu-toggle");
+			const menu = document.getElementById("main-nav");
+			const closeMenu = () => {
+				menu?.classList.remove("is-open");
+				menuButton?.setAttribute("aria-expanded", "false");
+			};
+			menuButton?.addEventListener("click", () => {
+				const open = menu?.classList.toggle("is-open") ?? false;
+				menuButton.setAttribute("aria-expanded", String(open));
+			});
+			menu?.addEventListener("click", (event) => {
+				if ((event.target as Element).closest("a")) closeMenu();
+			});
+			document.addEventListener("keydown", (event) => {
+				if (event.key === "Escape" && menu?.classList.contains("is-open")) {
+					closeMenu();
+					menuButton?.focus();
+				}
+			});
+		</script>
+		<EmDashBodyEnd page={pageCtx} />
+	</body>
+</html>

@@ -1,0 +1,4 @@
+---
+// Fragments never reach the server; keep legacy speaker anchors in the browser.
+return Astro.rewrite(`/people${Astro.url.search}`);
+---

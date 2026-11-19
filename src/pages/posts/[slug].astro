@@ -1,0 +1,580 @@
+---
+import {
+	getEmDashCollection,
+	getEmDashEntry,
+	getSeoMeta,
+	decodeSlug,
+	getSiteSettingsWithCacheHint,
+	getEditMeta,
+} from "emdash";
+import { Image, PortableText } from "emdash/ui";
+import Base from "../../layouts/Base.astro";
+import { resolveStarterSiteIdentity } from "../../utils/site-identity";
+import { summarize } from "../../utils/seo";
+import {
+	recapContent,
+	recapOutline,
+	recapSpeakers,
+	recapTitle as parseRecapTitle,
+} from "../../utils/recap";
+import RecapHeading from "../../components/RecapHeading.astro";
+import RecapParagraph from "../../components/RecapParagraph.astro";
+import RecapCharts from "../../components/RecapCharts.astro";
+import RecapCredits from "../../components/RecapCredits.astro";
+import SpeakerAvatars from "../../components/SpeakerAvatars.astro";
+
+const slug = decodeSlug(Astro.params.slug);
+
+if (!slug) {
+	return Astro.rewrite("/404");
+}
+
+const { entry: post, cacheHint } = await getEmDashEntry("posts", slug);
+
+if (!post) {
+	return Astro.rewrite("/404");
+}
+
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+const settingsResult = await getSiteSettingsWithCacheHint();
+if (Astro.cache?.enabled) Astro.cache.set(settingsResult.cacheHint);
+const settings = settingsResult.data;
+const { siteTitle } = resolveStarterSiteIdentity(settings);
+
+// SEO meta from content fields
+const seoRecap = post.data.title.match(/^Roast My TechStack #\d+/)?.[0];
+const seo = getSeoMeta(post, {
+	siteTitle,
+	siteUrl: settings.url || Astro.url.origin,
+	path: Astro.url.pathname.replace(/\/$/, ""),
+	defaultDescription: summarize(post.data.excerpt),
+	defaultOgImage: post.data.featured_image?.src,
+	defaultTitle: seoRecap ? `${seoRecap} Recap` : post.data.title,
+});
+
+// Taxonomy terms are already hydrated onto the entry by getEmDashEntry.
+const tags = post.data.terms?.tag ?? [];
+const categories = post.data.terms?.category ?? [];
+const dateValue = post.data.event_date || post.data.publishedAt;
+const date = dateValue ? new Date(dateValue) : null;
+const titleParts = parseRecapTitle(post.data.title);
+const isRecap = categories.some(
+	(category) => category.slug === "event-summaries",
+);
+const speakers = isRecap ? recapSpeakers(post.data.content ?? []) : [];
+const city = titleParts.city;
+const eventDate = date
+	? date.toLocaleDateString("en-SG", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+			timeZone: "Asia/Singapore",
+		})
+	: titleParts.dateLabel;
+
+const relatedResult = isRecap
+	? await getEmDashCollection("posts", {
+			where: { category: "event-summaries" },
+			orderBy: { event_date: "desc" },
+			limit: 4,
+		})
+	: undefined;
+if (relatedResult && Astro.cache?.enabled)
+	Astro.cache.set(relatedResult.cacheHint);
+const related = (relatedResult?.entries ?? [])
+	.filter((entry) => entry.id !== post.id)
+	.slice(0, 2)
+	.map((entry) => ({
+		id: entry.id,
+		title: parseRecapTitle(entry.data.title).title,
+		excerpt: entry.data.excerpt,
+	}));
+
+const recapComponents = {
+	block: { h2: RecapHeading, normal: RecapParagraph },
+	type: { audienceCharts: RecapCharts, credits: RecapCredits },
+};
+const content = getEditMeta(post.data.content)
+	? post.data.content
+	: recapContent(post.data.content);
+const outline = isRecap ? recapOutline(content ?? []) : [];
+const memberSlugs = speakers.map((speaker) => speaker.href.split("#")[1]);
+const membersResult = memberSlugs.length
+	? await getEmDashCollection("members", {
+			where: { slug: memberSlugs },
+			limit: memberSlugs.length,
+		})
+	: undefined;
+if (membersResult && Astro.cache?.enabled)
+	Astro.cache.set(membersResult.cacheHint);
+const seriesResult =
+	isRecap && post.data.title.startsWith("Roast My TechStack")
+		? await getEmDashEntry("programmes", "roast")
+		: undefined;
+if (seriesResult && Astro.cache?.enabled)
+	Astro.cache.set(seriesResult.cacheHint);
+const series = seriesResult?.entry;
+const cover = series?.data.cover || post.data.featured_image;
+---
+
+<Base
+	title={seo.title}
+	pageTitle={seo.ogTitle}
+	description={seo.description}
+	canonical={seo.canonical}
+	image={seo.ogImage}
+	articleMeta={{
+		publishedTime: post.data.publishedAt?.toISOString(),
+		modifiedTime: post.data.updatedAt.toISOString(),
+		author: post.data.byline?.displayName,
+	}}
+	content={{ collection: "posts", id: post.data.id, slug }}
+>
+	{
+		isRecap ? (
+			<article class="container recap-article">
+				<header class="page-heading recap-header">
+					<nav aria-label="Back to recaps">
+						<a class="back-link" href="/category/event-summaries">
+							← All recaps
+						</a>
+					</nav>
+					<h1 {...post.edit.title}>{titleParts.title}</h1>
+					{post.data.excerpt && (
+						<p class="recap-deck" {...post.edit.excerpt}>
+							{post.data.excerpt}
+						</p>
+					)}
+					{speakers.length > 0 && (
+						<div class="recap-speakers">
+							<span>Speakers</span>
+							<SpeakerAvatars
+								speakers={speakers}
+								members={
+									membersResult?.entries.map((member) => member.data) ?? []
+								}
+								byline
+							/>
+						</div>
+					)}
+					<p class="recap-facts">
+						{post.data.event_date ? "Event" : "Published"}
+						{eventDate && (
+							<>
+								{" "}
+								· <time datetime={date?.toISOString()}>{eventDate}</time>
+							</>
+						)}
+						{city && <> · {city}</>}
+					</p>
+				</header>
+
+				{cover && (
+					<figure
+						class="recap-cover"
+						{...(series?.data.cover
+							? series.edit.cover
+							: post.edit.featured_image)}
+					>
+						<div>
+							<Image image={cover} loading="eager" />
+						</div>
+						<figcaption>
+							{series
+								? `${series.data.title} · official event-series artwork`
+								: cover.alt}
+						</figcaption>
+					</figure>
+				)}
+
+				<div class="recap-layout">
+					{outline.length > 0 && (
+						<aside class="recap-sidebar">
+							<nav aria-label="In this article">
+								<p class="toc-title">In this article</p>
+								<ol>
+									{outline.map((heading) => (
+										<li>
+											<a href={`#${heading.id}`}>{heading.text}</a>
+										</li>
+									))}
+								</ol>
+							</nav>
+						</aside>
+					)}
+					<div
+						class="recap-body prose"
+						class:list={{ "without-outline": outline.length === 0 }}
+					>
+						<PortableText value={content} components={recapComponents} />
+						{(tags.length > 0 || post.data.source_url) && (
+							<footer class="recap-footer">
+								{tags.length > 0 && (
+									<div class="recap-tags">
+										{tags.map((tag) => (
+											<a href={`/tag/${tag.slug}`}>{tag.label}</a>
+										))}
+									</div>
+								)}
+								{post.data.source_url && (
+									<p>
+										<a href={post.data.source_url}>
+											Original published recap ↗
+										</a>
+									</p>
+								)}
+							</footer>
+						)}
+					</div>
+					<div class="article-end">
+						<h2>Keep the conversation going.</h2>
+						<p>
+							Bring your build and your questions to the next Techies session.
+						</p>
+						<a class="button" href="/events">
+							See upcoming events <span aria-hidden="true">↗</span>
+						</a>
+					</div>
+				</div>
+			</article>
+		) : (
+			<article class="container">
+				<header class="page-heading">
+					{categories[0] && (
+						<nav aria-label={`Back to ${categories[0].label}`}>
+							<a class="back-link" href={`/category/${categories[0].slug}`}>
+								← {categories[0].label}
+							</a>
+						</nav>
+					)}
+					<h1 {...post.edit.title}>{post.data.title}</h1>
+					{post.data.excerpt && (
+						<p {...post.edit.excerpt}>{post.data.excerpt}</p>
+					)}
+					<div class="post-meta metadata">
+						{date && (
+							<time datetime={date.toISOString()}>
+								{date.toLocaleDateString("en-SG", {
+									day: "numeric",
+									month: "short",
+									year: "numeric",
+									timeZone: "Asia/Singapore",
+								})}
+							</time>
+						)}
+						{categories.map((c) => (
+							<a href={`/category/${c.slug}`}>{c.label}</a>
+						))}
+					</div>
+				</header>
+				{post.data.featured_image && (
+					<div class="post-hero" {...post.edit.featured_image}>
+						<Image image={post.data.featured_image} />
+					</div>
+				)}
+
+				<div class="prose">
+					<PortableText value={post.data.content} />
+
+					{tags.length > 0 && (
+						<div>
+							{tags.map((t) => (
+								<a href={`/tag/${t.slug}`}>{t.label}</a>
+							))}
+						</div>
+					)}
+					{post.data.source_url && (
+						<p>
+							<a href={post.data.source_url}>Original published recap ↗</a>
+						</p>
+					)}
+				</div>
+			</article>
+		)
+	}
+
+	{
+		related.length > 0 && (
+			<section class="article-related" aria-labelledby="related-title">
+				<div class="container">
+					<h2 id="related-title">More from the room</h2>
+					<div class="related-grid">
+						{related.map((item) => (
+							<a class="related-item" href={`/posts/${item.id}`}>
+								<h3>{item.title}</h3>
+								{item.excerpt && <p>{item.excerpt}</p>}
+							</a>
+						))}
+					</div>
+				</div>
+			</section>
+		)
+	}
+</Base>
+
+<style>
+	.recap-header {
+		max-width: 1040px;
+		margin-inline: auto;
+		padding-block: 48px 44px;
+	}
+	.recap-header h1 {
+		font-size: clamp(40px, 5vw, 64px);
+		line-height: 1.12;
+		max-width: 20ch;
+		margin: 0 0 24px;
+	}
+	.recap-header .back-link {
+		margin-bottom: 28px;
+		text-decoration: underline;
+		text-underline-offset: 5px;
+		color: var(--accent);
+		font-size: 16px;
+	}
+	.recap-deck {
+		font-size: 20px;
+		max-width: 66ch;
+		margin-bottom: 32px;
+		color: var(--body);
+	}
+	.recap-speakers {
+		display: flex;
+		flex-direction: column;
+		align-items: start;
+		gap: 12px;
+	}
+	.recap-speakers > span {
+		font-size: 14px;
+		color: var(--muted);
+	}
+	.recap-facts {
+		margin-top: 18px;
+		font-size: 14px;
+		color: var(--muted);
+	}
+	.recap-cover {
+		max-width: 1040px;
+		margin: 0 auto 64px;
+	}
+	.recap-cover > div {
+		background: #000;
+		overflow: hidden;
+		border-radius: 12px;
+	}
+	.recap-cover :global(img) {
+		width: 100%;
+		height: 380px;
+		object-fit: contain;
+	}
+	.recap-cover figcaption {
+		font-size: 14px;
+		color: var(--muted);
+		margin-top: 12px;
+	}
+	.recap-layout {
+		display: grid;
+		grid-template-columns: 240px minmax(0, 720px);
+		gap: 72px;
+		justify-content: center;
+		align-items: start;
+		margin-bottom: 88px;
+	}
+	.recap-sidebar {
+		position: sticky;
+		top: 32px;
+	}
+	.toc-title {
+		font-family: Cairo, Inter, sans-serif;
+		font-size: 20px;
+		line-height: 1.3;
+		font-weight: 600;
+		color: var(--text);
+		margin-bottom: 20px;
+	}
+	.recap-sidebar ol {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	.recap-sidebar li {
+		margin: 0;
+	}
+	.recap-sidebar a {
+		display: block;
+		padding: 14px 0;
+		border-bottom: 1px solid var(--border);
+		font-size: 15px;
+		color: var(--body);
+		line-height: 1.6;
+	}
+	.recap-sidebar a:hover {
+		color: var(--accent);
+	}
+	.recap-body.prose {
+		max-width: 720px;
+		margin: 0;
+		padding: 0 0 16px;
+	}
+	.without-outline {
+		grid-column: 2;
+	}
+	.recap-body :global(h2) {
+		font-size: 36px;
+		line-height: 1.2;
+		padding-top: 56px;
+		margin: 56px 0 28px;
+		border-top: 1px solid var(--border);
+		scroll-margin-top: 32px;
+	}
+	.recap-body :global(h2:first-child) {
+		margin-top: 0;
+		padding-top: 0;
+		border-top: 0;
+	}
+	.recap-body :global(h2 a) {
+		color: inherit;
+		text-decoration: none;
+	}
+	.recap-body :global(h3) {
+		font-size: 26px;
+		line-height: 1.3;
+		padding: 0;
+		margin: 40px 0 16px;
+	}
+	.recap-body :global(p) {
+		margin-bottom: 22px;
+	}
+	.recap-body :global(.emdash-image img) {
+		width: 100%;
+		height: auto;
+		max-height: none;
+		border-radius: 10px;
+	}
+	.recap-body :global(.emdash-image figcaption) {
+		font-size: 14px;
+		color: var(--muted);
+		margin-top: 12px;
+		text-align: left;
+	}
+	.article-end {
+		grid-column: 2;
+		padding: 32px;
+		background: var(--raised);
+		border-radius: 12px;
+	}
+	.article-end h2 {
+		font-size: 30px;
+		margin-bottom: 28px;
+	}
+	.article-end p {
+		font-size: 16px;
+		margin-bottom: 22px;
+	}
+	.recap-footer {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 16px 24px;
+		margin-top: 44px;
+		padding-top: 24px;
+		border-top: 1px solid var(--border);
+		font-size: 14px;
+	}
+	.recap-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.recap-tags a {
+		padding: 4px 10px;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		color: var(--secondary);
+	}
+	.recap-tags a:hover {
+		color: var(--text);
+		border-color: var(--control-border);
+	}
+	.recap-footer p {
+		margin: 0;
+	}
+	.article-related {
+		padding-bottom: 88px;
+	}
+	.article-related h2 {
+		margin-bottom: 28px;
+	}
+	.related-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 24px 48px;
+	}
+	.related-item {
+		border-top: 1px solid var(--border);
+		padding-top: 20px;
+	}
+	.related-item h3 {
+		font-size: 26px;
+		margin-bottom: 12px;
+	}
+	.related-item:hover h3 {
+		color: var(--orange);
+	}
+	.related-item p {
+		font-size: 15px;
+	}
+	@media (max-width: 1100px) {
+		.recap-layout {
+			grid-template-columns: 210px minmax(0, 1fr);
+			gap: 44px;
+		}
+	}
+	@media (max-width: 900px) {
+		.without-outline {
+			grid-column: auto;
+		}
+		.recap-layout {
+			grid-template-columns: 1fr;
+			gap: 32px;
+		}
+		.recap-sidebar {
+			position: static;
+		}
+		.recap-sidebar nav {
+			border: 1px solid var(--border);
+			border-radius: 10px;
+			padding: 20px 24px;
+		}
+		.recap-sidebar ol {
+			display: block;
+		}
+		.recap-cover :global(img) {
+			height: 340px;
+		}
+		.article-end {
+			grid-column: auto;
+		}
+	}
+	@media (max-width: 700px) {
+		.recap-deck {
+			font-size: 18px;
+		}
+		.recap-cover {
+			margin-bottom: 36px;
+		}
+		.recap-cover :global(img) {
+			height: 300px;
+		}
+		.recap-body :global(h2) {
+			font-size: 30px;
+			margin-top: 36px;
+			padding-top: 36px;
+		}
+		.recap-body :global(h3) {
+			font-size: 24px;
+		}
+		.related-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

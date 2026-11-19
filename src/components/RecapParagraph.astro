@@ -1,0 +1,17 @@
+---
+import { isDecorativeLabel } from "../utils/recap";
+const props = Astro.props;
+const alignment = ["left", "center", "right", "justify"].includes(
+	props.node.textAlign,
+)
+	? props.node.textAlign
+	: undefined;
+---
+
+{
+	isDecorativeLabel(props.node) ? null : (
+		<p style={alignment && `text-align: ${alignment}`}>
+			<slot />
+		</p>
+	)
+}

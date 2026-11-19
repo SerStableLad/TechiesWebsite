@@ -1,0 +1,7 @@
+---
+import { decodeSlug } from "emdash";
+
+const slug = decodeSlug(Astro.params.slug);
+if (!slug) return Astro.rewrite("/404");
+return Astro.rewrite(`/${encodeURIComponent(slug)}${Astro.url.search}`);
+---

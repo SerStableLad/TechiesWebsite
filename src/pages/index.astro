@@ -1,0 +1,62 @@
+---
+import {
+	getEmDashEntry,
+	getSeoMeta,
+	getSiteSettingsWithCacheHint,
+} from "emdash";
+import Base from "../layouts/Base.astro";
+import PageSections from "../components/PageSections.astro";
+import { pageSections } from "../utils/page-sections";
+import { resolveStarterSiteIdentity } from "../utils/site-identity";
+import { defaultDescription } from "../utils/seo";
+import { PortableText } from "emdash/ui";
+
+const [result, settings] = await Promise.all([
+	getEmDashEntry("pages", "home"),
+	getSiteSettingsWithCacheHint(),
+]);
+if (!result.entry) return Astro.rewrite("/404");
+if (Astro.cache?.enabled)
+	for (const item of [result, settings]) Astro.cache.set(item.cacheHint);
+const home = result.entry;
+const { siteTitle } = resolveStarterSiteIdentity(settings.data);
+const seo = getSeoMeta(home, {
+	siteTitle,
+	siteUrl: settings.data.url || Astro.url.origin,
+	path: "/",
+	defaultTitle: "Developer Community Across APAC",
+	defaultDescription,
+});
+const sections = pageSections(home.data, true);
+---
+
+<Base
+	title={seo.title}
+	pageTitle={seo.ogTitle}
+	description={seo.description}
+	image={seo.ogImage}
+	canonical={seo.canonical}
+	content={{ collection: "pages", id: home.data.id, slug: "home" }}
+>
+	{
+		sections ? (
+			<>
+				{sections[0]?._type !== "page_hero" && (
+					<header class="container page-heading">
+						<h1 {...home.edit.title}>{home.data.title}</h1>
+					</header>
+				)}
+				<PageSections value={sections} />
+			</>
+		) : (
+			<article class="container page-content">
+				<header class="page-heading">
+					<h1 {...home.edit.title}>{home.data.title}</h1>
+				</header>
+				<div class="prose">
+					<PortableText value={home.data.content} />
+				</div>
+			</article>
+		)
+	}
+</Base>

@@ -1,0 +1,170 @@
+---
+import { getEmDashCollection } from "emdash";
+
+// Time-based expiry must not be held past its deadline by route caching.
+if (Astro.cache?.enabled) Astro.cache.set(false);
+const { entries, error } = await getEmDashCollection("posts", {
+	status: "published",
+	where: {
+		announcement_banner: "1",
+		announcement_until: { gt: new Date().toISOString() },
+	},
+	orderBy: { published_at: "desc" },
+	limit: 1,
+});
+if (error)
+	console.error("[announcements] Could not load announcement banner", error);
+const post = entries[0];
+const bannerText = typeof post?.data.announcement_text === "string" ? post.data.announcement_text.trim() : "";
+const buttonText = typeof post?.data.announcement_button_text === "string" ? post.data.announcement_button_text.trim() : "";
+const announcementKey = post ? JSON.stringify([post.id, bannerText || [post.data.title, post.data.excerpt], buttonText, post.data.announcement_until]) : "";
+---
+
+{
+	post && (
+		<aside
+			class="announcement-banner"
+			aria-label="Announcement"
+			data-announcement-until={post.data.announcement_until}
+			data-announcement-key={announcementKey}
+			data-announcement-id={post.id}
+		>
+			<div class="container announcement-content">
+				<p>
+					{bannerText ? bannerText : <><strong>{post.data.title}</strong>
+					{post.data.excerpt && <span> {post.data.excerpt}</span>}</>}
+				</p>
+				<a
+					class="announcement-link"
+					href={`/posts/${encodeURIComponent(post.id)}`}
+				>
+					{buttonText || "Learn more"}<span class="sr-only"> about {post.data.title}</span>
+				</a>
+			</div>
+			<button type="button" class="announcement-dismiss" aria-label="Dismiss announcement">
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+					<path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+				</svg>
+			</button>
+		</aside>
+	)
+}
+
+<script is:inline>
+	(() => {
+	const banner = document.querySelector(
+		"[data-announcement-until]",
+	);
+	if (banner) {
+		const storageKey = `techies-dismissed-announcement:${banner.dataset.announcementId}`;
+		try {
+			if (localStorage.getItem(storageKey) === banner.dataset.announcementKey) {
+				banner.remove();
+				return;
+			}
+		} catch {}
+		banner.querySelector(".announcement-dismiss").addEventListener("click", () => {
+			try {
+				localStorage.setItem(storageKey, banner.dataset.announcementKey);
+			} catch {}
+			banner.remove();
+		});
+		const deadline = Date.parse(banner.dataset.announcementUntil);
+		const expire = () => {
+			const remaining = deadline - Date.now();
+			if (!Number.isFinite(remaining) || remaining <= 0) banner.remove();
+			else window.setTimeout(expire, Math.min(remaining, 2_147_483_647));
+		};
+		expire();
+	}
+	})();
+</script>
+
+<style>
+	.announcement-banner {
+		position: relative;
+		background: var(--orange);
+		color: var(--button-text);
+	}
+	.announcement-content {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 0.25rem 1rem;
+		padding-block: 0.5rem;
+		padding-inline: 3.5rem;
+		font-size: 1.125rem;
+	}
+	.announcement-content p {
+		margin: 0;
+		max-width: 70ch;
+		line-height: 1.4;
+		overflow-wrap: anywhere;
+		color: inherit;
+	}
+	.announcement-content strong {
+		color: inherit;
+	}
+	.announcement-link {
+		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 32px;
+		max-width: 100%;
+		padding: 0.25rem 0.75rem;
+		border: 1px solid var(--cream);
+		border-radius: 4px;
+		background: var(--cream);
+		color: inherit;
+		font-size: inherit;
+		font-weight: 500;
+		line-height: 1.4;
+		overflow-wrap: anywhere;
+		text-decoration: none;
+	}
+	.announcement-link:hover {
+		background: transparent;
+		border-color: var(--button-text);
+	}
+	.announcement-link:focus-visible,
+	.announcement-dismiss:focus-visible {
+		outline: 3px solid currentColor;
+		outline-offset: 4px;
+	}
+	.announcement-dismiss {
+		position: absolute;
+		inset-inline-end: 0.5rem;
+		top: 50%;
+		transform: translateY(-50%);
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: 32px;
+		padding: 0;
+		border: 0;
+		border-radius: 4px;
+		background: transparent;
+		color: inherit;
+		cursor: pointer;
+	}
+	.announcement-dismiss:hover {
+		background: var(--cream);
+	}
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+	@media (max-width: 640px) {
+		.announcement-content {
+			justify-content: start;
+			padding-inline-start: 0;
+			padding-inline-end: 2rem;
+		}
+	}
+</style>

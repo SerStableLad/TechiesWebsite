@@ -1,0 +1,152 @@
+---
+import { Image } from "emdash/ui";
+import { getCalendar, eventVenue } from "../utils/luma";
+
+if (Astro.cache?.enabled) Astro.cache.set(false);
+const { events, unavailable } = await getCalendar();
+const dateFormat = new Intl.DateTimeFormat("en-SG", {
+	day: "numeric",
+	month: "short",
+	year: "numeric",
+	timeZone: "Asia/Singapore",
+});
+const timeFormat = new Intl.DateTimeFormat("en-SG", {
+	hour: "numeric",
+	minute: "2-digit",
+	hour12: true,
+	timeZone: "Asia/Singapore",
+});
+---
+
+<div class="upcoming-events">
+	{
+		events.length ? (
+			events.map((event) => (
+				<a class="upcoming-event" href={`https://luma.com/${event.url}`}>
+					<time datetime={event.start_at}>
+						<>
+							<strong>{dateFormat.format(new Date(event.start_at))}</strong>
+							<span>{timeFormat.format(new Date(event.start_at))} SGT</span>
+						</>
+					</time>
+					<div class="event-artwork">
+						{typeof event.cover_url === "string" &&
+							event.cover_url.startsWith("https://images.lumacdn.com/") && (
+								<Image
+									image={{ id: "", src: event.cover_url, alt: "" }}
+									width={112}
+									height={112}
+									loading="lazy"
+								/>
+							)}
+					</div>
+					<div class="event-details">
+						<>
+							<h3>{event.name}</h3>
+							<p>{eventVenue(event)}</p>
+						</>
+					</div>
+					<span class="event-action">
+						View event <span aria-hidden="true">↗</span>
+					</span>
+				</a>
+			))
+		) : (
+			<p class="calendar-empty">
+				{unavailable
+					? "The live calendar couldn’t load. Open the full Luma calendar for upcoming sessions."
+					: "No upcoming sessions yet. Check the Luma calendar for updates."}
+			</p>
+		)
+	}
+</div>
+
+<style>
+	.upcoming-event {
+		display: grid;
+		grid-template-columns: 144px 112px minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 24px;
+		padding-block: 24px;
+		border-top: 1px solid var(--border);
+		color: var(--text);
+		text-decoration: none;
+	}
+	.upcoming-event:last-child {
+		border-bottom: 1px solid var(--border);
+	}
+	time {
+		display: grid;
+		gap: 8px;
+		font-size: 14px;
+	}
+	time strong {
+		font-size: 16px;
+	}
+	time span,
+	.event-details p {
+		color: var(--secondary);
+	}
+	.event-artwork {
+		aspect-ratio: 1;
+		border-radius: 12px;
+		overflow: hidden;
+		background: var(--surface);
+	}
+	.event-artwork :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.event-details h3 {
+		font-size: 20px;
+		line-height: 1.35;
+		margin-bottom: 8px;
+	}
+	.event-details p {
+		font-size: 16px;
+	}
+	.event-action {
+		color: var(--accent);
+		font-size: 14px;
+		font-weight: 600;
+		white-space: nowrap;
+	}
+	.upcoming-event:hover h3 {
+		color: var(--accent);
+	}
+	.calendar-empty {
+		padding-block: 24px;
+		border-block: 1px solid var(--border);
+	}
+	@media (max-width: 900px) {
+		.upcoming-event {
+			grid-template-columns: 128px 96px minmax(0, 1fr);
+			gap: 20px;
+		}
+		.event-action {
+			grid-column: 3;
+			margin-top: -8px;
+		}
+	}
+	@media (max-width: 600px) {
+		.upcoming-event {
+			grid-template-columns: 80px minmax(0, 1fr);
+			gap: 16px;
+			padding-block: 20px;
+		}
+		time {
+			grid-column: 1 / -1;
+			display: flex;
+			flex-wrap: wrap;
+			align-items: baseline;
+			gap: 8px 16px;
+		}
+		.event-details h3 {
+			font-size: 18px;
+		}
+		.event-action {
+			grid-column: 2;
+		}
+	}
+</style>

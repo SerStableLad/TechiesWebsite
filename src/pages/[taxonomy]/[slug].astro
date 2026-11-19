@@ -1,0 +1,98 @@
+---
+import {
+	getTaxonomyTermsWithCacheHint,
+	getEmDashCollection,
+	decodeSlug,
+} from "emdash";
+import PostCard from "../../components/PostCard.astro";
+import Base from "../../layouts/Base.astro";
+
+const taxonomy = Astro.params.taxonomy;
+if (taxonomy !== "category" && taxonomy !== "tag") return Astro.rewrite("/404");
+const isTag = taxonomy === "tag";
+const slug = decodeSlug(Astro.params.slug);
+const termsResult = await getTaxonomyTermsWithCacheHint(taxonomy, {
+	includeCounts: false,
+});
+const term = slug ? termsResult.data.find((item) => item.slug === slug) : null;
+
+if (!term) {
+	return Astro.rewrite("/404");
+}
+const pageTitle = isTag
+	? term.label
+	: slug === "event-summaries"
+		? "Event Summaries"
+		: slug === "partnership-announcement"
+			? "Partnership"
+			: term.label;
+const path = `/${taxonomy}/${term.slug}`;
+const description = isTag
+	? `Explore ${term.label} recaps and technical discussions from Techies. Real stacks, engineering decisions, and lessons shared by the APAC developer community.`
+	: slug === "event-summaries"
+		? "Catch up on Techies developer events: real stacks, architecture decisions, and practical lessons from community demos and technical discussions."
+		: slug === "partnership-announcement"
+			? "Discover Techies community partnerships, developer conferences, and member offers connecting builders across APAC."
+			: `Read ${term.label} updates, practical lessons, and community news from Techies, a developer community across APAC.`;
+
+const cursor = Astro.url.searchParams.get("cursor") || undefined;
+const {
+	entries: posts,
+	cacheHint,
+	nextCursor,
+} = await getEmDashCollection("posts", {
+	where: { [taxonomy]: term.slug },
+	orderBy: { published_at: "desc" },
+	limit: 20,
+	cursor,
+});
+if (Astro.cache?.enabled) {
+	Astro.cache.set(termsResult.cacheHint);
+	Astro.cache.set(cacheHint);
+}
+---
+
+<Base
+	title={isTag ? `${term.label} Recaps & Discussions` : pageTitle}
+	description={description}
+	canonical={`${path}${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ""}`}
+>
+	<div class="container page-content">
+		<header class="page-heading">
+			<h1>{pageTitle}</h1><p>
+				{
+					isTag
+						? "Follow the decisions and discussions behind this topic."
+						: term.slug === "partnership-announcement"
+							? "Community partnerships and offers for Techies."
+							: "Real conversations, written down. Decisions, constraints, and lessons from the room."
+				}
+			</p>
+		</header>
+		{
+			posts.length ? (
+				<div class="card-grid">
+					{posts.map((post) => (
+						<PostCard post={post} />
+					))}
+				</div>
+			) : (
+				<p>
+					{isTag
+						? "No posts with this tag yet."
+						: "No posts in this category yet."}
+				</p>
+			)
+		}
+		<nav class="pagination" aria-label="Pagination">
+			{cursor && <a href={path}>First page</a>}
+			{
+				nextCursor && (
+					<a href={`${path}?cursor=${encodeURIComponent(nextCursor)}`}>
+						Next page
+					</a>
+				)
+			}
+		</nav>
+	</div>
+</Base>

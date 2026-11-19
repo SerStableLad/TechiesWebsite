@@ -1,0 +1,50 @@
+{
+	"name": "techies-site",
+	"version": "0.0.1",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@11.9.0",
+	"engines": { "node": ">=22.16" },
+	"emdash": { "label": "Techies", "seed": "seed/seed.json" },
+	"scripts": {
+		"dev": "astro dev --port 4322",
+		"build": "astro build",
+		"build:workers": "EMDASH_RUNTIME=cloudflare astro build",
+		"deploy": "pnpm build:workers && wrangler deploy",
+		"preview": "astro preview",
+		"typecheck": "astro check",
+		"lockup": "node scripts/partnership-lockup.mjs",
+		"test:cms": "node scripts/check-cms.mjs",
+		"test:browser": "node scripts/check-browser.mjs",
+		"test:resend": "vitest run tests/resend.test.ts",
+		"setup:announcements": "node scripts/setup-announcements.mjs",
+		"test:announcements": "node scripts/check-announcements.mjs",
+		"test:announcement-site": "node scripts/check-announcement-site.mjs",
+		"test": "node scripts/check-announcements.mjs && node scripts/check-members.mjs && node scripts/check-page-sections.mjs && node scripts/check-people.mjs && node scripts/check-recap.mjs && node scripts/check-luma.mjs && node scripts/check-auto-seo.mjs && node scripts/check-seo.mjs && pnpm test:resend"
+	},
+	"dependencies": {
+		"@astrojs/cloudflare": "^14.3.1",
+		"@astrojs/node": "^11.1.5",
+		"@astrojs/react": "^7.0.0",
+		"@cloudflare/kumo": "2.15.0",
+		"@emdash-cms/admin": "1.5.0",
+		"@emdash-cms/cloudflare": "1.5.0",
+		"@lingui/react": "^5.9.4",
+		"@phosphor-icons/react": "^2.1.10",
+		"astro": "^7.3.2",
+		"emdash": "1.5.0",
+		"react": "19.2.4",
+		"react-dom": "19.2.4"
+	},
+	"devDependencies": {
+		"@axe-core/playwright": "^4.12.1",
+		"@astrojs/check": "^0.9.10",
+		"@playwright/test": "^1.61.1",
+		"@types/node": "^24",
+		"@types/react": "19.2.14",
+		"@types/react-dom": "19.2.3",
+		"typescript": "^6.0.0",
+		"vitest": "4.1.10",
+		"wrangler": "^4.147.0"
+	}
+}

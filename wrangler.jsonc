@@ -1,0 +1,18 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "techies-emdash-preview",
+	"main": "./src/worker.ts",
+	"compatibility_date": "2026-02-24",
+	"compatibility_flags": ["nodejs_compat"],
+	"workers_dev": true,
+	"preview_urls": false,
+	"assets": { "run_worker_first": true },
+	"kv_namespaces": [{ "binding": "SESSION", "id": "6dae704ca7914a869c396cec9e1f94ad" }],
+	"d1_databases": [{
+		"binding": "DB",
+		"database_name": "techies-emdash-preview",
+		"database_id": "58692dca-68b6-40e6-8587-66b15eed8b5a"
+	}],
+	"r2_buckets": [{ "binding": "MEDIA", "bucket_name": "techies-emdash-preview-media" }],
+	"triggers": { "crons": ["0 * * * *"] }
+}

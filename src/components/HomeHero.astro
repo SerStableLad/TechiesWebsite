@@ -1,0 +1,96 @@
+---
+import { getCalendar, eventVenue, eventTimezone } from "../utils/luma";
+interface Props {
+	heading: string;
+	intro?: string | null;
+	code?: string | null;
+	codeTitle?: string | null;
+}
+const { heading, intro, code, codeTitle } = Astro.props;
+const communityCode =
+	code ??
+	'const techies = {\n  audience: [\n    "devs",\n    "technical founders",\n    "developer curious"\n  ]\n};';
+if (Astro.cache?.enabled) Astro.cache.set(false);
+const { events, unavailable } = await getCalendar();
+const next = events[0];
+const zone = next ? eventTimezone(next) : "Asia/Singapore";
+const date = next ? new Date(next.start_at) : undefined;
+const time = date?.toLocaleTimeString("en-SG", {
+	hour: "numeric",
+	minute: "2-digit",
+	hour12: true,
+	timeZone: zone,
+	timeZoneName: "short",
+});
+const url = next
+	? `https://luma.com/${next.url}`
+	: "https://luma.com/APACtechies";
+const eventCode =
+	next && date
+		? `  name: ${JSON.stringify(next.name)},\n  when: ${JSON.stringify(`${date.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", timeZone: zone })} · ${time}`)},\n  venue: ${JSON.stringify(eventVenue(next))},`
+		: `  nextEvent: null,\n  // ${unavailable ? "Upcoming event details are temporarily unavailable." : "New sessions will appear here when announced."}`;
+const displayCode = communityCode.replace(
+	/\s*};?\s*$/,
+	`,\n${eventCode}\n  supperAfter: true\n};`,
+);
+---
+
+<div class="reference-hero">
+	<div class="container">
+		<div class="hero-heading">
+			<div class="hero-message">
+				<h1>
+					{
+						heading.endsWith(" to geek out.") ? (
+							<>
+								{heading.replace(/ to geek out\.$/, "")}
+								<br /> to <span class="accent">geek out.</span>
+							</>
+						) : (
+							heading
+						)
+					}
+				</h1>
+				<div class="hero-aside">
+					<p>
+						{
+							intro ||
+								"Real stacks. Real constraints. Conversations that get into how things are actually built."
+						}
+					</p>
+					<a class="button" href={url}
+						>{next ? "RSVP on Luma" : "Explore upcoming events"}</a
+					>
+					{
+						next && date ? (
+							<p class="event-hint">
+								Next up: {next.name}
+								<br />
+								<time datetime={next.start_at}>
+									{date.toLocaleDateString("en-SG", {
+										day: "numeric",
+										month: "short",
+										timeZone: zone,
+									})}{" "}
+									· {time}
+								</time>{" "}
+								· {eventVenue(next)}
+							</p>
+						) : (
+							<p class="event-hint">
+								{unavailable
+									? "Open the Luma calendar for the latest sessions."
+									: "New sessions will appear here when announced."}
+							</p>
+						)
+					}
+				</div>
+			</div>
+			<div class="hero-code">
+				<div class="terminal-bar">{codeTitle || "community.ts"}</div>
+				<span id="upcoming"></span>
+				<pre id="next"><code>{displayCode}</code></pre>
+			</div>
+		</div>
+	</div>
+</div>
