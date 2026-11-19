@@ -8,7 +8,7 @@ type WorkerFetch = NonNullable<typeof handler.fetch>;
 export default {
 	...handler,
 	fetch(
-		request: Request,
+		request: Parameters<WorkerFetch>[0],
 		bindings: Parameters<WorkerFetch>[1] & { PREVIEW_PASSWORD?: string },
 		context: Parameters<WorkerFetch>[2],
 	) {
@@ -23,7 +23,9 @@ export default {
 		}
 		const headers = new Headers(request.headers);
 		headers.delete("Authorization");
-		return handler.fetch!(new Request(request, { headers }), bindings, context);
+		// Replacing headers preserves the incoming request's Cloudflare metadata.
+		const forwarded = new Request(request, { headers }) as typeof request;
+		return handler.fetch(forwarded, bindings, context);
 	},
 	scheduled: createScheduledHandler({ generalCron: "0 * * * *" }),
 };

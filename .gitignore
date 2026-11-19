@@ -4,7 +4,6 @@ dist/
 .emdash/
 data.db*
 uploads/
-emdash-env.d.ts
 .env
 .env.*
 .dev.vars*

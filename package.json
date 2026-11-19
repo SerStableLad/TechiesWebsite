@@ -12,7 +12,7 @@
 		"build:workers": "EMDASH_RUNTIME=cloudflare astro build",
 		"deploy": "pnpm build:workers && wrangler deploy",
 		"preview": "astro preview",
-		"typecheck": "astro check",
+		"typecheck": "wrangler types && astro check",
 		"lockup": "node scripts/partnership-lockup.mjs",
 		"test:cms": "node scripts/check-cms.mjs",
 		"test:browser": "node scripts/check-browser.mjs",

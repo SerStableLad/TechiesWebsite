@@ -37,6 +37,7 @@ plugins.push({
 export default defineConfig({
 	output: "server",
 	adapter: workers ? cloudflare() : node({ mode: "standalone" }),
+	...(workers ? { vite: { build: { rolldownOptions: { output: { minify: true } } } } } : {}),
 	image: {
 		service: passthroughImageService(),
 		layout: "constrained",
